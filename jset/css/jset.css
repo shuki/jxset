@@ -1,0 +1,88 @@
+.ui-datepicker {
+	z-index: 950;
+}
+
+.altclass {
+	background:#FFFFDD;
+}
+
+/* multiselect styles */
+.multiselect {
+	width: 460px;
+	height: 200px;
+}
+
+.ui-jqdialog-content .CaptionTD {
+	vertical-align:middle;
+	font-size:1.1em;
+	font-weight:800;
+	padding: 0 10px 0 0;
+	border-top: 1px solid #A6C9E2; 	
+}
+
+.ui-jqdialog-content .DataTD{
+	padding: 10px 0 10px 0;
+	border-top: 1px solid #A6C9E2;
+}
+
+.ui-jqdialog-content .FormElement {
+	display: inline-block;
+	width: inherit;
+	vertical-align:text-top;
+}
+
+.ui-widget .ui-widget {
+    font-size: 11px;
+}
+
+.ui-widget {
+    font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+}
+.ui-menu .ui-menu-item a {
+    display: block;
+    line-height: 1em;
+    padding: 0.2em 0.4em;
+    text-decoration: none;
+}
+
+.ui-autocomplete {
+	max-height: 180px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	/* add padding to account for vertical scrollbar */
+	padding-right: 20px;
+  font-size: 0.8em;
+}
+
+.error {
+	padding:0 5px 0 5px;
+	color: red;
+}
+
+.qq-trash-button {
+    display: block;
+    width: 105px;
+    padding: 7px 0;
+    text-align: center;
+    background: #880000;
+    border-bottom: 1px solid #DDD;
+    color: #FFF;
+}
+.qq-trash-button-hover {
+    background: #CC0000;
+}
+.qq-trash-button-focus {
+    outline: 1px dotted #000000;
+}
+
+.jset-field-padding {
+	padding-bottom: 0.3em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    padding-top: 0.3em;
+}
+
+.jset-field-readonly {
+	background: #F0F0F0;
+}
