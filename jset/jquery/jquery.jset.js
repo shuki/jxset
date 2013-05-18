@@ -319,7 +319,6 @@
 		}
 		
 		var t = this;
-		//console.log(t);
 		t.p = $.extend(true, {}, $.jset.defaults, events, param || {});
 		$(t).append('<img src="' + $.jset.dir_pre + t.p.loading_img + '">');
 		fn.set_source_param(t.p);
@@ -362,7 +361,7 @@
 	// common events
 	var add_edit_events = {
 		beforeInitData: function(formid){
-			var grid = $.jset.fn.get_grid($(formid).selector.substr(9));
+			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeInitData))
 					$.jset.defaults.control[this.control].beforeInitData(formid);
@@ -373,8 +372,7 @@
 		},
 		
 		onInitializeForm : function(formid) {
-			var grid = $.jset.fn.get_grid_by_formid(formid);
-			
+			var grid = $(this);			
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
 
@@ -383,7 +381,7 @@
 		},
 		
 		beforeShowForm: function(formid){
-			var grid = $.jset.fn.get_grid_by_formid(formid);
+			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
 					$.jset.defaults.control[this.control].beforeShowForm(formid, this.Field);
@@ -402,7 +400,7 @@
 		
 		afterShowForm: function(formid){
 			$(formid).validate().resetForm();
-			var grid = $.jset.fn.get_grid_by_formid(formid);			
+			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].afterShowForm))
 					$.jset.defaults.control[this.control].afterShowForm(formid, this.Field);
@@ -421,7 +419,7 @@
 		},
 		
 		afterclickPgButtons : function(whichbutton, formid, rowid){
-			var grid = $.jset.fn.get_grid_by_formid(formid);
+			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].afterclickPgButtons))
 					$.jset.defaults.control[this.control].afterclickPgButtons(whichbutton, formid, rowid, this.Field);
