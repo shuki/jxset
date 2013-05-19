@@ -10,14 +10,12 @@
 	$.extend($.fn.fmatter , {
 		selectbox: function (cellval,opts, rwd, act) {
 			var grid = $(this);
-			//$.dump($(this).data('settings'));
-			//$.dump(opts);
 			// jqGrid specific
 			cellval = cellval + "";
 			var oSelect = false, ret=[];
-			if(!$.fmatter.isUndefined(opts.colModel.formatoptions)){
+			if(opts.colModel.formatoptions != undefined){
 				oSelect= opts.colModel.formatoptions.value;
-			} else if(!$.fmatter.isUndefined(opts.colModel.editoptions)){
+			} else if(opts.colModel.editoptions != undefined){
 				oSelect= opts.colModel.editoptions.value;
 			}
 			if (oSelect) {
@@ -95,11 +93,11 @@
 		
 		checkbox_edit : function(cval, opts, rowdata) {
 			var op = $.extend({},opts.checkbox), ds;
-			if(!$.fmatter.isUndefined(opts.colModel.formatoptions)) {
+			if(opts.colModel.formatoptions != undefined) {
 				op = $.extend({},op,opts.colModel.formatoptions);
 			}
 			if(op.disabled===true) {ds = "disabled=\"disabled\"";} else {ds="";}
-			if($.fmatter.isEmpty(cval) || $.fmatter.isUndefined(cval) ) {cval = $.fn.fmatter.defaultFormat(cval,op);}
+			if($.fmatter.isEmpty(cval) || cval != undefined ) {cval = $.fn.fmatter.defaultFormat(cval,op);}
 			cval=cval+"";cval=cval.toLowerCase();
 			var bchk = cval.search(/(false|0|no|off)/i)<0 ? " checked='checked' " : "";
 			return "<input type=\"checkbox\" " + bchk  + " value=\""+ cval+"\" offval=\"no\" "+ds+ " check_name=" + opts.colModel.index + " onClick=\"$.jset.fn.checkbox_submit(this)\"/>";
@@ -110,11 +108,11 @@
 				return '';
 				
 			var op = $.extend({},opts.checkbox), ds;
-			if(!$.fmatter.isUndefined(opts.colModel.formatoptions)) {
+			if(opts.colModel.formatoptions != undefined) {
 				op = $.extend({},op,opts.colModel.formatoptions);
 			}
 			if(op.disabled===true) {ds = "disabled=\"disabled\"";} else {ds="";}
-			if($.fmatter.isEmpty(cval) || $.fmatter.isUndefined(cval) ) {cval = $.fn.fmatter.defaultFormat(cval,op);}
+			if($.fmatter.isEmpty(cval) || cval != undefined ) {cval = $.fn.fmatter.defaultFormat(cval,op);}
 			cval=cval+"";cval=cval.toLowerCase();
 			var bchk = cval.search(/(false|0|no|off)/i)<0 ? " checked='checked' " : "";
 			return "<input type=\"checkbox\" " + bchk  + " value=\""+ cval+"\" offval=\"no\" "+ds+ " check_name=" + opts.colModel.index + " onClick=\"$.jset.fn.checkbox_submit(this)\"/>";
