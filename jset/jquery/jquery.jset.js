@@ -153,7 +153,7 @@
 				},
 				col:{
 				    width: 420,
-				    modal: true,
+				   // modal: true,
 				    msel_opts: {dividerLocation: 0.5},
 				    dialog_opts: {
 				        minWidth: 470,
@@ -585,8 +585,8 @@
 					
 					if ($t.data('settings').filterToolbar.hide)
 						this.toggleToolbar(); // for initialy hiding the toolbar
-					else
-						$t.jqGrid('setGridHeight', $t.data('settings').grid.height - 23);
+					/*else
+						$t.jqGrid('setGridHeight', $t.data('settings').grid.height - 23);*/
 						
 					if($t.data('settings').detail){
 						$.each($t.data('settings').detail, function(){

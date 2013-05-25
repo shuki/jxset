@@ -19,13 +19,12 @@
 	<table>
 		<tr>
 			<td><table id="grid_db"></table></td>
+			<td><span style="display:inline-block; width:8px"> </span></td>
 			<td><table id="grid_table"></table></td>
 		</tr>
 	</table>
 	
-	<div style="height:20px"></div>
+	<div style="height:10px"></div>
 	<table id="grid"></table>
-	<img src="jset/img/loading.gif" id="loading" style="display:none">
-	<!--button id="test">test</button-->
 </body>
 </html>
