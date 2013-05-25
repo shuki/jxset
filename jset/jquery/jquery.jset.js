@@ -565,7 +565,7 @@
 					});
 					url = url.slice(0, - 1);
 					
-					window.open(url);
+					window.open(url, '_parent');
 				}
 				
 				post[$t.data('settings').grid.prmNames.oper] = 'grid_rows';
