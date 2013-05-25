@@ -563,7 +563,8 @@
 					$.each(get, function(key, value){
 						url += key + '=' + value + '&';
 					});
-
+					url = url.slice(0, - 1);
+					
 					window.open(url);
 				}
 				

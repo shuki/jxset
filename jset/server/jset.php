@@ -10,7 +10,7 @@
 
 include_once("autoload.php");
 
-echo json_encode(process(getRealPOST()));
+echo json_encode(process(get_real_POST_GET()));
 
 function process($post){
 	$db_param_names = array("_db_name_" => "db_name", "_host_" => "host", "_db_remote_definitions_" => "db_remote_definitions");
@@ -18,6 +18,7 @@ function process($post){
 	$request = new stdClass;
 	$dbparams = new stdClass;
 	
+	//die($_SERVER['QUERY_STRING']);
 	foreach($post as $var => $value)
 		if($dbvar =	$db_param_names[$var])
 			$dbparams->$dbvar = $value;
@@ -52,8 +53,9 @@ function process($post){
 	return call_user_func(array($jset, 'get'), $request);
 }
 
-function getRealPOST() {
-    $pairs = explode("&", file_get_contents("php://input"));
+function get_real_POST_GET() {
+	$query_string = $_SERVER['QUERY_STRING'] ? $_SERVER['QUERY_STRING'] : file_get_contents("php://input");
+    $pairs = explode("&", $query_string);
     $vars = array();
     foreach ($pairs as $pair) {
         $nv = explode("=", $pair);
