@@ -18,7 +18,6 @@ function process($post){
 	$request = new stdClass;
 	$dbparams = new stdClass;
 	
-	//die($_SERVER['QUERY_STRING']);
 	foreach($post as $var => $value)
 		if($dbvar =	$db_param_names[$var])
 			$dbparams->$dbvar = $value;
