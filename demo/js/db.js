@@ -29,9 +29,6 @@ $(function(){
 	var grid_db_settings = {
 	  	source: 'select `SCHEMA_NAME` as `Name`, DEFAULT_CHARACTER_SET_NAME as `Character Set`, DEFAULT_COLLATION_NAME as `Collation` from `information_schema`.`SCHEMATA` order by `SCHEMA_NAME`',
 		search_default: [{name: 'Name', value: $.getUrlVar('db')}],
-		filterToolbar:{
-			hide: false
-		},
 		copy:{
 			navButtonAdd: false
 		},
@@ -62,9 +59,6 @@ $(function(){
 	var grid_settings = {
 	  	source: fn.get_table,
 		db_name: fn.get_db,
-		filterToolbar:{
-			hide: false
-		},
 	    grid: {
 			autowidth: true,
 			height: fn.calculate_contents_grid_height()
@@ -75,9 +69,6 @@ $(function(){
 	var grid_table_settings = {
 	  	source: 'select `TABLE_NAME` as `Name`, TABLE_TYPE as `Type`, TABLE_ROWS as `Rows`  from `information_schema`.`tables` where (`TABLE_SCHEMA` = database())',
 		db_name: fn.get_db,
-		filterToolbar:{
-			hide: false
-		},
 		copy:{
 			navButtonAdd: false
 		},
