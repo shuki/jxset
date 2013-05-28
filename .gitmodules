@@ -1,0 +1,3 @@
+[submodule "jset/jqGrid"]
+	path = jset/jqGrid
+	url = https://github.com/shuki/jqGrid.git
