@@ -11,6 +11,7 @@
 include_once("autoload.php");
 
 echo json_encode(process(get_real_POST_GET()));
+//echo json_encode(process($_REQUEST));
 
 function process($post){
 	$db_param_names = array("_db_name_" => "db_name", "_host_" => "host", "_db_remote_definitions_" => "db_remote_definitions");
@@ -57,7 +58,7 @@ function get_real_POST_GET() {
     $pairs = explode("&", $query_string);
     $vars = array();
     foreach ($pairs as $pair) {
-        $nv = explode("=", $pair);
+        $nv = explode("=", $pair, 2);
         $name = urldecode($nv[0]);
         $value = urldecode($nv[1]);
         $vars[$name] = $value;

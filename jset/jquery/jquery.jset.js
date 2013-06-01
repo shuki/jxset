@@ -240,6 +240,7 @@
 				altclass: 'altclass',
 				viewrecords: true,
 				sortorder: 'asc',
+				//multiSort: true,
 				caption: '',
 				//toolbar : [true,'top'],
 				toppager: false,
@@ -564,7 +565,7 @@
 						url += key + '=' + value + '&';
 					});
 					url = url.slice(0, - 1);
-					
+
 					window.open(url, '_parent');
 				}
 				

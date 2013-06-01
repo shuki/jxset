@@ -142,8 +142,9 @@ class jset_columns_base {
 	}
 	
 	protected function process($db, &$index){
+		$rows = $db->fetchAll();
 		$i = 0;
-		while($row = $db->fetch()){
+		foreach($rows as $row){
 			$attributes = $this->extract_attributes($row->Type);
 			if(!$row->control) $row->control = $attributes->type;
 			$privileges = $this->extract_privileges($row->Privileges);

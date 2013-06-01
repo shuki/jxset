@@ -3,18 +3,51 @@
 -- Server version:               5.5.16 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL version:             7.0.0.4156
--- Date/time:                    2013-05-15 01:33:07
+-- Date/time:                    2013-06-01 13:09:50
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!40014 SET FOREIGN_KEY_CHECKS=0 */;
 
+-- Dumping database structure for jxset
+CREATE DATABASE IF NOT EXISTS `jxset` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `jxset`;
+
+
+-- Dumping structure for table jxset.demo
+DROP TABLE IF EXISTS `demo`;
+CREATE TABLE IF NOT EXISTS `demo` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `char` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'שדה טקסט',
+  `text` text,
+  `date` date DEFAULT NULL COMMENT 'תאריך',
+  `image` varchar(1024) DEFAULT NULL,
+  `video` varchar(1024) DEFAULT NULL,
+  `integer` int(11) DEFAULT NULL COMMENT 'מספריים',
+  `decimal` decimal(11,2) DEFAULT NULL,
+  `boolean` tinyint(1) unsigned DEFAULT NULL,
+  `select` smallint(6) unsigned DEFAULT NULL,
+  `multiselect` varchar(1024) DEFAULT NULL,
+  `multicheckbox` varchar(1024) DEFAULT NULL,
+  `link` varchar(1024) DEFAULT NULL,
+  `html` mediumtext,
+  PRIMARY KEY (`id`),
+  KEY `Index_integer` (`integer`),
+  KEY `Index_varchar` (`char`),
+  KEY `Index_select` (`select`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table jxset.demo: ~0 rows (approximately)
+DELETE FROM `demo`;
+/*!40000 ALTER TABLE `demo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `demo` ENABLE KEYS */;
+
 
 -- Dumping structure for function jxset.f_date_unformat
 DROP FUNCTION IF EXISTS `f_date_unformat`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_date_unformat`(vvalue varchar(20)) RETURNS date
+CREATE FUNCTION `f_date_unformat`(vvalue varchar(20)) RETURNS date
 BEGIN
   declare dpos, dpos_next tinyint;
   declare dyeari smallint;
@@ -48,7 +81,7 @@ DELIMITER ;
 -- Dumping structure for function jxset.f_insert_jset_atom
 DROP FUNCTION IF EXISTS `f_insert_jset_atom`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_insert_jset_atom`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
+CREATE FUNCTION `f_insert_jset_atom`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
 BEGIN
   DECLARE did BIGINT DEFAULT UUID_SHORT();
 
@@ -63,7 +96,7 @@ DELIMITER ;
 -- Dumping structure for function jxset.f_insert_jset_atom_no_uuid
 DROP FUNCTION IF EXISTS `f_insert_jset_atom_no_uuid`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_insert_jset_atom_no_uuid`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
+CREATE FUNCTION `f_insert_jset_atom_no_uuid`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
 BEGIN
   INSERT INTO jset_atom (id, stamp, user, kind, web_user, ip)
     VALUES (null, NOW(), USER(), vkind, vweb_user, vip);
@@ -76,7 +109,7 @@ DELIMITER ;
 -- Dumping structure for function jxset.f_numeric_only
 DROP FUNCTION IF EXISTS `f_numeric_only`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_numeric_only`(`str` VARCHAR(1000)) RETURNS varchar(1000) CHARSET utf8
+CREATE FUNCTION `f_numeric_only`(`str` VARCHAR(1000)) RETURNS varchar(1000) CHARSET utf8
     DETERMINISTIC
 BEGIN
   DECLARE counter INT DEFAULT 0;
@@ -103,47 +136,13 @@ DELIMITER ;
 -- Dumping structure for function jxset.f_sql
 DROP FUNCTION IF EXISTS `f_sql`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_sql`() RETURNS varchar(8000) CHARSET utf8
+CREATE FUNCTION `f_sql`() RETURNS varchar(8000) CHARSET utf8
 BEGIN
 return 'select * from test';
 
 END//
 DELIMITER ;
 
-DROP TABLE IF EXISTS `item`;
-CREATE TABLE `item` (
-	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`what` SMALLINT(6) UNSIGNED NULL DEFAULT NULL,
-	`name` VARCHAR(1024) NULL DEFAULT NULL,
-	`text` TEXT NULL,
-	`date` DATE NULL DEFAULT NULL,
-	`image` VARCHAR(1024) NULL DEFAULT NULL,
-	`video` VARCHAR(1024) NULL DEFAULT NULL,
-	`integer` INT(11) NULL DEFAULT NULL,
-	`decimal` DECIMAL(11,2) NULL DEFAULT NULL,
-	`boolean` TINYINT(1) UNSIGNED NULL DEFAULT NULL,
-	`link` VARCHAR(1024) NULL DEFAULT NULL,
-	`html` MEDIUMTEXT NULL,
-	`select` SMALLINT(6) UNSIGNED NULL DEFAULT NULL,
-	`multicheckbox` VARCHAR(1024) NULL DEFAULT NULL,
-	PRIMARY KEY (`id`),
-	INDEX `Index_what` (`what`),
-	INDEX `Index_name` (`name`),
-	INDEX `Index_text` (`text`(1024)),	
-	INDEX `Index_date` (`date`),
-	INDEX `Index_image` (`image`),
-	INDEX `Index_video` (`video`),
-	INDEX `Index_integer` (`integer`),
-	INDEX `Index_decimal` (`decimal`),
-	INDEX `Index_boolean` (`boolean`),
-	INDEX `Index_link` (`link`),
-	INDEX `Index_html` (`html`(1024)),
-	INDEX `Index_select` (`select`),
-	INDEX `Index_multicheckbox` (`multicheckbox`)
-)
-COLLATE='utf8_general_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1;
 
 -- Dumping structure for table jxset.jset_atom
 DROP TABLE IF EXISTS `jset_atom`;
@@ -155,10 +154,12 @@ CREATE TABLE IF NOT EXISTS `jset_atom` (
   `web_user` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   `ip` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=94992943877718020 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=FIXED;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=FIXED;
 
--- Dumping data for table jxset.jset_atom: ~4 rows (approximately)
+-- Dumping data for table jxset.jset_atom: ~0 rows (approximately)
 DELETE FROM `jset_atom`;
+/*!40000 ALTER TABLE `jset_atom` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jset_atom` ENABLE KEYS */;
 
 
 -- Dumping structure for table jxset.jset_column
@@ -192,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `jset_column` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent` (`parent`,`name`),
   CONSTRAINT `FK_jset_table_parent` FOREIGN KEY (`parent`) REFERENCES `jset_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=560 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_column: ~71 rows (approximately)
 DELETE FROM `jset_column`;
@@ -285,7 +286,7 @@ CREATE TABLE IF NOT EXISTS `jset_default_column` (
   `Privileges` varchar(100) DEFAULT NULL,
   `Comment` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_default_column: ~1 rows (approximately)
 DELETE FROM `jset_default_column`;
@@ -305,8 +306,11 @@ CREATE TABLE IF NOT EXISTS `jset_error` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table jxset.jset_error: ~4 rows (approximately)
+-- Dumping data for table jxset.jset_error: ~0 rows (approximately)
 DELETE FROM `jset_error`;
+/*!40000 ALTER TABLE `jset_error` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jset_error` ENABLE KEYS */;
+
 
 -- Dumping structure for table jxset.jset_event
 DROP TABLE IF EXISTS `jset_event`;
@@ -324,11 +328,14 @@ CREATE TABLE IF NOT EXISTS `jset_event` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent` (`parent`) USING BTREE,
   CONSTRAINT `FK_jset_event_parent` FOREIGN KEY (`parent`) REFERENCES `jset_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Dumping data for table jxset.jset_event: ~1 rows (approximately)
 DELETE FROM `jset_event`;
 /*!40000 ALTER TABLE `jset_event` DISABLE KEYS */;
+INSERT INTO `jset_event` (`id`, `parent`, `before_insert`, `after_insert`, `before_select`, `after_select`, `before_update`, `after_update`, `before_delete`, `after_delete`) VALUES
+	(1, 3, NULL, 'jset_columns_mysql::create_columns(id,source)~jset_event::create_event(id)', NULL, NULL, NULL, 'jset_columns_mysql::create_columns(id,source)~jset_event::create_event(id)', NULL, NULL);
+/*!40000 ALTER TABLE `jset_event` ENABLE KEYS */;
 
 
 -- Dumping structure for table jxset.jset_host
@@ -344,11 +351,14 @@ CREATE TABLE IF NOT EXISTS `jset_host` (
   `user` varchar(40) DEFAULT NULL,
   `password` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_host: ~3 rows (approximately)
+-- Dumping data for table jxset.jset_host: ~4 rows (approximately)
 DELETE FROM `jset_host`;
 /*!40000 ALTER TABLE `jset_host` DISABLE KEYS */;
+INSERT INTO `jset_host` (`id`, `active`, `name`, `host`, `port`, `server`, `db_name`, `user`, `password`) VALUES
+	(1, 1, 'jxset', 'localhost', '3306', 'mysql', 'jxset', 'root', '');
+/*!40000 ALTER TABLE `jset_host` ENABLE KEYS */;
 
 
 -- Dumping structure for table jxset.jset_layout
@@ -378,50 +388,11 @@ CREATE TABLE IF NOT EXISTS `jset_list` (
   `type` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `Index_type` (`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_list: ~38 rows (approximately)
+-- Dumping data for table jxset.jset_list: ~0 rows (approximately)
 DELETE FROM `jset_list`;
 /*!40000 ALTER TABLE `jset_list` DISABLE KEYS */;
-INSERT INTO `jset_list` (`id`, `tid`, `name`, `type`) VALUES
-	(1, 1, 'select', 'control'),
-	(2, 2, 'checkbox', 'control'),
-	(3, 3, 'currency', 'control'),
-	(4, 4, 'upload', 'control'),
-	(5, 5, 'editor', 'control'),
-	(6, 2000, '2000', 'xyear'),
-	(7, 2001, '2001', 'xyear'),
-	(8, 2002, '2002', 'xyear'),
-	(9, 2003, '2003', 'xyear'),
-	(10, 2004, '2004', 'xyear'),
-	(11, 2005, '2005', 'xyear'),
-	(12, 2006, '2006', 'xyear'),
-	(13, 2007, '2007', 'xyear'),
-	(14, 2008, '2008', 'xyear'),
-	(15, 2009, '2009', 'xyear'),
-	(16, 2010, '2010', 'xyear'),
-	(17, 2011, '2011', 'xyear'),
-	(18, 2012, '2012', 'xyear'),
-	(19, 2013, '2013', 'xyear'),
-	(20, 2014, '2014', 'xyear'),
-	(21, 2015, '2015', 'xyear'),
-	(22, 2016, '2016', 'xyear'),
-	(23, 2017, '2017', 'xyear'),
-	(24, 2018, '2018', 'xyear'),
-	(25, 2019, '2019', 'xyear'),
-	(26, 2020, '2020', 'xyear'),
-	(27, 1, '1', 'xmonth'),
-	(28, 2, '2', 'xmonth'),
-	(29, 3, '3', 'xmonth'),
-	(30, 4, '4', 'xmonth'),
-	(31, 5, '5', 'xmonth'),
-	(32, 6, '6', 'xmonth'),
-	(33, 7, '7', 'xmonth'),
-	(34, 8, '8', 'xmonth'),
-	(35, 9, '9', 'xmonth'),
-	(36, 10, '10', 'xmonth'),
-	(37, 11, '11', 'xmonth'),
-	(38, 12, '12', 'xmonth');
 /*!40000 ALTER TABLE `jset_list` ENABLE KEYS */;
 
 
@@ -470,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `jset_table` (
   `system` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_table: ~6 rows (approximately)
 DELETE FROM `jset_table`;
@@ -499,10 +470,11 @@ DELETE FROM `jset_upload`;
 /*!40000 ALTER TABLE `jset_upload` DISABLE KEYS */;
 /*!40000 ALTER TABLE `jset_upload` ENABLE KEYS */;
 
+
 -- Dumping structure for procedure jxset.p_copy_jset_columns
 DROP PROCEDURE IF EXISTS `p_copy_jset_columns`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_copy_jset_columns`(vsource varchar(45), vtarget varchar(45))
+CREATE PROCEDURE `p_copy_jset_columns`(vsource varchar(45), vtarget varchar(45))
 BEGIN
   declare did int;
 
@@ -521,7 +493,7 @@ DELIMITER ;
 -- Dumping structure for procedure jxset.p_execute
 DROP PROCEDURE IF EXISTS `p_execute`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_execute`(vsql varchar(8000))
+CREATE PROCEDURE `p_execute`(vsql varchar(8000))
 BEGIN
 SET @s = vsql;
 PREPARE s from @s;
@@ -535,7 +507,7 @@ DELIMITER ;
 -- Dumping structure for procedure jxset.p_set_jset_semaphore
 DROP PROCEDURE IF EXISTS `p_set_jset_semaphore`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_set_jset_semaphore`(vname varchar(45), vvalue tinyint)
+CREATE PROCEDURE `p_set_jset_semaphore`(vname varchar(45), vvalue tinyint)
 BEGIN
 declare dfalg tinyint;
 declare did int;
@@ -664,69 +636,69 @@ CREATE TABLE `v_xyear` (
 DROP VIEW IF EXISTS `v_databases`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_databases`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_databases` AS select `schemata`.`SCHEMA_NAME` AS `databases` from `information_schema`.`schemata` order by `schemata`.`SCHEMA_NAME` ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_databases` AS select `schemata`.`SCHEMA_NAME` AS `databases` from `information_schema`.`schemata` order by `schemata`.`SCHEMA_NAME` ;
 
 
 -- Dumping structure for view jxset.v_jset_help
 DROP VIEW IF EXISTS `v_jset_help`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_jset_help`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_jset_help` AS select `jset_column`.`id` AS `id`,`jset_column`.`parent` AS `parent`,if((`jset_column`.`title` is not null),`jset_column`.`title`,`jset_column`.`name`) AS `field`,`jset_column`.`help` AS `help` from `jset_column` where ((isnull(`jset_column`.`hidden`) and isnull(`jset_column`.`noedit`)) or `jset_column`.`edithidden`) ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_jset_help` AS select `jset_column`.`id` AS `id`,`jset_column`.`parent` AS `parent`,if((`jset_column`.`title` is not null),`jset_column`.`title`,`jset_column`.`name`) AS `field`,`jset_column`.`help` AS `help` from `jset_column` where ((isnull(`jset_column`.`hidden`) and isnull(`jset_column`.`noedit`)) or `jset_column`.`edithidden`) ;
 
 
 -- Dumping structure for view jxset.v_jset_table
 DROP VIEW IF EXISTS `v_jset_table`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_jset_table`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_jset_table` AS select `jset_table`.`id` AS `id`,`jset_table`.`name` AS `name`,`jset_table`.`description` AS `description`,`jset_table`.`title` AS `title`,`jset_table`.`source` AS `source`,`jset_table`.`target` AS `target`,`jset_table`.`help` AS `help`,`jset_table`.`id` AS `columns`,`jset_table`.`id` AS `events` from `jset_table` ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_jset_table` AS select `jset_table`.`id` AS `id`,`jset_table`.`name` AS `name`,`jset_table`.`description` AS `description`,`jset_table`.`title` AS `title`,`jset_table`.`source` AS `source`,`jset_table`.`target` AS `target`,`jset_table`.`help` AS `help`,`jset_table`.`id` AS `columns`,`jset_table`.`id` AS `events` from `jset_table` ;
 
 
 -- Dumping structure for view jxset.v_jset_table_name
 DROP VIEW IF EXISTS `v_jset_table_name`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_jset_table_name`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_jset_table_name` AS select `jset_table`.`id` AS `id`,`jset_table`.`name` AS `name` from `jset_table` ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_jset_table_name` AS select `jset_table`.`id` AS `id`,`jset_table`.`name` AS `name` from `jset_table` ;
 
 
 -- Dumping structure for view jxset.v_list_control
 DROP VIEW IF EXISTS `v_list_control`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_list_control`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_list_control` AS select tid as id, name from jset_list where `type` = 'control' ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_list_control` AS select tid as id, name from jset_list where `type` = 'control' ;
 
 
 -- Dumping structure for view jxset.v_source
 DROP VIEW IF EXISTS `v_source`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_source`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_source` AS select `tables`.`TABLE_NAME` AS `id`,`tables`.`TABLE_NAME` AS `name` from `information_schema`.`tables` where (`tables`.`TABLE_SCHEMA` = database()) ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_source` AS select `tables`.`TABLE_NAME` AS `id`,`tables`.`TABLE_NAME` AS `name` from `information_schema`.`tables` where (`tables`.`TABLE_SCHEMA` = database()) ;
 
 
 -- Dumping structure for view jxset.v_tables
 DROP VIEW IF EXISTS `v_tables`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_tables`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_tables` AS select `tables`.`TABLE_NAME` AS `TABLE_NAME` from `information_schema`.`tables` where (`tables`.`TABLE_SCHEMA` = database()) ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_tables` AS select `tables`.`TABLE_NAME` AS `TABLE_NAME` from `information_schema`.`tables` where (`tables`.`TABLE_SCHEMA` = database()) ;
 
 
 -- Dumping structure for view jxset.v_target
 DROP VIEW IF EXISTS `v_target`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_target`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_target` AS select `tables`.`TABLE_NAME` AS `id`,`tables`.`TABLE_NAME` AS `name` from `information_schema`.`tables` where ((`tables`.`TABLE_SCHEMA` = database()) and (`tables`.`TABLE_TYPE` = 'BASE TABLE')) ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_target` AS select `tables`.`TABLE_NAME` AS `id`,`tables`.`TABLE_NAME` AS `name` from `information_schema`.`tables` where ((`tables`.`TABLE_SCHEMA` = database()) and (`tables`.`TABLE_TYPE` = 'BASE TABLE')) ;
 
 
 -- Dumping structure for view jxset.v_xmonth
 DROP VIEW IF EXISTS `v_xmonth`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_xmonth`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_xmonth` AS select `jset_list`.`tid` AS `id`,`jset_list`.`name` AS `name` from `jset_list` where (`jset_list`.`type` = _utf8'xmonth') order by `jset_list`.`tid` ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_xmonth` AS select `jset_list`.`tid` AS `id`,`jset_list`.`name` AS `name` from `jset_list` where (`jset_list`.`type` = _utf8'xmonth') order by `jset_list`.`tid` ;
 
 
 -- Dumping structure for view jxset.v_xyear
 DROP VIEW IF EXISTS `v_xyear`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_xyear`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_xyear` AS select `jset_list`.`tid` AS `id`,`jset_list`.`name` AS `name` from `jset_list` where (`jset_list`.`type` = _utf8'xyear') order by `jset_list`.`tid` ;
+CREATE ALGORITHM=UNDEFINED VIEW `v_xyear` AS select `jset_list`.`tid` AS `id`,`jset_list`.`name` AS `name` from `jset_list` where (`jset_list`.`type` = _utf8'xyear') order by `jset_list`.`tid` ;
 /*!40014 SET FOREIGN_KEY_CHECKS=1 */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
