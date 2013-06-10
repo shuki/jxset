@@ -35,7 +35,9 @@ $(function(){
 		//search_default: searchDefaults,
 	    grid: {
 			autowidth: true,
-			height: windowHeight - 70
+			height: windowHeight - 110,
+			footerrow : true,
+			userDataOnFooter : true
 	  	},
 	  	navigation:{
 			options : {

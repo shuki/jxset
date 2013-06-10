@@ -48,6 +48,7 @@
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
 			spacing: '20px',
+			caption_class: 'CaptionField',
 			load_edit_record: false,
 			pending_create: false,
 			hide_submit_row: false,
@@ -244,6 +245,8 @@
 				caption: '',
 				//toolbar : [true,'top'],
 				toppager: false,
+				footerrow : false,
+				userDataOnFooter : false, 
 				hiddengrid: false
 			},
 			navigation:{
@@ -743,7 +746,7 @@
 		},
 		
 		get_form_field: function(formid, name){
-			return $(formid).find('[name=' + name + ']');
+			return $(formid).find(':input[name=' + name + ']');
 		},
 		
 		get_form_field_label: function(formid, name){
@@ -1219,16 +1222,7 @@
 				catch (e) {
 					alert( 'column ' + obj.name + '\nobject definition ' + e.name + '\n' + e.message);
 				}
-			else
-			{
-				//alert('default');
-				//$.dump(eval(obj));
-			}
-			if(obj.name == 'client_id')
-			{
-				//alert('default: ' + obj.name);
-				//$.dump(obj);
-			}
+				
 			return obj;
 		},
 		
@@ -1341,8 +1335,8 @@
 			var options = t.p.control[col.control].formoptions ? t.p.control[col.control].formoptions : {};
 			if(col.rowpos){
 				obj.rowpos = col.rowpos;
-				obj.elmprefix = options.label_hide ? '' : (col.title ? '<label for="' + col.Field + '">' + col.title + ": </label>" : '');
-				obj.elmsuffix = '<span name="' + col.Field + '" style="display:inline-block; width:' + t.p.spacing + '"/>';
+				obj.elmprefix = options.label_hide ? '' : (col.title ? '<label class="' + t.p.caption_class + '" for="' + col.Field + '">' + col.title + ": </label>" : '');
+				obj.elmsuffix = '<span name="' + col.Field + '_span" style="display:inline-block; width:' + t.p.spacing + '"/>';
 				obj.label = col.rowlabel;
 			}else{
 				obj.rowpos = i + 1;

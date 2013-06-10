@@ -19,7 +19,7 @@ class config
 	const dbcharset = 'utf8';
 	const dbname = 'jxset';
 	const dbuser   = 'root';
-	const dbpassword = ''; 
+	const dbpassword = 'earth12'; 
 	const dbfetchStyle = PDO::FETCH_OBJ;
 	const dberrorMode = PDO::ERRMODE_EXCEPTION;
 	const limit = 100;

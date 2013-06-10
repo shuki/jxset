@@ -14,7 +14,9 @@ class sql_base
 	public $LD = "`"; // database object left delimiter
 	public $RD = "`"; // database object right delimiter
 	public $GET_GRID_ROWS = "SELECT #field_list# FROM #LD##source##RD# WHERE #where# ORDER BY #order# #direction# LIMIT #start#, #limit#";
+	public $GET_GRID_AGGREGATE = "SELECT #field_list# FROM #LD##source##RD# WHERE #where#";
 	public $GET_GRID_ROWS_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where# ORDER BY #order# #direction# LIMIT #start#, #limit#";
+	public $GET_GRID_AGGREGATE_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where#";
 	public $GET_COUNT = "SELECT COUNT(*) AS count FROM #LD##source##RD# WHERE #where#";
 	public $GET_COUNT_SQL_SOURCE = "SELECT COUNT(*) AS count FROM (#source#) a WHERE #where#";
 	
@@ -71,6 +73,7 @@ class sql_base
 		j.#LD#src#RD# as #LD#src#RD#,
 		j.#LD#help#RD# as #LD#help#RD#,
 		j.#LD#validation#RD# as #LD#validation#RD#,
+		j.#LD#aggregate#RD# as #LD#aggregate#RD#,
 		j.#LD#object#RD# as #LD#object#RD#
 		FROM information_schema.COLUMNS i
 		LEFT JOIN jset_column j

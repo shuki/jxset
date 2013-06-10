@@ -628,16 +628,13 @@
 		},
 		
 		upload_image_formatter : function(cellvalue, options, rowobject) {
-			var src = cellvalue ? cellvalue : $(this).data('settings').upload.empty_url;
-			return '<input type="image" src="' + src + '" rowId="' + options.rowId + '" height="' + $(this).data('settings').upload.row_height + '" />';
+			return cellvalue ? '<input type="image" src="' + cellvalue + '" rowId="' + options.rowId + '" height="' + $(this).data('settings').upload.row_height + '" />' :
+			'<div style="display:block; height:' + $(this).data('settings').upload.row_height + 'px"></div>';
 		},
 		
 		upload_image_unformatter: function(cellvalue, options, cellObject) {
-			
-			//alert(cellvalue);
-			//console.log($($(cellObject)[0].innerHTML).attr('src'));
-			return $($(cellObject)[0].innerHTML).attr('src');
-			//return $(cellObject.innerHTML).attr('src');
+			//alert($($(cellObject)[0].innerHTML).attr('src'));
+			return $($(cellObject)[0].innerHTML).attr('src') != undefined ? $($(cellObject)[0].innerHTML).attr('src') : '';
 		},
 		
 		select_option_exists: function(elem, value){

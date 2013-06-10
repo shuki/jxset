@@ -116,6 +116,8 @@ class jset_base
 		$result->records = $count;
 		$result->total = $pages;
 		$result->page = $page;
+		if($this->columns->aggregate)
+			$result->userdata = $this->aggregate($this->columns->aggregate);
 		
 		return $result;
 	}
@@ -566,4 +568,22 @@ class jset_base
 	    return false;
 	}
 	
+	private function aggregate($aggregate){
+		foreach($aggregate as $key => $value)
+			$fields .= $value . ' as ' . $this->sql_class->LD . $key . $this->sql_class->RD . ',';
+
+		$fields =  substr($fields, 0, -1);
+		
+		$sql = $this->table->sql ? $this->sql_class->GET_GRID_AGGREGATE_SQL_SOURCE : $this->sql_class->GET_GRID_AGGREGATE;
+		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#LD#', '#RD#'), 
+					array($fields, $this->table->source, $this->where, $this->sql_class->LD, $this->sql_class->RD), $sql);
+
+	    $this->db->query($sql);
+		$row = $this->db->fetch();
+		
+		foreach($row as $key => $value)
+			$result->$key = $value;
+		
+		return $result;
+	}
 }

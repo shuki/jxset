@@ -12,9 +12,10 @@ include_once("autoload.php");
 
 class jset_columns_base {
 	public function get($db, $table){
-		$result->source->cols = $this->columns($db, $table, $index);
+		$result->source->cols = $this->columns($db, $table, $index, $aggregate);
 		$result->target->cols = $table->target && ($table->target != $table->source) ? $this->columns_base($db, $table->target, $notused) : $result->source->cols;
 		$result->index = $index;
+		$result->aggregate = $aggregate;
 		$result->primary = $this->primary($result->target->cols);
 		$this->update_dependent_fields($result->source->cols, $result->index);
 		return $result;
@@ -33,11 +34,11 @@ class jset_columns_base {
 	}
 	
 //-----------------    internal functions ------------------------
-	protected function columns($db, $table, &$index){
+	protected function columns($db, $table, &$index, &$aggregate){
 		$sql_class = sql::create($db);
 		return $table->sql ? $this->columns_sql($db, $table, $index) :
 		(db_utils::table_exists($db, $sql_class->TABLE_COLUMN) ?
-			$this->columns_all($db, $table, $index) :
+			$this->columns_all($db, $table, $index, $aggregate) :
 			$this->columns_base($db, $table->name, $index));
 	}
 
@@ -47,10 +48,10 @@ class jset_columns_base {
 		return $this->process($db, $index);
 	}
 
-	protected function columns_all($db, $table, &$index){ 
+	protected function columns_all($db, $table, &$index, &$aggregate){ 
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->source));
-		$cols = $this->process($db, $index);
+		$cols = $this->process($db, $index, $aggregate);
 		return $this->lists($db, $cols);
 	}
 	
@@ -141,7 +142,7 @@ class jset_columns_base {
 		return $cols;
 	}
 	
-	protected function process($db, &$index){
+	protected function process($db, &$index, &$aggregate){
 		$rows = $db->fetchAll();
 		$i = 0;
 		foreach($rows as $row){
@@ -152,6 +153,7 @@ class jset_columns_base {
 			$a_row = $this->set_computed_values($db, $row);
 			$cols[] = (object) array_merge((array) $a_row, (array) $attributes, (array) $privileges);
 			$index[$row->Field] = $i++;
+			if($row->aggregate) $aggregate[$row->Field] = $row->aggregate;
 		}
 
 		return $cols;
@@ -283,5 +285,5 @@ class jset_columns_base {
 		'NEWDECIMAL' => 'decimal'
     );
     return $trans[$value] ? $trans[$value] : 'int';
-}
+	}
 }
