@@ -704,7 +704,7 @@
 			changeYear:true,
 			yearRange:'1800:2100',
 			onSelect: function(dateText, inst){
-				if($(this).attr('id').substr(0,3) == 'gs_' && $(this).attr('name') == $(this).attr('id').substr(3))
+				if($(this).attr('id').substr(0,3) == 'gs_' && $(this).attr('name').substr(0,3) != 'gs_')
 				{
 					var grid = $.jset.fn.get_grid_by_element(this);
 					grid[0].triggerToolbar();
