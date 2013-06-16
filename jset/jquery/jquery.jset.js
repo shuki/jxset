@@ -195,12 +195,14 @@
 				    }
 				},
 		        errorPlacement: function (error, element) {
-		        	console.log(element);
-		        	$(element).prop('tooltip', $(error).text())
-		        	.tooltip({items: ":input", position: {my: 'left center', at: 'right+10 center', collision: "none"}, tooltipClass:'right'})
-		            .tooltip( "option", "content", $(error).text())
-		            .tooltip('open')
-		            .unbind('mouseout mouseover mouseleave');
+		        	//to take care of wrongly displaying an error tooltip before a form is oppened.
+		        	if($(element).is(":visible")){
+			        	$(element).prop('tooltip', $(error).text())
+			        	.tooltip({items: ":input", position: {my: 'left center', at: 'right+10 center', collision: "none"}, tooltipClass:'right'})
+			            .tooltip( "option", "content", $(error).text())
+			            .tooltip('open')
+			            .unbind('mouseout mouseover mouseleave');
+		        	}
 		        },
 		        success: function (label, element) {
 		        	fn.clear_tooltip(element);
@@ -395,7 +397,7 @@
 		},
 		
 		beforeShowForm: function(formid){
-			fn.clear_form_tooltips(formid);
+			//fn.clear_form_tooltips(formid);
 
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
