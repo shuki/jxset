@@ -191,11 +191,21 @@
 				invalidHandler: function(form, validator) {
 				    var errors = validator.numberOfInvalids();
 				    if (errors) {
-				        //alert(validator.errorList[0].message);  //Only show first invalid rule message!!!
 				        validator.errorList[0].element.focus(); //Set Focus
 				    }
-				}
-				//errorClass: 'ui-state-error',
+				},
+		        errorPlacement: function (error, element) {
+		        	console.log(element);
+		        	$(element).prop('tooltip', $(error).text())
+		        	.tooltip({items: ":input", position: {my: 'left center', at: 'right+10 center', collision: "none"}, tooltipClass:'right'})
+		            .tooltip( "option", "content", $(error).text())
+		            .tooltip('open')
+		            .unbind('mouseout mouseover mouseleave');
+		        },
+		        success: function (label, element) {
+		        	fn.clear_tooltip(element);
+		        }				
+		        //errorClass: 'ui-state-error',
 				/*messages: {
 			    	integer_field : "Please specify your name"
 				},*/
@@ -385,6 +395,8 @@
 		},
 		
 		beforeShowForm: function(formid){
+			fn.clear_form_tooltips(formid);
+
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
@@ -420,6 +432,14 @@
 			}
 			if($.isFunction(grid.data('settings').afterShowForm))
 				grid.data('settings').afterShowForm(formid);			
+		},
+		
+		onclickPgButtons : function (whichbutton, formid, rowid){
+			var grid = $(this);
+			fn.clear_form_tooltips(formid);
+
+			if($.isFunction(grid.data('settings').onclickPgButtons))
+				grid.data('settings').onclickPgButtons(whichbutton, formid, rowid);
 		},
 		
 		afterclickPgButtons : function(whichbutton, formid, rowid){
@@ -530,6 +550,7 @@
 		},
 		
 		onClose: function(formid){
+			fn.clear_form_tooltips(formid);
 		}
 	};
 	
@@ -1505,6 +1526,19 @@
 					}
 				}, 'json');
 			}
+		},
+		
+		clear_tooltip: function(element){
+        	$(element).removeProp('tooltip')
+            .tooltip('close');
+		},
+		
+		clear_form_tooltips: function(formid){
+			var list = $(formid).find(':input');
+			$.each(list, function(i, e){
+				if($(e).prop('tooltip'))
+					fn.clear_tooltip(e);
+			});
 		}
 	};
 })(jQuery);
