@@ -150,6 +150,28 @@
 			return $.jset.fn.unformat_date(arr[0]) + ' ' +  arr[1];
 		},
 
+		format_time: function (value, minutes, seconds){
+			value = $.trim(value);
+			if(value == '') return '';
+
+			var arr = value.split(':');
+			if (arr.length == 1) return value;
+
+			if(minutes === false) return arr[0];
+			if(seconds !== true) return arr[0] + ':' + arr[1];
+			return value;
+		},
+
+		unformat_time: function (value){
+			value = $.trim(value);
+			if(value == '') return '';
+
+			var arr = value.split(':');
+			if(arr.length == 1) return value + ':00';
+
+			return value;
+		},
+
 
 		unformat_checkbox: function (cellvalue, options, cellobject){
 			return cellvalue;
@@ -1810,6 +1832,9 @@
 			time:{
 				align:'right',
 				edittype:'text',
+				formatter:'timeFmatter',
+				formatoptions: {seconds:false, minutes:true},
+				unformat: $.jset.fn.unformat_time,
 				editoptions:{
 					size: $.jset.fn.colsize,
 					maxlength: function(col){

@@ -201,7 +201,8 @@
 			        	.tooltip({items: ":input", position: {my: 'left center', at: 'right+10 center', collision: "none"}, tooltipClass:'right'})
 			            .tooltip( "option", "content", $(error).text())
 			            .tooltip('open')
-			            .unbind('mouseout mouseover mouseleave');
+			            .unbind('mouseleave');
+			           // .unbind('mouseout mouseover mouseleave');
 		        	}
 		        },
 		        success: function (label, element) {

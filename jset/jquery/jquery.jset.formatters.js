@@ -135,6 +135,11 @@
 			return $.jset.fn.format_datetime(cellvalue);
 		},
 		
+		timeFmatter: function(cellvalue, options, rowdata){
+			var formatoptions = options.colModel.formatoptions;
+			return (formatoptions != undefined) ? $.jset.fn.format_time(cellvalue, formatoptions.minutes, formatoptions.seconds) : $.jset.fn.format_time(cellvalue);
+		},
+		
 		plainFmatter : function(cellvalue, options, rowdata) {
 			return $('<div>' + cellvalue + '</div>').text().replace(/\n/g, ' ');
 		},
