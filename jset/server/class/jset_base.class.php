@@ -93,13 +93,13 @@ class jset_base
 		$start = $limit * $page - $limit;
 		$start = ($start < 0) ? 0 : $start;
 		$end = $start + $limit;
-		$order = !$this->settings->_order_by_ ? $this->settings->_order_ : $this->sql_class->LD . $this->settings->_order_by_ . $this->sql_class->RD;
+		$order = $this->order();
 		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
 		
 		$sql = $this->table->sql ? $this->sql_class->GET_GRID_ROWS_SQL_SOURCE : $this->sql_class->GET_GRID_ROWS;
 		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#start#', '#limit#', '#start1#', '#end#', '#LD#', '#RD#'), 
 					array($this->field_list(), $this->table->source, $this->where, $order, $direction, $start, $limit, $start + 1, $start + $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);
-			
+
 	    $this->db->query($sql);
 	    $primary = $this->columns->primary;
 		$i=0;
@@ -132,7 +132,7 @@ class jset_base
 		$start = $limit * $page - $limit;
 		$start = ($start < 0) ? 0 : $start;
 		$end = $start + $limit;
-		$order = !$this->settings->_order_by_ ? $this->settings->_order_ : $this->sql_class->LD . $this->settings->_order_by_ . $this->sql_class->RD;
+		$order = $this->order();
 		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
 		
 		$sql = $this->table->sql ? $this->sql_class->GET_GRID_ROWS_SQL_SOURCE : $this->sql_class->GET_GRID_ROWS;
@@ -585,5 +585,17 @@ class jset_base
 			$result->$key = $value;
 		
 		return $result;
+	}
+	
+	private function order(){
+		if(!$this->settings->_order_by_)
+			return $this->settings->_order_;
+		
+		foreach(explode(',', $this->settings->_order_by_) as $order_pair){
+			$pair = explode(' ', trim($order_pair));
+			$result[] = $this->sql_class->LD . $pair[0] . $this->sql_class->RD . (isset($pair[1]) ? ' ' . $pair[1] : '');
+		}
+		
+		return implode(',', $result);
 	}
 }

@@ -254,7 +254,7 @@
 				altclass: 'altclass',
 				viewrecords: true,
 				sortorder: 'asc',
-				//multiSort: true,
+				multiSort: true,
 				caption: '',
 				//toolbar : [true,'top'],
 				toppager: false,
