@@ -62,6 +62,7 @@ EOT;
 <script src="{$dir_pre}jset/jqGrid/plugins/ui.multiselect.js" type="text/javascript"></script>
 
 <script src="{$dir_pre}jset/i18n/grid.locale-en.js" type="text/javascript"></script>
+<!--script src="{$dir_pre}jset/jqGrid/js/i18n/grid.locale-en.js" type="text/javascript"></script-->
 <script src="{$dir_pre}jset/jqGrid/js/grid.base.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/js/grid.common.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/js/grid.formedit.js" type="text/javascript"></script>

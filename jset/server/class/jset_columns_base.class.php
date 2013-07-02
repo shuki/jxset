@@ -142,7 +142,7 @@ class jset_columns_base {
 		return $cols;
 	}
 	
-	protected function process($db, &$index, &$aggregate){
+	protected function process($db, &$index, &$aggregate = null){
 		$rows = $db->fetchAll();
 		$i = 0;
 		foreach($rows as $row){
