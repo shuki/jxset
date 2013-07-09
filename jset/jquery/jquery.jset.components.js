@@ -36,6 +36,10 @@
 			$(elem).attr('disabled', true);
 		},
 		
+		default_sopt: function(){
+			return ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en'];
+		},
+		
 		prepend_empty_select_option: function(elem){
 			$(elem).prepend('<option value=""></option>');
 			$(elem).val('');
@@ -117,8 +121,9 @@
 			if(value == '') return '';
 			
 			var arr = value.split('-');
-			if (arr.length != 3) return value;
-			return arr[2] + '/' + arr[1] + '/' + arr[0];
+			if (arr.length == 1) return value;
+			//return arr[2] + '/' + arr[1] + '/' + arr[0];
+			return (arr[2] != undefined ? arr[2] + '/' : '') + (arr[1] ? arr[1] : '') + '/' + arr[0];
 		},
 
 		unformat_date: function (value){
@@ -126,8 +131,8 @@
 			if(value == '') return '';
 			
 			var arr = value.split('/');
-			if (arr.length != 3) return value;
-			return arr[2] + '-' + arr[1] + '-' + arr[0];
+			if (arr.length == 1) return value;
+			return (arr[2] != undefined ? arr[2] + '-' : '') + (arr[1] ? ('0' + arr[1]).substr(-2) : '') + '-' + ('0' + arr[0]).substr(-2);
 		},
 
 		format_datetime: function (value){
@@ -177,6 +182,35 @@
 			return cellvalue;
 		},
 
+		custom_test_element: function(value, options){
+			var elem = $('<input type="text">');
+			elem.val(value);
+			elem.addClass('custom_test');
+			elem.attr('validate', options.validate);
+			return elem;
+		},
+		
+		custom_test_value: function(elem, action, value){
+			if(action == 'get')
+				return $(elem).val();
+			else if(action == 'set')
+				$(elem).val(value);
+		},
+		
+		custom_date_element: function(value, options){
+			return $('<input type="text">')
+			.val($.jset.fn.format_date(value))
+			.attr('validate', options.validate);
+
+		},
+		
+		custom_date_value: function(elem, action, value){
+			if(action == 'get')
+				return $.jset.fn.unformat_date($(elem).val());
+			else if(action == 'set')
+				$(elem).val($.jset.fn.format_date(value));
+		},
+		
 		upload_element: function(value, options){
 			var elem = $("<input type='image' />").attr('src', value ? value : options.upload.empty_url).attr('height', options.upload.height);
 			elem.attr('validate', options.validate);
@@ -1012,10 +1046,8 @@
 	        					$(this).siblings('input').val(ui.item.id);
 	        				})
 	        				.focusout(function(){
-	        					if(!$(this).val()){
+	        					if(!$(this).val())
 	        						$this.val('');
-	        						console.log($this.val());
-	        					}
 	        				});
 	        				/*.on("autocompletechange.jset", function(event, ui){
 	        					$.dump(ui.item.id);
@@ -1085,6 +1117,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					sopt:['eq','ne'],					
 					value: {0:'No', 1:'Yes'},
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
@@ -1153,6 +1186,44 @@
 				searchoptions:{
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
+					}
+				}
+			},
+			custom_test:{
+				align: 'left',
+				edittype:'custom',
+				stype: 'custom',
+				editoptions:{
+					defaultValue: function(col){
+						return col.default_value;
+					}
+				},
+				searchoptions:{
+					custom_element: $.jset.fn.custom_test_element,
+					custom_value: $.jset.fn.custom_test_value
+				}
+			},
+			custom_date:{
+				align: 'right',
+				formatter:'date',
+				edittype:'custom',
+				stype: 'custom',
+				editoptions:{
+					defaultValue: function(col){
+						return col.default_value;
+					}
+				},
+				beforeShowForm: function(formid, id){
+					var elem = $(formid).find('#' + id);
+					if(elem.length > 0)
+						$.jset.fn.dateInit(elem);
+				},
+				searchoptions:{
+					custom_element: $.jset.fn.custom_date_element,
+					custom_value: $.jset.fn.custom_date_value,
+					sopt:['cn','nc','eq','ne','lt','le','gt','ge'],					
+					dataInit: function(col){
+						return $.jset.fn.dateInit;
 					}
 				}
 			},
@@ -1344,7 +1415,8 @@
 				searchoptions:{
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
-					}
+					},
+					sopt:['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			'intexact':{
@@ -1547,6 +1619,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					sopt:['eq','ne','lt','le','gt','ge'],					
 					dataInit: function(col){
 						return $.jset.fn.select_searchoptions_dataInit;
 					}	
@@ -1625,6 +1698,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
 					}	
@@ -1682,6 +1756,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt:['eq','bw','bn','cn','nc','ew','en']
 				}
 			},
 			plain:{

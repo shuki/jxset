@@ -54,7 +54,17 @@
 			hide_submit_row: false,
 			filterToolbar:{
 				hide: false,
-				navButtonAdd: false
+				navButtonAdd: false,
+				options: {
+					searchOperators: true,
+					searchOnEnter: false,
+					stringResult: true,
+					defaultSearch: 'cn',
+					beforeSearch: function(){
+						var $t = $(this);
+						var postData = $t.jqGrid('getGridParam','postData');
+					}
+				}
 			},
 			help:{
 				hide: false,
@@ -403,7 +413,7 @@
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
-					$.jset.defaults.control[this.control].beforeShowForm(formid, this.Field);
+					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
 			});			
 	
 			fn.set_help_tips(grid, formid);
@@ -576,10 +586,16 @@
 					}
 		
 					if ($t.data('settings').search_default.length > 0) {
+						$t.data('init', false);
+						//setTimeout(function(){console.log('about to trigger toolbar'); $t[0].triggerToolbar();}, 1000);
+						return false;
+						//return;
+						
 					  	$.each($t.data('settings').search_default, function(){
-					  		post[this.name] = this.value;
+					  		//since using filterToolbar stringResult - dont post search values
+					  		//post[this.name] = this.value;
 					  	});
-					  	post[$t.data('settings').grid.prmNames.search] = true;
+					  	//post[$t.data('settings').grid.prmNames.search] = true;
 				  }
 				} 
 				
@@ -609,6 +625,7 @@
 		
 			loadComplete: function(data){
 				var $t = $(this);
+
 				if ($t.data('init')) {
 					$t.data('init', false);
 					
@@ -617,16 +634,6 @@
 					/*else
 						$t.jqGrid('setGridHeight', $t.data('settings').grid.height - 23);*/
 						
-					if($t.data('settings').detail){
-						$.each($t.data('settings').detail, function(){
-							if(!$t.data('settings').pending_create || ($t.data('settings').pending_create && fn.get_elem(this.elem).is(':visible')))
-								fn.get_elem(this.elem).jset($.extend(true, {master: $t}, this.settings));
-						});
-					}
-					
-					if($t.data('settings').master){
-						$t.data('loaded', true);
-					}
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
@@ -634,6 +641,19 @@
 						$t.data('settings').loadCompleteInit(data);
 				}
 				
+				if($t.data('settings').detail){
+					$.each($t.data('settings').detail, function(){
+						if(!$t.data('settings').pending_create || ($t.data('settings').pending_create && fn.get_elem(this.elem).is(':visible'))){
+							if(!fn.get_elem(this.elem).jset('defined'))
+								fn.get_elem(this.elem).jset($.extend(true, {master: $t}, this.settings));
+						}
+					});
+				}
+				
+				if($t.data('settings').master){
+					$t.data('loaded', true);
+				}
+
 				if ($t.jqGrid('getGridParam', 'records') != 0) {
 					if($t.data('lastID')){
 						$t.jqGrid('setSelection', $t.data('lastID'));
@@ -1179,12 +1199,16 @@
 		},
 		
 		filter_toolbar_init: function($t, grid_container){
-			$t.jqGrid('filterToolbar', {searchOnEnter: false});
-			//$t.jqGrid('filterToolbar'); //test creaing a second filtertoolbar.
+			$t.jqGrid('filterToolbar', $t.data('settings').filterToolbar.options);
 			
 			if ($t.data('settings').search_default.length > 0) {
 				$.each($t.data('settings').search_default, function(i){
-					$('#gs_' + this.name, grid_container).val(this.value);
+					var acolModel = $t.data('settings').grid.colModel[$t.data('index')[this.name]];
+					var $elem = $('#gs_' + acolModel.name, grid_container);
+					if(acolModel.stype === 'custom' && acolModel.searchoptions != undefined && $.isFunction(acolModel.searchoptions.custom_value))
+						acolModel.searchoptions.custom_value.call($t, $elem, "set", this.value);
+					else
+						$elem.val(this.value);
 				});
 				$t[0].triggerToolbar();
 			}
@@ -1339,11 +1363,20 @@
 			if(t.p.control[col.control]){
 				if(t.p.control[col.control].searchoptions){
 					$.each(t.p.control[col.control].searchoptions, function(key, value){
-						if($.isFunction(value)) value = value(col);
-						if(key === 'value')
-							obj.value = col.values ? $.extend({}, value, col.values) : value;
-						else
+						if(key == 'custom_element' || key == 'custom_value'){
 							obj[key] = value;
+						}else{
+							if($.isFunction(value)) value = value(col);
+							if(key === 'value'){
+								if(col.values && col.values.error !== undefined)
+									alert('critical error in select options of search field: ' +  col.Field + '\n' + col.values.error.message + '\n' + col.values.error.dump);
+								else
+									//obj.value = col.values ? col.values : value;
+									obj.value = col.values ? $.extend({}, value, col.values) : value;
+							}
+							else
+								obj[key] = value;
+						}
 					});
 				}
 			}

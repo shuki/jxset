@@ -389,9 +389,9 @@ class jset_base
 	{
 		if($this->settings->_search_ == 'true')
 		{
-			if(isset($this->settings->_filters_))
+			if(isset($this->settings->filters))
 			{
-				$searchstr = $this->strip($this->settings->_filters_);
+				$searchstr = $this->strip($this->settings->filters);
 				$jsona = json_decode($searchstr,true);
 				$filters =  $this->getStringForGroup($jsona);
 			}
@@ -510,7 +510,7 @@ class jset_base
 					if (strlen($s) > 1) {
 						$s .= " ".$group['groupOp']." ";
 					}
-					$field = $val['field'];
+					$field = $this->sql_class->LD . $val['field'] . $this->sql_class->RD;
 					$op = $val['op'];
 					$v = $val['data'];
 					if( $op ) {
@@ -551,7 +551,8 @@ class jset_base
 			//return array("",$prm); // ignore groups that don't have rules
 			return "";
 		} else {
-			return $s;;
+			//die($s);
+			return $s;
 		}
 	}
 
