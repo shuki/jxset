@@ -1391,7 +1391,7 @@
 		
 		formoptions: function(col, i, t){
 			var obj = {};
-			var options = t.p.control[col.control].formoptions ? t.p.control[col.control].formoptions : {};
+			var options = t.p.control[col.control] && t.p.control[col.control].formoptions ? t.p.control[col.control].formoptions : {};
 			if(col.rowpos){
 				obj.rowpos = col.rowpos;
 				obj.elmprefix = options.label_hide ? '' : (col.title ? '<label class="' + t.p.caption_class + '" for="' + col.Field + '">' + col.title + ": </label>" : '');
