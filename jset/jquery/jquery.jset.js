@@ -52,11 +52,12 @@
 			load_edit_record: false,
 			pending_create: false,
 			hide_submit_row: false,
+			clearSearch: false,
 			filterToolbar:{
 				hide: false,
 				navButtonAdd: false,
 				options: {
-					searchOperators: true,
+					searchOperators: false,
 					searchOnEnter: false,
 					stringResult: true,
 					defaultSearch: 'cn',
@@ -418,7 +419,7 @@
 	
 			fn.set_help_tips(grid, formid);
 			
-			$('select').addClass('inputfilter FormElement ui-widget-content ui-corner-all');
+			$('select,input').addClass('inputfilter FormElement ui-widget-content ui-corner-all');
 			
 			if (grid.data('settings').hide_submit_row) 
 				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
@@ -587,9 +588,7 @@
 		
 					if ($t.data('settings').search_default.length > 0) {
 						$t.data('init', false);
-						//setTimeout(function(){console.log('about to trigger toolbar'); $t[0].triggerToolbar();}, 1000);
 						return false;
-						//return;
 						
 					  	$.each($t.data('settings').search_default, function(){
 					  		//since using filterToolbar stringResult - dont post search values
@@ -1380,6 +1379,9 @@
 					});
 				}
 			}
+			
+			if(t.p.clearSearch === false)
+				obj.clearSearch = false;
 			return obj;
 		},
 

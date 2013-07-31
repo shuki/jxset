@@ -363,6 +363,19 @@
 				$(elem).val(value);
 		},
 		
+		grid_element: function(value, options){
+			var elem = $('<TABLE></TABLE>');
+			return elem;
+		},
+		
+		grid_frame_value: function(elem, action, value){
+			if(action == 'get'){
+				return '';
+			}
+			else if(action == 'set'){
+			}
+		},
+		
 		grid_frame_element: function(value, options){
 			var elem = $('<IFRAME></IFRAME>');
 			$(elem).attr($.jset.defaults.grid_frame.iframe);
@@ -477,8 +490,9 @@
 		multicheckbox_value: function(elem, action, value){
 			if(action == 'get'){
 				var v = [];
-				$.each($(elem), function(i){
-					if($(this).is('input') && $(this).is(':checked'))
+				
+				$.each($(elem).closest('span').children('input.multicheckbox'), function(i){
+					if($(this).is(':checked'))
 						v.push($(this).val());
 				});
 				return v.length > 0 ? v.join(',') : '';
@@ -486,8 +500,8 @@
 			else if(action == 'set'){
 				var v = value.split(',');
 				
-				$.each($(elem), function(i){
-					if($(this).is('input') && v.indexOf($(this).val()) != -1)
+				$.each($(elem).closest('span').children('input.multicheckbox'), function(i){
+					if(v.indexOf($(this).val()) != -1)
 						$(this).attr('checked', true);
 					else
 						$(this).attr('checked', false);
