@@ -199,6 +199,7 @@
 			},
 			validate:{
 				meta: 'validate',
+				tooltip: {items: ":input", position: {my: 'right center', at: 'right+30, top-10 center', collision: "none"}, tooltipClass:'top'},
 				invalidHandler: function(form, validator) {
 				    var errors = validator.numberOfInvalids();
 				    if (errors) {
@@ -206,14 +207,14 @@
 				    }
 				},
 		        errorPlacement: function (error, element) {
+		        	var grid = $.jset.fn.get_grid_by_formid($(element).closest('form'));
 		        	//to take care of wrongly displaying an error tooltip before a form is oppened.
 		        	if($(element).is(":visible")){
 			        	$(element).prop('tooltip', $(error).text())
-			        	.tooltip({items: ":input", position: {my: 'left center', at: 'right+10 center', collision: "none"}, tooltipClass:'right'})
+			        	.tooltip(grid.data('settings').validate.tooltip)
 			            .tooltip( "option", "content", $(error).text())
 			            .tooltip('open')
 			            .unbind('mouseleave');
-			           // .unbind('mouseout mouseover mouseleave');
 		        	}
 		        },
 		        success: function (label, element) {

@@ -102,10 +102,11 @@
     border: none;
     padding: 0;
     opacity: 1;
+    font-size: 1em;
 }
 .ui-tooltip-content {
     position: relative;
-    padding: 0.2em;
+    padding: 0.1em;
 }
 .ui-tooltip-content::after {
     content: '';
@@ -127,8 +128,8 @@
     border-width: 10px 0 10px 10px;
 }
 .top .ui-tooltip-content::after {
-    bottom: -10px;
-    left: 72px;
+    bottom: -7px;
+    left: 40px;
     border-color: red transparent;
     border-width: 10px 10px 0;    
 }
