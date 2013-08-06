@@ -748,6 +748,7 @@
 		field_size:10,
 		autocomplete: {
 	        minLength: 2,
+	        autoFocus: true,
 	        source: function( request, response){
 	            $.ajax({
 	                type: 'GET',
@@ -767,7 +768,19 @@
 						alert(message);
 	                }
 	            });
-	        }
+	        },
+            response: function(event, ui){
+            	if(ui.content.length == 0)
+            		$(this).data('empty', true);
+            	else
+            	{
+            		$(this).removeData('empty');
+            		$(this).data('firstitem', ui.content[0]);
+            	}
+            },
+            select: function(event, ui){
+            	$(this).removeData('firstitem');
+            }
 		},
 		datepicker: {
 			dateFormat:'dd/mm/yy',
@@ -1060,8 +1073,46 @@
 	        					$(this).siblings('input').val(ui.item.id);
 	        				})
 	        				.focusout(function(){
-	        					if(!$(this).val())
-	        						$this.val('');
+	        					if($(this).val().length < $(this).autocomplete( "option", "minLength" ))
+	        					{
+	        						$(this).val('');
+	        						if($this.val() != '')
+	        						{
+	        							var ui = {};
+	        							ui.item = {
+	        								id: '',
+	        								value: ''
+	        							};
+	        							$(this).trigger("autocompleteselect", [ui]);
+	        						}
+	        					}
+	        					else if($(this).val() == '' && $this.val() != '')
+	        					{
+        							var ui = {};
+        							ui.item = {
+        								id: '',
+        								value: ''
+        							};
+	        						$(this).trigger("autocompleteselect", [ui]);
+	        					}
+	        					else if($(this).data('empty'))
+	        					{
+	        						$(this).val('');
+        							var ui = {};
+        							ui.item = {
+        								id: '',
+        								value: ''
+        							};
+	        						$(this).trigger("autocompleteselect", [ui]);
+	        					} 
+	        					else if($(this).data('firstitem'))
+	        					{
+        							$(this).val($(this).data('firstitem').value);
+        							var ui = {};
+        							ui.item = $(this).data('firstitem');
+        							$(this).removeData('firstitem');
+        							$(this).trigger("autocompleteselect", [ui]);
+	        					} 
 	        				});
 	        				/*.on("autocompletechange.jset", function(event, ui){
 	        					$.dump(ui.item.id);

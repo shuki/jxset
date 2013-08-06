@@ -28,4 +28,7 @@ class config
 	
 	const mysqldump_prefix = '';
 	const errorLogFile = 'log/error_log_file.txt';
+	const export_dir = 'c:/TEMP/';
+	const export_charset = 'hebrew';
+	const export_charset_windows = 'Windows-1255';
 }

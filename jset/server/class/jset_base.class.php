@@ -266,6 +266,48 @@ class jset_base
 	private function export()
 	{
 		foreach($this->columns->source->cols as $col)
+			if($col->hidden != 1 || $col->edithidden == 1)
+			{
+				$field = $col->Field;
+				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
+				$fields .= $field . ",";
+				$field_names .= $name . ",";
+				$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
+			}
+
+		$fields =  substr($fields, 0, -1);
+		$field_names =  substr($field_names, 0, -1);
+  		$filters = substr($filters, 0, -1);
+  	
+		$outfile = config::export_dir . uniqid() . '.csv';
+		$charset = config::export_charset;
+		$order = $this->order();
+		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
+		$field_list = $this->coalesce($this->field_list($fields));
+		$sql = $this->sql_class->EXPORT;
+		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#outfile#', '#charset#', '#LD#', '#RD#'), 
+					array($field_list, $this->table->source, $this->where, $order, $direction, $outfile, $charset, $this->sql_class->LD, $this->sql_class->RD), $sql);	
+	    $this->db->query($sql);
+
+		$contents = file_get_contents($outfile);
+		unlink($outfile);
+		
+		header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
+		header('Content-type: text/csv');
+		
+		//echo "Date: " . date("d/m/Y G:i:s") . "\n";
+		//echo "Source: " . $this->table->source . "\n";
+		//echo "Filters: (on next line, above field names)\n";
+		//echo $filters . "\n";
+		//echo str_replace(",", ",", $fields) . "\n";
+		echo str_replace(",", ",", $field_names) . "\n";
+		echo $contents;
+		return '';
+	}
+/*	
+	private function export()
+	{
+		foreach($this->columns->source->cols as $col)
 			if($col->hidden != 1)
 			{
 				$field = $col->Field;
@@ -300,8 +342,8 @@ class jset_base
 		echo $output;
 		return '';
 	}
-	
-//-----------------    internal functions ------------------------
+*/	
+	//-----------------    internal functions ------------------------
 	private function request_check($request)
 	{
 		if(empty($request->_methods_)) die('ERROR: no methods has been specified');
@@ -453,6 +495,15 @@ class jset_base
 		
 		foreach($this->columns->index as $key=>$value)
 			$result .= $this->sql_class->LD . $key . $this->sql_class->RD . ',';
+			
+		return substr($result, 0, -1);
+	}
+	
+	protected function coalesce($fields)
+	{
+		$fields_array = explode(',', $fields);
+		foreach($fields_array as $key=>$value)
+			$result .= 'COALESCE(' . $value . ', \'\') AS ' . $value . ',';
 			
 		return substr($result, 0, -1);
 	}
