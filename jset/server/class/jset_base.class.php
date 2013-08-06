@@ -265,6 +265,27 @@ class jset_base
 	
 	private function export()
 	{
+		$parts = explode(jset_autoload::get_header('Host'), jset_autoload::get_header('Referer'), 2);
+		if(!isset($parts[1]))
+		{
+			$result->error->message =  "error: could not figure out the export directory.<br/>" .
+			"Host: " . jset_autoload::get_header('Host') . '<br/>' .
+			"Referer: " . jset_autoload::get_header('Referer') . '<br/>';
+			$result->error = $result->error->message;
+			$result->success = false;
+			return $result;
+		}
+
+		$export_dir = $_SERVER['DOCUMENT_ROOT'] . $parts[1] . config::export_dir;
+		if (!is_dir($export_dir))
+			if(!mkdir($export_dir))
+			{
+				$result->error->message = "unable to create export directory: $export_dir";
+				$result->error = $result->error->message;
+				$result->success = false;
+				return $result;
+			}
+		
 		foreach($this->columns->source->cols as $col)
 			if($col->hidden != 1 || $col->edithidden == 1)
 			{
@@ -279,7 +300,7 @@ class jset_base
 		$field_names =  substr($field_names, 0, -1);
   		$filters = substr($filters, 0, -1);
   	
-		$outfile = config::export_dir . uniqid() . '.csv';
+		$outfile = $export_dir . uniqid() . '.csv';
 		$charset = config::export_charset;
 		$order = $this->order();
 		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
@@ -295,54 +316,12 @@ class jset_base
 		header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
 		header('Content-type: text/csv');
 		
-		//echo "Date: " . date("d/m/Y G:i:s") . "\n";
-		//echo "Source: " . $this->table->source . "\n";
-		//echo "Filters: (on next line, above field names)\n";
 		//echo $filters . "\n";
 		//echo str_replace(",", ",", $fields) . "\n";
 		echo str_replace(",", ",", $field_names) . "\n";
 		echo $contents;
 		return '';
 	}
-/*	
-	private function export()
-	{
-		foreach($this->columns->source->cols as $col)
-			if($col->hidden != 1)
-			{
-				$field = $col->Field;
-				$name = $col->title ? $col->title : ($col->Comment ? $col->Comment : $col->Field);
-				$fields .= $field . ",";
-				$field_names .= $name . ",";
-				$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
-			}
-
-		$fields =  substr($fields, 0, -1);
-		$field_names =  substr($field_names, 0, -1);
-  		$filters = substr($filters, 0, -1);
-  	
-		$data = $this->pure_rows($this->field_list($fields));
-		foreach($data as $row){
-			foreach($row as $key => $value)
-				$line .= '"'. str_replace('"', '""', $value) . '",';
-
-			$output .= substr($line, 0, -1) . "\n";
-			$line = '';
-		}
-		
-		header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
-		header('Content-type: text/csv');
-		
-		//echo "Date: " . date("d/m/Y G:i:s") . "\n";
-		//echo "Source: " . $this->table->source . "\n";
-		//echo "Filters: (on next line, above field names)\n";
-		echo $filters . "\n";
-		//echo str_replace(",", ",", $fields) . "\n";
-		echo str_replace(",", ",", $field_names) . "\n";
-		echo $output;
-		return '';
-	}
-*/	
 	//-----------------    internal functions ------------------------
 	private function request_check($request)
 	{

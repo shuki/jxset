@@ -18,7 +18,7 @@ function process($files, $post){
 	
 	if($files['userfile']['size'] > $request->max){
 		$result->error->message = 'file is too big';
-		$result->error = 'file is too big';
+		$result->error = $result->error->message;
 		$result->success = false;
 		return $result;
 	}
@@ -39,7 +39,7 @@ function process($files, $post){
 		if(!mkdir($upload_dir))
 		{
 			$result->error->message = "unable to create upload directory: $upload_dir";
-			$result->error = "unable to create upload directory: $upload_dir";
+			$result->error = $result->error->message;
 			$result->success = false;
 			return $result;
 		}
@@ -47,7 +47,7 @@ function process($files, $post){
 	if(!move_uploaded_file($files['userfile']['tmp_name'], $upload_path))
 	{
 		$result->error->message = "unable to move uploaded file to upload path: $upload_path";
-		$result->error = "unable to move uploaded file to upload path: $upload_path";
+		$result->error = $result->error->message;
 		$result->success = false;
 		return $result;
 	}
@@ -68,7 +68,7 @@ function process($files, $post){
 		if(!mkdir($target_dir))
 		{
 			$result->error->message = "unable to create target directory: $target_dir";
-			$result->error = "unable to create target directory: $target_dir";
+			$result->error = $result->error->message;
 			$result->success = false;
 			return $result;
 		}
@@ -78,7 +78,7 @@ function process($files, $post){
 	if(!copy($upload_path, $target_path))
 	{
 		$result->error->message = "unable to copy uploaded file to target path: $target_path";
-		$result->error = "unable to copy uploaded file to target path: $target_path";
+		$result->error = $result->error->message;
 		$result->success = false;
 		return $result;
 	}
