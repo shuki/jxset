@@ -276,7 +276,12 @@ class jset_base
 			return $result;
 		}
 
-		$export_dir = $_SERVER['DOCUMENT_ROOT'] . $parts[1] . config::export_dir;
+		$a = explode('/', $parts[1]);
+
+		if($a[count($a)-1])
+			$a[count($a)-1] = '';
+		$target_dir = implode('/', $a);
+		$export_dir = $_SERVER['DOCUMENT_ROOT'] . $target_dir . config::export_dir;
 		if (!is_dir($export_dir))
 			if(!mkdir($export_dir))
 			{
@@ -300,15 +305,18 @@ class jset_base
 		$field_names =  substr($field_names, 0, -1);
   		$filters = substr($filters, 0, -1);
   	
-		$outfile = $export_dir . uniqid() . '.csv';
+		$outfile = $export_dir . uniqid('ex') . '.csv';
 		$charset = config::export_charset;
 		$order = $this->order();
 		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
 		$field_list = $this->coalesce($this->field_list($fields));
-		$sql = $this->sql_class->EXPORT;
+		$sql = $this->table->sql ? $this->sql_class->EXPORT_SQL_SOURCE : $this->sql_class->EXPORT;
+		//$sql = $this->sql_class->EXPORT;
 		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#outfile#', '#charset#', '#LD#', '#RD#'), 
 					array($field_list, $this->table->source, $this->where, $order, $direction, $outfile, $charset, $this->sql_class->LD, $this->sql_class->RD), $sql);	
-	    $this->db->query($sql);
+		
+	    $result = $this->db->query($sql);
+		//var_dump($result);
 
 		$contents = file_get_contents($outfile);
 		unlink($outfile);
