@@ -21,6 +21,8 @@ class sql_base
 	public $GET_COUNT_SQL_SOURCE = "SELECT COUNT(*) AS count FROM (#source#) a WHERE #where#";
 	public $EXPORT = "SELECT #field_list# FROM #LD##source##RD# WHERE #where# ORDER BY #order# #direction# INTO OUTFILE '#outfile#' CHARACTER SET #charset# FIELDS TERMINATED BY ',' ESCAPED BY '\\\\' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'";
 	public $EXPORT_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where# ORDER BY #order# #direction# INTO OUTFILE '#outfile#' CHARACTER SET #charset# FIELDS TERMINATED BY ',' ESCAPED BY '\\\\' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'";
+	public $EXPORT_GRID_ROWS = "SELECT #field_list# FROM #LD##source##RD# WHERE #where# ORDER BY #order# #direction# LIMIT #limit#";
+	public $EXPORT_GRID_ROWS_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where# ORDER BY #order# #direction# LIMIT #limit#";
 	
 	public $TABLE_TABLE = "jset_table";
 	public $LOG_TABLE_PREFIX = 'jset_log_';

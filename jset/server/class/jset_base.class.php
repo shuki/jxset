@@ -262,7 +262,7 @@ class jset_base
 		$ret = exec(config::mysqldump_prefix . 'mysqldump.exe --user=' . $this->db->user() . ' --password=' . $this->db->password() . ' --complete-insert --no-create-info --skip-add-drop-table --skip-comments --skip-add-locks --skip-disable-keys --skip-add-locks --skip-set-charset --skip-tz-utc --where="id=' . $this->settings->_id_ . '" ' . $this->db->db_name() . ' ' . $this->table->target , $array, $result);
 		return class_exists('app_dump') ? app_dump::process($this->db, $array[5], $this->settings) : $array[5];
 	}
-	
+/*	
 	private function export()
 	{
 		$parts = explode(jset_autoload::get_header('Host'), jset_autoload::get_header('Referer'), 2);
@@ -330,7 +330,57 @@ class jset_base
 		echo $contents;
 		return '';
 	}
-	//-----------------    internal functions ------------------------
+*/
+
+private function export()
+{
+	foreach($this->columns->source->cols as $col)
+		if($col->hidden != 1)
+		{
+			$field = $col->Field;
+			//$name = $col->title ? $col->title : ($col->Comment ? $col->Comment : $col->Field);
+			$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
+			$fields .= $field . ",";
+			$field_names .= $name . ",";
+			$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
+		}
+	
+	$fields = substr($fields, 0, -1);
+	$field_names = substr($field_names, 0, -1);
+	$filters = substr($filters, 0, -1);
+	//$data = $this->pure_rows($this->field_list($fields));
+	$order = $this->order();
+	$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
+	$limit = config::export_limit;
+	$field_list = $this->coalesce($this->field_list($fields));
+	$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
+	//$sql = $this->sql_class->EXPORT;
+	$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#limit#', '#LD#', '#RD#'), 
+				array($field_list, $this->table->source, $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
+	//die($sql);
+	$this->db->query($sql);
+	$data = $this->db->fetchAll();
+
+	foreach($data as $row){
+		foreach($row as $key => $value)
+			$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $value)) . '",';
+	
+		$output .= substr($line, 0, -1) . "\n";
+		$line = '';
+	}
+	header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
+	header('Content-type: text/csv');
+	//echo "Date: " . date("d/m/Y G:i:s") . "\n";
+	//echo "Source: " . $this->table->source . "\n";
+	//echo "Filters: (on next line, above field names)\n";
+	//echo $filters . "\n";
+	//echo str_replace(",", ",", $fields) . "\n";
+	echo str_replace(",", ",", $field_names) . "\n";
+	echo $output;
+	return '';
+}
+	
+//-----------------    internal functions ------------------------
 	private function request_check($request)
 	{
 		if(empty($request->_methods_)) die('ERROR: no methods has been specified');
