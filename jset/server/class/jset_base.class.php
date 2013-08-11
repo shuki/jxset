@@ -335,10 +335,9 @@ class jset_base
 private function export()
 {
 	foreach($this->columns->source->cols as $col)
-		if($col->hidden != 1)
+		if($col->export == 1)
 		{
 			$field = $col->Field;
-			//$name = $col->title ? $col->title : ($col->Comment ? $col->Comment : $col->Field);
 			$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
 			$fields .= $field . ",";
 			$field_names .= $name . ",";
@@ -348,7 +347,6 @@ private function export()
 	$fields = substr($fields, 0, -1);
 	$field_names = substr($field_names, 0, -1);
 	$filters = substr($filters, 0, -1);
-	//$data = $this->pure_rows($this->field_list($fields));
 	$order = $this->order();
 	$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
 	$limit = config::export_limit;
@@ -357,7 +355,6 @@ private function export()
 	//$sql = $this->sql_class->EXPORT;
 	$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#limit#', '#LD#', '#RD#'), 
 				array($field_list, $this->table->source, $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
-	//die($sql);
 	$this->db->query($sql);
 	$data = $this->db->fetchAll();
 

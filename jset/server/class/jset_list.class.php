@@ -14,20 +14,20 @@ class jset_list {
 	public function values($db, $source)
 	{
 		$result = new stdClass;
-		if(self::is_sql($source))
+		if($result->is_sql = self::is_sql($source))
 		{
 			$result->master_fields = self::get_master_fields($source);
 			$sqls = explode('|-|', $source);
-			if(count($sqls) == 1)
-				$result->values = self::run_sql($db, $source);
-			else {
+			$result->values = self::run_sql($db, $sqls[0]);
+			$result->sql = $sqls[0];
+			if(count($sqls) > 1)
 				$result->sqls = $sqls;
-				$result->values = self::run_sql($db, $sqls[0]);
-			}
-				
 		}
-		else 
-			$result->values = self::get_table_values($db, $source);
+		else
+		{
+			$result->sql = self::get_table_sql($db, $source);
+			$result->values = self::run_sql($db, $result->sql);
+		}
 		return $result;
 	}
 
@@ -40,14 +40,10 @@ class jset_list {
 		return self::load_data($db);
 	}
 
-	public function get_table_values($db, $source)
+	public function get_table_sql($db, $source)
 	{
 		$sql_class = sql::create($db);
-	  	$res = $db->query(str_replace('#table#', $source, $sql_class->GET));
-		if(isset($res->error))
-			return $res;
-		
-		return self::load_data($db);
+		return str_replace('#table#', $source, $sql_class->GET);
 	}
 
 	private function is_sql($source)

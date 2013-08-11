@@ -32,4 +32,7 @@ class config
 	//const export_charset = 'hebrew';
 	const export_limit = 1000000;
 	const export_charset_windows = 'Windows-1255';
+
+	const join_list_suffix = '_jxlist';
+	const join_field_suffix = '_jxfield';
 }

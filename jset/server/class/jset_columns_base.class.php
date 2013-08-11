@@ -239,6 +239,7 @@ class jset_columns_base {
 					$row->sqls = $lists->sqls;
 					$row->list = $row->sqls[0];
 				}
+				//$row->join = $this->join($row, $lists);
 			}
 
 		return $cols;
@@ -269,21 +270,35 @@ class jset_columns_base {
 					$cols[$index[$field_name]]->dependent_fields[] = $row->Field;
 	}
 	
-	protected function translate_sql_type($value) {
-    $trans = array(
-        'VAR_STRING' => 'varchar',
-        'STRING' => 'varchar',
-        'BLOB' => 'text',
-        'LONGLONG' => 'int',
-        'LONG' => 'int',
-        'SHORT' => 'int',
-        'DATETIME' => 'datetime',
-        'DATE' => 'date',
-        'DOUBLE' => 'double',
-        'TIMESTAMP' => 'timestamp',
-		'FLOAT' => 'float',
-		'NEWDECIMAL' => 'decimal'
-    );
-    return $trans[$value] ? $trans[$value] : 'int';
+	protected function translate_sql_type($value){
+	    $trans = array(
+	        'VAR_STRING' => 'varchar',
+	        'STRING' => 'varchar',
+	        'BLOB' => 'text',
+	        'LONGLONG' => 'int',
+	        'LONG' => 'int',
+	        'SHORT' => 'int',
+	        'DATETIME' => 'datetime',
+	        'DATE' => 'date',
+	        'DOUBLE' => 'double',
+	        'TIMESTAMP' => 'timestamp',
+			'FLOAT' => 'float',
+			'NEWDECIMAL' => 'decimal'
+	    );
+	    return $trans[$value] ? $trans[$value] : 'int';
+	}
+	
+	private function join($row, $lists){
+		$result = new stdClass;
+		
+		$field = $row->Field;
+		$table_name = $list->is_sql ? 'a' : $row->list;
+		$sql = $lists->sql;
+		$list_name = $field . config::join_list_suffix;
+		$field_name = $field . config::join_field_suffix;
+		
+		$result->field_name = $list_name . '.name AS ' . $field_name;
+		$result->join = " LEFT JOIN ($sql) AS $list_name ON a.`$field` = $list_name.id ";
+		return $result;
 	}
 }

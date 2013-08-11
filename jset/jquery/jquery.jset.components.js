@@ -1045,8 +1045,13 @@
 				searchoptions:{
 				},
 				beforeShowForm: function(formid){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
-					
+					//var grid = $.jset.fn.get_grid_by_formid(formid);
+					var grid = $(this);
+					var empty_ui_object = {};
+					empty_ui_object.item = {
+						id: '',
+						value: ''
+					};
 					$.each($('input.jset_autocomplete', formid), function(){
 						var $this = $(this);
 						var editoptions = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]]['editoptions'];							
@@ -1077,33 +1082,14 @@
 	        					{
 	        						$(this).val('');
 	        						if($this.val() != '')
-	        						{
-	        							var ui = {};
-	        							ui.item = {
-	        								id: '',
-	        								value: ''
-	        							};
-	        							$(this).trigger("autocompleteselect", [ui]);
-	        						}
+	        							$(this).trigger("autocompleteselect", [empty_ui_object]);
 	        					}
 	        					else if($(this).val() == '' && $this.val() != '')
-	        					{
-        							var ui = {};
-        							ui.item = {
-        								id: '',
-        								value: ''
-        							};
-	        						$(this).trigger("autocompleteselect", [ui]);
-	        					}
+	        						$(this).trigger("autocompleteselect", [empty_ui_object]);
 	        					else if($(this).data('empty'))
 	        					{
 	        						$(this).val('');
-        							var ui = {};
-        							ui.item = {
-        								id: '',
-        								value: ''
-        							};
-	        						$(this).trigger("autocompleteselect", [ui]);
+ 	        						$(this).trigger("autocompleteselect", [empty_ui_object]);
 	        					} 
 	        					else if($(this).data('firstitem'))
 	        					{

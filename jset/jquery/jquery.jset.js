@@ -1253,6 +1253,7 @@
 				obj.hidedlg = true;
 			}
 			if(col.unsortable == 1) obj.sortable = false;
+			obj.export = col.export;
 			obj.editable = (col.noedit == 1) ? false : true;
 			obj.edittype = fn.edittype(col, t);
 			obj.editoptions = fn.editoptions(col, t);
