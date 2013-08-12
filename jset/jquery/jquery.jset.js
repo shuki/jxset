@@ -581,6 +581,7 @@
 				if(!$t.data('settings').db_remote_definitions) post[$t.data('settings').prmNames.db_remote_definitions] = $t.data('settings').db_remote_definitions;
 		
 				if ($t.data('init')) {
+					$t.data('init', false);
 					if ($t.data('settings').empty) {
 						post[$t.data('settings').grid.prmNames.oper] = 'grid_empty';
 						$.extend($t.jqGrid('getGridParam', 'postData'), post);
@@ -588,7 +589,6 @@
 					}
 		
 					if ($t.data('settings').search_default.length > 0) {
-						$t.data('init', false);
 						return false;
 						
 					  	$.each($t.data('settings').search_default, function(){
@@ -626,8 +626,8 @@
 			loadComplete: function(data){
 				var $t = $(this);
 
-				if ($t.data('init')) {
-					$t.data('init', false);
+				if ($t.data('loadCompleteInit')) {
+					$t.data('loadCompleteInit', false);
 					
 					if ($t.data('settings').filterToolbar.hide)
 						this.toggleToolbar(); // for initialy hiding the toolbar
@@ -969,6 +969,7 @@
 				index: data.index,
 				store: {},
 				init: true,
+				loadCompleteInit: true,
 				loaded: false,
 				lastID: false
 			});
