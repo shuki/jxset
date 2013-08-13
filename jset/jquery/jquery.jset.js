@@ -266,7 +266,7 @@
 				altclass: 'altclass',
 				viewrecords: true,
 				sortorder: 'asc',
-				multiSort: true,
+				multiSort: false,
 				caption: '',
 				//toolbar : [true,'top'],
 				toppager: false,
