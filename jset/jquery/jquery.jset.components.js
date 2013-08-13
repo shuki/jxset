@@ -1044,68 +1044,66 @@
 				stype: 'text',
 				searchoptions:{
 				},
-				beforeShowForm: function(formid){
-					//var grid = $.jset.fn.get_grid_by_formid(formid);
+				beforeShowForm: function(formid, id){
+					var elem = $(formid).find('#' + id);
 					var grid = $(this);
 					var empty_ui_object = {};
 					empty_ui_object.item = {
 						id: '',
 						value: ''
 					};
-					$.each($('input.jset_autocomplete', formid), function(){
-						var $this = $(this);
-						var editoptions = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]]['editoptions'];							
-						//$.dump(editoptions.custom_options.autocomplete);
-						if($this.siblings().length == 0){
-							$this.hide();
 
-							var div = $('<div></div>')
-							.insertBefore($this)
-							.append($this);
-							
-							var target_element = $('<input/>')
-							.attr('id', $this.attr('name') + '_autocomplete')
-							.attr('name', $this.attr('name') + '_autocomplete')
-							.addClass('ui-widget-content ui-corner-all ui-widget')
-							.css({'font-size': '1em', display: 'inline-block', 'vertical-align': 'text-top'})
-							.addClass('jset-field-padding')
-							.attr('validate', editoptions.validate);
+					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
+					//$.dump(editoptions.custom_options.autocomplete);
+					if(elem.siblings().length == 0){
+						elem.hide();
 
-							//editoptions.custom_options.configure_target(target_element, editoptions);
-							target_element.insertAfter($this);
-							target_element.autocomplete(editoptions.custom_options.autocomplete);
-	        				target_element.on( "autocompleteselect.jset", function( event, ui ) {
-	        					$(this).siblings('input').val(ui.item.id);
-	        				})
-	        				.focusout(function(){
-	        					if($(this).val().length < $(this).autocomplete( "option", "minLength" ))
-	        					{
-	        						$(this).val('');
-	        						if($this.val() != '')
-	        							$(this).trigger("autocompleteselect", [empty_ui_object]);
-	        					}
-	        					else if($(this).val() == '' && $this.val() != '')
-	        						$(this).trigger("autocompleteselect", [empty_ui_object]);
-	        					else if($(this).data('empty'))
-	        					{
-	        						$(this).val('');
- 	        						$(this).trigger("autocompleteselect", [empty_ui_object]);
-	        					} 
-	        					else if($(this).data('firstitem'))
-	        					{
-        							$(this).val($(this).data('firstitem').value);
-        							var ui = {};
-        							ui.item = $(this).data('firstitem');
-        							$(this).removeData('firstitem');
-        							$(this).trigger("autocompleteselect", [ui]);
-	        					} 
-	        				});
-	        				/*.on("autocompletechange.jset", function(event, ui){
-	        					$.dump(ui.item.id);
-	        					$('ul.ui-autocomplete').css('background-image', 'url("../gui_lib/panel/images/panel_bg_green.gif")');
-	        				});*/
-						}
-					});
+						var div = $('<div></div>')
+						.insertBefore(elem)
+						.append(elem);
+						
+						var target_element = $('<input/>')
+						.attr('id', elem.attr('name') + '_autocomplete')
+						.attr('name', elem.attr('name') + '_autocomplete')
+						.addClass('ui-widget-content ui-corner-all ui-widget')
+						.css({'font-size': '1em', display: 'inline-block', 'vertical-align': 'text-top'})
+						.addClass('jset-field-padding')
+						.attr('validate', editoptions.validate);
+
+						//editoptions.custom_options.configure_target(target_element, editoptions);
+						target_element.insertAfter(elem);
+						target_element.autocomplete(editoptions.custom_options.autocomplete);
+        				target_element.on( "autocompleteselect.jset", function( event, ui ) {
+        					$(this).siblings('input').val(ui.item.id);
+        				})
+        				.focusout(function(){
+        					if($(this).val().length < $(this).autocomplete( "option", "minLength" ))
+        					{
+        						$(this).val('');
+        						if(elem.val() != '')
+        							$(this).trigger("autocompleteselect", [empty_ui_object]);
+        					}
+        					else if($(this).val() == '' && elem.val() != '')
+        						$(this).trigger("autocompleteselect", [empty_ui_object]);
+        					else if($(this).data('empty'))
+        					{
+        						$(this).val('');
+        						$(this).trigger("autocompleteselect", [empty_ui_object]);
+        					} 
+        					else if($(this).data('firstitem'))
+        					{
+    							$(this).val($(this).data('firstitem').value);
+    							var ui = {};
+    							ui.item = $(this).data('firstitem');
+    							$(this).removeData('firstitem');
+    							$(this).trigger("autocompleteselect", [ui]);
+        					} 
+        				});
+        				/*.on("autocompletechange.jset", function(event, ui){
+        					$.dump(ui.item.id);
+        					$('ul.ui-autocomplete').css('background-image', 'url("../gui_lib/panel/images/panel_bg_green.gif")');
+        				});*/
+					}
 				}
 			},
 			bigint:{
@@ -1684,14 +1682,12 @@
 							$(elem).trigger('change.jset', [true]);
 					});
 				},*/
-				afterShowForm: function(formid){
+				afterShowForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
-					var selects = $(formid).find('select');
-					$.each(selects, function(i, elem){
-						var name = $(elem).attr('name');
-						if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
-							$(elem).trigger('change.jset', [true]);
-					});
+					var elem = $(formid).find('#' + id);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.jset', [true]);
 				}
 			},
 			selectbox_text:{

@@ -434,7 +434,7 @@
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].afterShowForm))
-					$.jset.defaults.control[this.control].afterShowForm(formid, this.Field);
+					$.jset.defaults.control[this.control].afterShowForm(formid, this.index || this.Field);
 			});			
 			var id = $(formid).find('#id').val();
 			if(grid.data('copy_form')){
