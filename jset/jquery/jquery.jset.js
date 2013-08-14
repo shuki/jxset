@@ -411,20 +411,18 @@
 		
 		beforeShowForm: function(formid){
 			//fn.clear_form_tooltips(formid);
-
 			var grid = $(this);
+			
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
 					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
 			});			
 	
 			fn.set_help_tips(grid, formid);
-			
 			$('select,input').addClass('inputfilter FormElement ui-widget-content ui-corner-all');
-			
+
 			if (grid.data('settings').hide_submit_row) 
 				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
-
 			if($.isFunction(grid.data('settings').beforeShowForm))
 				grid.data('settings').beforeShowForm(formid);
 		},
@@ -479,10 +477,6 @@
 			eval(grid.data('table').validation);
 			if(validation_error)
 			{
-				//$('#FormError', formid).show();
-				//$('#FormError', formid).focus();
-				//$('form:first *:input[type!=hidden]:first').focus();
-				//$('#company_code', formid).focus();
 				$('html, body').animate({ scrollTop: 0 }, 200);
 				//$("body").scrollTop(100);
 				return [false, validation_error];
@@ -574,34 +568,33 @@
 		grid: {
 			beforeRequest: function(){
 				var $t = $(this);
-				var post = fn.unformat_columns(this);
-				post[$t.data('settings').prmNames.source] = fn.get_value($t.data('settings').source);
-				if($t.data('settings').db_name) post[$t.data('settings').prmNames.db_name] = fn.get_value($t.data('settings').db_name);
-				if($t.data('settings').host) post[$t.data('settings').prmNames.host] = fn.get_value($t.data('settings').host);
-				if(!$t.data('settings').db_remote_definitions) post[$t.data('settings').prmNames.db_remote_definitions] = $t.data('settings').db_remote_definitions;
+				var post = $t.jqGrid('getGridParam', 'postData');
+				var post_columns = fn.unformat_columns(this);
+				post_columns[$t.data('settings').prmNames.source] = fn.get_value($t.data('settings').source);
+				if($t.data('settings').db_name) post_columns[$t.data('settings').prmNames.db_name] = fn.get_value($t.data('settings').db_name);
+				if($t.data('settings').host) post_columns[$t.data('settings').prmNames.host] = fn.get_value($t.data('settings').host);
+				if(!$t.data('settings').db_remote_definitions) post_columns[$t.data('settings').prmNames.db_remote_definitions] = $t.data('settings').db_remote_definitions;
 		
 				if ($t.data('init')) {
 					$t.data('init', false);
 					if ($t.data('settings').empty) {
-						post[$t.data('settings').grid.prmNames.oper] = 'grid_empty';
-						$.extend($t.jqGrid('getGridParam', 'postData'), post);
+						post_columns[$t.data('settings').grid.prmNames.oper] = 'grid_empty';
+						$.extend(post, post_columns);
 						return;
 					}
 		
 					if ($t.data('settings').search_default.length > 0) {
 						return false;
-						
-					  	$.each($t.data('settings').search_default, function(){
-					  		//since using filterToolbar stringResult - dont post search values
-					  		//post[this.name] = this.value;
-					  	});
-					  	//post[$t.data('settings').grid.prmNames.search] = true;
 				  }
 				} 
 				
+				var order_by_name = post['_order_by_'] + '_name';
+				if(post._order_by_ && $t.data('columns')[$t.data('index')[post._order_by_]].list && typeof $t.data('columns')[$t.data('index')[post._order_by_ + '_name']] != "undefined")
+					post._order_by_ = post._order_by_ + '_name';
+					
 				if($t.data('export') === true){
 					$t.data('export', false);
-					var get = $.extend({}, $t.jqGrid('getGridParam', 'postData'), post);
+					var get = $.extend({}, post, post_columns);
 					get[$t.data('settings').grid.prmNames.oper] = 'export';
 					var url = $t.data('settings').dir_pre + $.jset.defaults.url + '?';
 					$.each(get, function(key, value){
@@ -612,8 +605,8 @@
 					window.open(url, '_parent');
 				}
 				
-				post[$t.data('settings').grid.prmNames.oper] = 'grid_rows';
-				$.extend($t.jqGrid('getGridParam', 'postData'), post);
+				post_columns[$t.data('settings').grid.prmNames.oper] = 'grid_rows';
+				$.extend(post, post_columns);
 
 				if($.isFunction($t.data('settings').beforeRequest))
 					$t.data('settings').beforeRequest();

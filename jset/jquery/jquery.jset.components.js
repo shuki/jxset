@@ -1045,6 +1045,7 @@
 				searchoptions:{
 				},
 				beforeShowForm: function(formid, id){
+					console.log(Date.now());
 					var elem = $(formid).find('#' + id);
 					var grid = $(this);
 					var empty_ui_object = {};
@@ -1073,7 +1074,8 @@
 						//editoptions.custom_options.configure_target(target_element, editoptions);
 						target_element.insertAfter(elem);
 						target_element.autocomplete(editoptions.custom_options.autocomplete);
-        				target_element.on( "autocompleteselect.jset", function( event, ui ) {
+        				console.log(Date.now());
+						target_element.on( "autocompleteselect.jset", function( event, ui ) {
         					$(this).siblings('input').val(ui.item.id);
         				})
         				.focusout(function(){
