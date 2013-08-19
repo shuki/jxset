@@ -99,7 +99,7 @@ class jset_base
 		$sql = $this->table->sql ? $this->sql_class->GET_GRID_ROWS_SQL_SOURCE : $this->sql_class->GET_GRID_ROWS;
 		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#start#', '#limit#', '#start1#', '#end#', '#LD#', '#RD#'), 
 					array($this->field_list(), $this->table->source, $this->where, $order, $direction, $start, $limit, $start + 1, $start + $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);
-
+		//die($sql);
 	    $this->db->query($sql);
 	    $primary = $this->columns->primary;
 		$i=0;
@@ -463,8 +463,8 @@ private function export()
 	
 	private function where()
 	{
-		if($this->settings->_search_ == 'true')
-		{
+//		if($this->settings->_search_ == 'true')
+//		{
 			if(isset($this->settings->filters))
 			{
 				$searchstr = $this->strip($this->settings->filters);
@@ -502,8 +502,8 @@ private function export()
 			}
 			$result = ($result == '') ? '1=1' : substr($result, 0, -5);
 			return $filters == '' ? $result : $filters . ' AND ' . $result;
-		}else
-			return '1=1';
+//		}else
+//			return '1=1';
 	}
 	
 	private function nullit($value)
