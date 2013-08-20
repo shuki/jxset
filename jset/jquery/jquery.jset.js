@@ -393,11 +393,11 @@
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeInitData))
-					$.jset.defaults.control[this.control].beforeInitData(formid);
+					$.jset.defaults.control[this.control].beforeInitData.call(grid, formid);
 			});	
 					
 			if($.isFunction(grid.data('settings').beforeInitData))
-				grid.data('settings').beforeInitData(formid);
+				grid.data('settings').beforeInitData.call(grid, formid);
 		},
 		
 		onInitializeForm : function(formid) {
@@ -406,7 +406,7 @@
 			$(formid).validate(grid.data('settings').validate);
 
 			if($.isFunction(grid.data('settings').onInitializeForm))
-				grid.data('settings').onInitializeForm(formid);
+				grid.data('settings').onInitializeForm.call(grid, formid);
 		},
 		
 		beforeShowForm: function(formid){
@@ -424,7 +424,7 @@
 			if (grid.data('settings').hide_submit_row) 
 				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
 			if($.isFunction(grid.data('settings').beforeShowForm))
-				grid.data('settings').beforeShowForm(formid);
+				grid.data('settings').beforeShowForm.call(grid, formid);
 		},
 		
 		afterShowForm: function(formid){
@@ -432,7 +432,7 @@
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].afterShowForm))
-					$.jset.defaults.control[this.control].afterShowForm(formid, this.index || this.Field);
+					$.jset.defaults.control[this.control].afterShowForm.call(grid, formid, this.index || this.Field);
 			});			
 			var id = $(formid).find('#id').val();
 			if(grid.data('copy_form')){
@@ -441,10 +441,10 @@
 				if(grid.data('settings').copy.clear_id)
 					$(formid).find('#id').val('');
 				if($.isFunction(grid.data('settings').copy.showFormInit))
-					grid.data('settings').copy.showFormInit(formid, source_id);
+					grid.data('settings').copy.showFormInit.call(grid, formid, source_id);
 			}
 			if($.isFunction(grid.data('settings').afterShowForm))
-				grid.data('settings').afterShowForm(formid);			
+				grid.data('settings').afterShowForm.call(grid, formid);			
 		},
 		
 		onclickPgButtons : function (whichbutton, formid, rowid){
@@ -452,20 +452,20 @@
 			fn.clear_form_tooltips(formid);
 
 			if($.isFunction(grid.data('settings').onclickPgButtons))
-				grid.data('settings').onclickPgButtons(whichbutton, formid, rowid);
+				grid.data('settings').onclickPgButtons.call(grid, whichbutton, formid, rowid);
 		},
 		
 		afterclickPgButtons : function(whichbutton, formid, rowid){
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].afterclickPgButtons))
-					$.jset.defaults.control[this.control].afterclickPgButtons(whichbutton, formid, rowid, this.Field);
+					$.jset.defaults.control[this.control].afterclickPgButtons.call(grid, whichbutton, formid, rowid, this.Field);
 			});
 			
 			fn.load_edit_record(grid, rowid, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false,  formid: formid}));
 			
 			if($.isFunction(grid.data('settings').afterclickPgButtons))
-				grid.data('settings').afterclickPgButtons(whichbutton, formid, rowid);
+				grid.data('settings').afterclickPgButtons.call(grid, whichbutton, formid, rowid);
 		},
 		
 		beforeSubmit: function(postdata, formid){
@@ -519,7 +519,7 @@
 			$.extend(postdata, post, hard_post);
 			
 			if($.isFunction(grid.data('settings').beforeSubmit))
-				return grid.data('settings').beforeSubmit(postdata, formid);
+				return grid.data('settings').beforeSubmit.call(grid, postdata, formid);
 			
 			return [true];
 		},
@@ -553,7 +553,7 @@
 			grid.jqGrid('setGridParam', {scrollrows: true});
 
 			if($.isFunction(grid.data('settings').afterSubmit))
-				return grid.data('settings').afterSubmit(response, postdata);
+				return grid.data('settings').afterSubmit.call(grid, response, postdata);
 			
 			return [true];
 		},
@@ -609,7 +609,7 @@
 				$.extend(post, post_columns);
 
 				if($.isFunction($t.data('settings').beforeRequest))
-					$t.data('settings').beforeRequest();
+					$t.data('settings').beforeRequest.call($t);
 			},
 			
 			gridComplete: function(){
@@ -631,7 +631,7 @@
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
 					if($.isFunction($t.data('settings').loadCompleteInit))
-						$t.data('settings').loadCompleteInit(data);
+						$t.data('settings').loadCompleteInit.call($t, data);
 				}
 				
 				if($t.data('settings').detail){
@@ -667,7 +667,7 @@
 		
 				$t.jqGrid('setGridParam', {scrollrows: false});
 				if($.isFunction($t.data('settings').loadComplete))
-					$t.data('settings').loadComplete(data);
+					$t.data('settings').loadComplete.call($t, data);
 			},
 			onSelectRow: function(ids) {
 				var $t = $(this);
@@ -694,7 +694,7 @@
 					$t.data('last_selection', ids);
 					
 					if($.isFunction($t.data('settings').onSelectRow))
-						$t.data('settings').onSelectRow(ids);
+						$t.data('settings').onSelectRow.call($t, ids);
 				}
 			},
 			
@@ -715,7 +715,7 @@
 					var grid = $(this);
 					fn.set_help_tips(grid, formid);
 					if($.isFunction(grid.data('settings').beforeShowFormView))
-						grid.data('settings').beforeShowFormView(formid);
+						grid.data('settings').beforeShowFormView.call(grid, formid);
 				}
 			},
 			
@@ -732,7 +732,7 @@
 						alert('record deleted!');
 
 					if($.isFunction(grid.data('settings').afterSubmit))
-						grid.data('settings').afterSubmit(response, postdata);
+						grid.data('settings').afterSubmit.call(grid, response, postdata);
 			
 					return [true];
 				},
@@ -845,7 +845,7 @@
 			var grid = $.jset.fn.get_grid_by_formid(formid);
 			$.each(grid.data('settings').grid.colModel, function(i, col){
 				if(col.editoptions.custom_options && $.isFunction(col.editoptions.custom_options.readonly))
-					col.editoptions.custom_options.readonly(formid, col.name);
+					col.editoptions.custom_options.readonly.call(grid, formid, col.name);
 				else
 					$.jset.fn.readonly_field(formid, col.name);
 			});
@@ -856,7 +856,7 @@
 			$.each(grid.data('settings').grid.colModel, function(i, col){
 				if(!col.editoptions.readonly)
 					if(col.editoptions.custom_options && $.isFunction(col.editoptions.custom_options.enable))
-						col.editoptions.custom_options.enable(formid, col.name);
+						col.editoptions.custom_options.enable.call(grid, formid, col.name);
 					else
 						$.jset.fn.enable_field(formid, col.name);
 			});
@@ -1146,7 +1146,7 @@
 								$t.data('form_action', 'copy');
 								var options = $.extend(true, {}, $t.data('settings').navigation.edit , $t.data('settings').copy.properties);
 								if($.isFunction($t.data('settings').copyfunc))
-									$t.data('settings').copyfunc(id, options);
+									$t.data('settings').copyfunc.call($t, id, options);
 								else					
 									$t.jqGrid('editGridRow', id, options);
 							}
@@ -1410,7 +1410,7 @@
 			$.each(colModel, function(i){
 				if (postData[this.index] != undefined && controls[columns[rownumber].control] != undefined) {
 					if ($.isFunction(controls[columns[rownumber].control].unformat))
-				  	post[this.index] = controls[columns[rownumber].control].unformat(postData[this.index]);
+				  	post[this.index] = controls[columns[rownumber].control].unformat.call(grid, postData[this.index]);
 					
 					if (controls[columns[rownumber].control].empty_url != undefined) 
 						if (postData[this.index] == controls[columns[rownumber].control].empty_url) 
@@ -1504,14 +1504,14 @@
 		
 		editfunc: function(grid, id, options){
 			if ($.isFunction(grid.data('settings').editfunc)) 
-				grid.data('settings').editfunc(id, options);
+				grid.data('settings').editfunc.call(grid, id, options);
 			else 
 				grid.jqGrid('editGridRow', id, options);
 		},
 		
 		addfunc: function(grid, options){
 			if($.isFunction(grid.data('settings').addfunc))
-				grid.data('settings').addfunc(options);
+				grid.data('settings').addfunc.call(grid, options);
 			else
 				grid.jqGrid('editGridRow', 'new', options);
 		},

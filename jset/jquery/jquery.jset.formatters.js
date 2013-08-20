@@ -144,8 +144,15 @@
 			return $('<div>' + cellvalue + '</div>').text().replace(/\n/g, ' ');
 		},
 		
-		linkFmatter : function(cellvalue, options, rowdata) {
-			return '<a href="' + cellvalue + '" target="_blank">' + cellvalue + '</a>';
+		linkFmatter : function(cellvalue, options, rowdata, act) {
+			var grid = $(this);
+			console.log(rowdata);
+			console.log(act);
+			var url = options.colModel.formatoptions.url;
+			var idname = options.colModel.formatoptions.idname;
+			url = url.replace(/#value#/g, cellvalue);
+			url = url.replace(/#idname#/g, rowdata[grid.data('index')[idname]]);
+			return url;
 		}
 	});
 	

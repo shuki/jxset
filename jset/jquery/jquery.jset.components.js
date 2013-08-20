@@ -1492,6 +1492,10 @@
 			'link':{
 				align:'left',
 				formatter:'linkFmatter',
+				formatoptions:{
+					url: '<a href="?id=#idname#" target="_blank">#value#</a>',
+					idname: 'id'
+				},
 				editoptions:{
 					size: $.jset.fn.colsize,
 					maxlength: function(col){
