@@ -146,8 +146,6 @@
 		
 		linkFmatter : function(cellvalue, options, rowdata, act) {
 			var grid = $(this);
-			console.log(rowdata);
-			console.log(act);
 			var url = options.colModel.formatoptions.url;
 			var idname = options.colModel.formatoptions.idname;
 			url = url.replace(/#value#/g, cellvalue);
