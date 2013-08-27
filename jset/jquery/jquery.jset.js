@@ -409,6 +409,12 @@
 				grid.data('settings').onInitializeForm.call(grid, formid);
 		},
 		
+		beforeInitData : function(formid){
+			var grid = $(this);
+			if($.isFunction(grid.data('settings').beforeInitData))
+				grid.data('settings').beforeInitData.call(grid, formid);
+		},
+		
 		beforeShowForm: function(formid){
 			//fn.clear_form_tooltips(formid);
 			var grid = $(this);
