@@ -594,6 +594,10 @@
 					
 				if($t.data('export') === true){
 					$t.data('export', false);
+
+					if($.isFunction($t.data('settings').beforeRequest))
+						$t.data('settings').beforeRequest.call($t);
+
 					var get = $.extend({}, post, post_columns);
 					get[$t.data('settings').grid.prmNames.oper] = 'export';
 					var url = $t.data('settings').dir_pre + $.jset.defaults.url + '?';
@@ -603,6 +607,7 @@
 					url = url.slice(0, - 1);
 
 					window.open(url, '_parent');
+					return;
 				}
 				
 				post_columns[$t.data('settings').grid.prmNames.oper] = 'grid_rows';
