@@ -1044,7 +1044,7 @@
 				stype: 'text',
 				searchoptions:{
 				},
-				beforeShowForm: function(formid, id){
+				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
 					var grid = $(this);
 					var empty_ui_object = {};
@@ -1262,7 +1262,7 @@
 						return col.default_value;
 					}
 				},
-				beforeShowForm: function(formid, id){
+				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
 					if(elem.length > 0)
 						$.jset.fn.dateInit(elem);
@@ -1428,7 +1428,7 @@
 				formoptions:{
 					label_hide: true
 				},
-				beforeShowForm: function(formid){
+				onInitializeForm: function(formid){
 					var grid = $.jset.fn.get_grid($(formid).selector.substr(9));
 					if(grid.data('form_action') == 'add' && !grid.data('settings').control.grid_frame.new_record_show)
 						$(formid).find('iframe[jsetype=grid_frame]').hide();
@@ -1443,7 +1443,7 @@
 						return col;
 					}
 				},
-				beforeShowForm: function(formid){
+				onInitializeForm: function(formid){
 				}
 			},
 			'int':{
@@ -1589,7 +1589,7 @@
 						return col.default_value;
 					}
 				},
-				beforeShowForm: function(formid){
+				onInitializeForm: function(formid){
 					//if in add mode
 					if($(formid).find('input[name=id]').val() == '')
 						$(formid).find('.multiselector').val('');
@@ -1677,7 +1677,7 @@
 						return $.jset.fn.select_searchoptions_dataInit;
 					}	
 				},
-				/*beforeShowForm: function(formid){
+				/*onInitializeForm: function(formid){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					var selects = $(formid).find('select');
 					$.each(selects, function(i, elem){
@@ -1861,7 +1861,7 @@
 						return col.default_value;
 					}
 				},
-				beforeShowForm: function(formid, id){
+				onInitializeForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 						
 					$.each($('#' + id, formid), function(){
@@ -2066,7 +2066,7 @@
 				},
 				beforeInitData: function(formid){
 				},
-				beforeShowForm: function(formid){
+				onInitializeForm: function(formid){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					$.each($('.upload_image', formid), function(){
 						var $this = $(this);
@@ -2152,7 +2152,7 @@
 						return col.Field;
 					}
 				},
-				beforeShowForm: function(formid){
+				onInitializeForm: function(formid){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					
 					$.each($('input.upload_file', formid), function(){
@@ -2217,7 +2217,7 @@
 				},
 				beforeInitData: function(formid){
 				},
-				beforeShowForm: function(formid){
+				onInitializeForm: function(formid){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					$.each($('.upload_video'), function(){
 						var $this = $(this);

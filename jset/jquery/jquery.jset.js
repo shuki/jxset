@@ -214,7 +214,8 @@
 			        	.tooltip(grid.data('settings').validate.tooltip)
 			            .tooltip( "option", "content", $(error).text())
 			            .tooltip('open')
-			            .unbind('mouseleave');
+			            .unbind('mouseleave')
+			            .unbind('mouseover');
 		        	}
 		        },
 		        success: function (label, element) {
@@ -405,6 +406,17 @@
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
 
+			$.each(grid.data('columns'), function(){
+				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
+					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
+			});
+			
+			fn.set_help_tips(grid, formid);
+			$('select,input').addClass('inputfilter FormElement ui-widget-content ui-corner-all');
+
+			if (grid.data('settings').hide_submit_row) 
+				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
+					
 			if($.isFunction(grid.data('settings').onInitializeForm))
 				grid.data('settings').onInitializeForm.call(grid, formid);
 		},
@@ -416,19 +428,13 @@
 		},
 		
 		beforeShowForm: function(formid){
-			//fn.clear_form_tooltips(formid);
 			var grid = $(this);
 			
-			$.each(grid.data('columns'), function(){
+			/*$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
 					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
-			});			
+			});*/		
 	
-			fn.set_help_tips(grid, formid);
-			$('select,input').addClass('inputfilter FormElement ui-widget-content ui-corner-all');
-
-			if (grid.data('settings').hide_submit_row) 
-				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
 			if($.isFunction(grid.data('settings').beforeShowForm))
 				grid.data('settings').beforeShowForm.call(grid, formid);
 		},
