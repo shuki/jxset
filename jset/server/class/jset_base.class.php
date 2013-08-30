@@ -213,8 +213,11 @@ class jset_base
 			$result = jset_event::exec($this->db, $this->event->before_delete, $this->pairs, $settings);
 			if(isset($result->error))
 				return $result;
-			if(!isset($result->skip))
+			if(!isset($result->skip)){
 				$result = $this->db->execute($SQL, array($id));
+				if(isset($result->error))
+					return $result;
+			}
 			$result = jset_event::exec($this->db, $this->event->after_delete, $this->pairs, $settings);
 			if(isset($result->error))
 				return $result;
