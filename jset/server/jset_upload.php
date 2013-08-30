@@ -62,8 +62,6 @@ function process($files, $post){
 	
 	$request_dir = urldecode($request->dir);
 	$target_dir = config::rel_path . jset_autoload::path('..', $request_dir);
-	//echo getcwd() . "\n";
-	//die($target_dir);
 	if (!is_dir($target_dir))
 		if(!mkdir($target_dir))
 		{

@@ -100,11 +100,6 @@
 					editCaption: 'Copy Record',
 					viewPagerButtons: false,
 					onclickSubmit: fd.onclickSubmit
-					/*
-					onclickSubmit: function(params, postdata){
-						$(params.the_grid).data('copy', true);
-						return {};
-					}*/
 				},
 				clear_id: true,
 				options: {
@@ -141,12 +136,15 @@
 					position: ['left', 'top']
 				}
 			},
-			'export': true,
-			export_options:{
+			'export':{
+				navButtonAdd: true,
+				options: {
 					caption: '',
 					title: 'Export Data',
 					buttonicon: 'ui-icon-star',
 					position: 'last'
+				},
+				associative:'both'
 			},
 			columnChooser:{
 				navButtonAdd: true,
@@ -165,7 +163,7 @@
 				},
 				col:{
 				    width: 420,
-				   // modal: true,
+					modal: false,
 				    msel_opts: {dividerLocation: 0.5},
 				    dialog_opts: {
 				        minWidth: 470,
@@ -203,7 +201,7 @@
 				invalidHandler: function(form, validator) {
 				    var errors = validator.numberOfInvalids();
 				    if (errors) {
-				        validator.errorList[0].element.focus(); //Set Focus
+				        validator.errorList[0].element.focus();
 				    }
 				},
 		        errorPlacement: function (error, element) {
@@ -221,10 +219,6 @@
 		        success: function (label, element) {
 		        	fn.clear_tooltip(element);
 		        }				
-		        //errorClass: 'ui-state-error',
-				/*messages: {
-			    	integer_field : "Please specify your name"
-				},*/
 			},
 			grid: {        
 				prmNames:{
@@ -430,11 +424,6 @@
 		beforeShowForm: function(formid){
 			var grid = $(this);
 			
-			/*$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
-					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
-			});*/		
-	
 			if($.isFunction(grid.data('settings').beforeShowForm))
 				grid.data('settings').beforeShowForm.call(grid, formid);
 		},
@@ -490,7 +479,6 @@
 			if(validation_error)
 			{
 				$('html, body').animate({ scrollTop: 0 }, 200);
-				//$("body").scrollTop(100);
 				return [false, validation_error];
 			}
 			
@@ -550,7 +538,6 @@
 
 			var obj = $.parseJSON(response.responseText);
 			if(obj.error !== undefined){
-				//var message = obj.error.message + '<br />' + obj.error.dump + '<br />' + obj.error.info[0] + '<br />' + obj.error.info[1] + '<br />' + obj.error.info[2];
 				var message = obj.error.message;
 				return [false, message];
 			}
@@ -609,6 +596,19 @@
 
 					if($.isFunction($t.data('settings').beforeRequest))
 						$t.data('settings').beforeRequest.call($t);
+					
+					var colModel = $t.jqGrid('getGridParam', 'colModel');
+					var fields = [];
+					$.each(colModel, function(i){
+						if(!this.hidden && this.name != 'rn')
+						{
+							if($t.data('settings').export.associative == 'both')
+								if(typeof $t.data('index')[this.index + '_name'] != 'undefined')
+									fields.push(this.index + '_name');
+
+							fields.push(this.index);
+						}
+					});
 
 					var get = $.extend({}, post, post_columns);
 					get[$t.data('settings').grid.prmNames.oper] = 'export';
@@ -616,12 +616,15 @@
 					$.each(get, function(key, value){
 						url += key + '=' + value + '&';
 					});
-					url = url.slice(0, - 1);
 
+					if(fields.length == 0)
+						return;
+
+					url += '_fields_=' + JSON.stringify(fields);
 					window.open(url, '_parent');
 					return;
 				}
-				
+
 				post_columns[$t.data('settings').grid.prmNames.oper] = 'grid_rows';
 				$.extend(post, post_columns);
 
@@ -640,10 +643,7 @@
 					$t.data('loadCompleteInit', false);
 					
 					if ($t.data('settings').filterToolbar.hide)
-						this.toggleToolbar(); // for initialy hiding the toolbar
-					/*else
-						$t.jqGrid('setGridHeight', $t.data('settings').grid.height - 23);*/
-						
+						this.toggleToolbar(); 
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
@@ -886,7 +886,7 @@
 					backgroundColor: '#AAAAAA',
 					opacity: 0.3
 				}
-			}, options)
+			}, options);
 			$(elem).block(options);
 		},
 		
@@ -1043,8 +1043,8 @@
 		},
 		
 		navigator_export_button: function($t, grid_container){
-			if ($t.data('settings')['export']) {
-				var options = $.extend(true, {}, $t.data('settings').export_options,
+			if ($t.data('settings').export.navButtonAdd){
+				var options = $.extend(true, {}, $t.data('settings').export.options,
 					{onClickButton: function(){
 						$t.data('export', true);
 						$t[0].triggerToolbar();
@@ -1231,7 +1231,6 @@
 				t.p.grid.colModel[i] = fn.colModel(this, i, t);
 				if(this.search_default) fn.search_default(this, t);
 			}); 
-			//alert('colModel length is ' + t.p.grid.colModel.length)
 		},
 
 		set_master_details: function($t){
@@ -1349,7 +1348,6 @@
 						}else{
 							if($.isFunction(value)) value = value(col);
 							if (key === 'value') {
-								//obj.value = col.values ? (/*$.dump(col.values),*/ $.extend({}, value, col.values)) : value;
 								if(col.values && col.values.error !== undefined)
 									alert('critical error in select options of field: ' +  col.Field + '\n' + col.values.error.message + '\n' + col.values.error.dump);
 								else
@@ -1383,7 +1381,6 @@
 								if(col.values && col.values.error !== undefined)
 									alert('critical error in select options of search field: ' +  col.Field + '\n' + col.values.error.message + '\n' + col.values.error.dump);
 								else
-									//obj.value = col.values ? col.values : value;
 									obj.value = col.values ? $.extend({}, value, col.values) : value;
 							}
 							else
@@ -1474,14 +1471,10 @@
 			if(grid.data('settings').single_record.mode == 'new' || grid.jqGrid('getGridParam', 'records') == 0){
 				var options = $.extend(true, {}, grid.data('settings').navigation.add, grid.data('settings').single_record.options);
 				grid.jqGrid('editGridRow', 'new', options);
-				// deal with the filter_name field here later
-				//if(grid.data('settings').master && $.jset.fn.get_filterToolbar_field(grid, grid.data('settings').filter_name).val() == '_empty_')
-				//	$('#sData', grid_container).hide();
 			}else{
 				var options = $.extend(true, {}, grid.data('settings').navigation.edit, grid.data('settings').single_record.options);
 				var ids = grid.jqGrid('getDataIDs');
 				grid.jqGrid('editGridRow', ids[0], options);
-				//$('#sData', grid_container).show();
 			}
 			$('.ui-jqdialog-titlebar-close', grid_container).hide();
 			$('#cData', grid_container).hide();
@@ -1567,7 +1560,6 @@
 						fn.editfunc(grid, id, options);
 					}else{
 						alert('this record no longer exists');
-						//var rowind = grid.jqGrid('getInd', rowid);
 						if (typeof options.formid != 'undefined')
 							$(options.formid).unblock();
 						else

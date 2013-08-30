@@ -9,8 +9,6 @@ class general
 	
 	public static function get_user_id()
 	{
-		//die(var_dump($_SESSION['user_id']));
-		//return $_SESSION['user_id'];
 		return 200000;
 	}
 }

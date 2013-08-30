@@ -29,7 +29,6 @@ class jset_table {
 		$sql_class = sql::create($db);
 	  	$db->query($sql_class->GET_TABLE, array($source));
 		$result = $db->fetch();
-		//var_dump($result); die;
 		if($result){
 			if(self::is_sql($result->source))
 				$result->sql = true;

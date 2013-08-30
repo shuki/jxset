@@ -86,7 +86,6 @@ class jset_base
 	private function grid_rows()
 	{
 		$count = $this->count();
-		//die($count);
 		$limit = $this->settings->_rows_ ? $this->settings->_rows_ : $this->settings->_limit_;
 		$pages = ($count > 0) ? ceil($count / $limit) : 0;
 		$page = ($this->settings->_page_ > $pages) ? $pages : $this->settings->_page_;		
@@ -99,7 +98,6 @@ class jset_base
 		$sql = $this->table->sql ? $this->sql_class->GET_GRID_ROWS_SQL_SOURCE : $this->sql_class->GET_GRID_ROWS;
 		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#start#', '#limit#', '#start1#', '#end#', '#LD#', '#RD#'), 
 					array($this->field_list(), $this->table->source, $this->where, $order, $direction, $start, $limit, $start + 1, $start + $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);
-		//die($sql);
 	    $this->db->query($sql);
 	    $primary = $this->columns->primary;
 		$i=0;
@@ -124,8 +122,6 @@ class jset_base
 
 	private function pure_rows($fields = null)
 	{
-		//$count = $this->count();
-		//die($count);
 		$limit = $this->settings->_rows_ ? $this->settings->_rows_ : $this->settings->_limit_;
 		$pages = ($count > 0) ? ceil($count / $limit) : 0;
 		$page = ($this->settings->_page_ > $pages) ? $pages : $this->settings->_page_;		
@@ -262,37 +258,15 @@ class jset_base
 		$ret = exec(config::mysqldump_prefix . 'mysqldump.exe --user=' . $this->db->user() . ' --password=' . $this->db->password() . ' --complete-insert --no-create-info --skip-add-drop-table --skip-comments --skip-add-locks --skip-disable-keys --skip-add-locks --skip-set-charset --skip-tz-utc --where="id=' . $this->settings->_id_ . '" ' . $this->db->db_name() . ' ' . $this->table->target , $array, $result);
 		return class_exists('app_dump') ? app_dump::process($this->db, $array[5], $this->settings) : $array[5];
 	}
-/*	
-	private function export()
-	{
-		$parts = explode(jset_autoload::get_header('Host'), jset_autoload::get_header('Referer'), 2);
-		if(!isset($parts[1]))
+
+private function export()
+{
+	if(isset($this->settings->_fields_)){
+		$fields_array = json_decode($this->settings->_fields_, true);
+		foreach($fields_array as $field_name)
 		{
-			$result->error->message =  "error: could not figure out the export directory.<br/>" .
-			"Host: " . jset_autoload::get_header('Host') . '<br/>' .
-			"Referer: " . jset_autoload::get_header('Referer') . '<br/>';
-			$result->error = $result->error->message;
-			$result->success = false;
-			return $result;
-		}
-
-		$a = explode('/', $parts[1]);
-
-		if($a[count($a)-1])
-			$a[count($a)-1] = '';
-		$target_dir = implode('/', $a);
-		$export_dir = $_SERVER['DOCUMENT_ROOT'] . $target_dir . config::export_dir;
-		if (!is_dir($export_dir))
-			if(!mkdir($export_dir))
-			{
-				$result->error->message = "unable to create export directory: $export_dir";
-				$result->error = $result->error->message;
-				$result->success = false;
-				return $result;
-			}
-		
-		foreach($this->columns->source->cols as $col)
-			if($col->hidden != 1 || $col->edithidden == 1)
+			$col = $this->col($field_name);
+			if($col->export == 1)
 			{
 				$field = $col->Field;
 				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
@@ -300,49 +274,24 @@ class jset_base
 				$field_names .= $name . ",";
 				$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
 			}
-
-		$fields =  substr($fields, 0, -1);
-		$field_names =  substr($field_names, 0, -1);
-  		$filters = substr($filters, 0, -1);
-  	
-		$outfile = $export_dir . uniqid('ex') . '.csv';
-		$charset = config::export_charset;
-		$order = $this->order();
-		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
-		$field_list = $this->coalesce($this->field_list($fields));
-		$sql = $this->table->sql ? $this->sql_class->EXPORT_SQL_SOURCE : $this->sql_class->EXPORT;
-		//$sql = $this->sql_class->EXPORT;
-		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#outfile#', '#charset#', '#LD#', '#RD#'), 
-					array($field_list, $this->table->source, $this->where, $order, $direction, $outfile, $charset, $this->sql_class->LD, $this->sql_class->RD), $sql);	
-		
-	    $result = $this->db->query($sql);
-		//var_dump($result);
-
-		$contents = file_get_contents($outfile);
-		unlink($outfile);
-		
+		}
+	}
+	else
+		foreach($this->columns->source->cols as $col)
+			if($col->export == 1)
+			{
+				$field = $col->Field;
+				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
+				$fields .= $field . ",";
+				$field_names .= $name . ",";
+				$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
+			}
+	
+	if(!$fields){
 		header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
 		header('Content-type: text/csv');
-		
-		//echo $filters . "\n";
-		//echo str_replace(",", ",", $fields) . "\n";
-		echo str_replace(",", ",", $field_names) . "\n";
-		echo $contents;
 		return '';
 	}
-*/
-
-private function export()
-{
-	foreach($this->columns->source->cols as $col)
-		if($col->export == 1)
-		{
-			$field = $col->Field;
-			$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
-			$fields .= $field . ",";
-			$field_names .= $name . ",";
-			$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
-		}
 	
 	$fields = substr($fields, 0, -1);
 	$field_names = substr($field_names, 0, -1);
@@ -367,11 +316,6 @@ private function export()
 	}
 	header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
 	header('Content-type: text/csv');
-	//echo "Date: " . date("d/m/Y G:i:s") . "\n";
-	//echo "Source: " . $this->table->source . "\n";
-	//echo "Filters: (on next line, above field names)\n";
-	//echo $filters . "\n";
-	//echo str_replace(",", ",", $fields) . "\n";
 	echo str_replace(",", ",", $field_names) . "\n";
 	echo $output;
 	return '';
@@ -632,13 +576,10 @@ private function export()
 			}
 		}
 		$s .= ")";
-		if ($s == "()") {
-			//return array("",$prm); // ignore groups that don't have rules
+		if ($s == "()")
 			return "";
-		} else {
-			//die($s);
+		else
 			return $s;
-		}
 	}
 
 	private function array_is_associative ($array)

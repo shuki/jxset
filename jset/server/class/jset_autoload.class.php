@@ -3,7 +3,6 @@ class jset_autoload {
 	public static function get_header($name)
 	{
 		$headers = apache_request_headers();
-		//echo var_dump($headers);
 		return isset($headers[$name]) ? $headers[$name] : (isset($headers[strtoupper($name)]) ? $headers[strtoupper($name)] : '');
 	}
 	
