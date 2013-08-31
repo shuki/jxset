@@ -1165,7 +1165,8 @@
 				},
 				stype: 'select',
 				searchoptions:{
-					sopt:['eq','ne'],					
+					sopt:['eq'],
+					searchOperators: false,					
 					value: {0:'No', 1:'Yes'},
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
