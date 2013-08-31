@@ -652,6 +652,8 @@
 					       save_this.select(); 
 					    },0);
 					});
+
+					$('td.ui-search-oper > a', $.jset.fn.get_grid_container($t)).css('padding', '0');
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
