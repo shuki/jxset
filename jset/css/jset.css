@@ -139,3 +139,7 @@
     border-color: red transparent;
     border-width: 0 10px 10px;
 }
+
+.ui-jqgrid .ui-search-table .ui-search-oper {
+	width: 0;
+}

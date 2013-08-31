@@ -57,7 +57,7 @@
 				hide: false,
 				navButtonAdd: false,
 				options: {
-					searchOperators: false,
+					searchOperators: true,
 					searchOnEnter: false,
 					stringResult: true,
 					defaultSearch: 'cn',
@@ -643,7 +643,15 @@
 					$t.data('loadCompleteInit', false);
 					
 					if ($t.data('settings').filterToolbar.hide)
-						this.toggleToolbar(); 
+						this.toggleToolbar();
+						
+					$('td.ui-search-input > input', $.jset.fn.get_grid_container($t))
+					.on('focus.jset', function(){
+		   				var save_this = $(this);
+					    setTimeout (function(){ 
+					       save_this.select(); 
+					    },0);
+					});
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 

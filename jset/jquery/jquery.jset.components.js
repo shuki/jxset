@@ -201,7 +201,6 @@
 			return $('<input type="text">')
 			.val($.jset.fn.format_date(value))
 			.attr('validate', options.validate);
-
 		},
 		
 		custom_date_value: function(elem, action, value){
