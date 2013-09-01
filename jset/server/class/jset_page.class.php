@@ -10,10 +10,10 @@
 
 class jset_page
 {
-	public static function create($dir_pre)
+	public static function create($dir_pre, $lang = 'en')
 	{
 		self::doctype();
-		self::head($dir_pre);
+		self::head($dir_pre, $lang);
 	}
 	
 	public static function doctype()
@@ -24,7 +24,7 @@ class jset_page
 EOT;
 	}
 	
-	public static function head($dir_pre){
+	public static function head($dir_pre, $lang){
 		$dir_pre = isset($dir_pre) ? $dir_pre : '';
 		echo <<< EOT
 <head>
@@ -46,7 +46,7 @@ EOT;
 <script type="text/javascript">
 		$.jset = {dir_pre: '{$dir_pre}'};
 </script>
-<script src="{$dir_pre}jset/i18n/jset.locale-en.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/i18n/jset.locale-{$lang}.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.dump.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.blockUI.js" type="text/javascript"></script>
@@ -61,8 +61,7 @@ EOT;
 <script src="{$dir_pre}jset/jqGrid/plugins/jquery.contextmenu.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/plugins/ui.multiselect.js" type="text/javascript"></script>
 
-<script src="{$dir_pre}jset/i18n/grid.locale-en.js" type="text/javascript"></script>
-<!--script src="{$dir_pre}jset/jqGrid/js/i18n/grid.locale-en.js" type="text/javascript"></script-->
+<script src="{$dir_pre}jset/i18n/grid.locale-{$lang}.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/js/grid.base.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/js/grid.common.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/js/grid.formedit.js" type="text/javascript"></script>
