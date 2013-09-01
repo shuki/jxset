@@ -11,7 +11,8 @@
 	// variable settings
 	var jset = {
 		messages: {
-			selectboxItemNotFound: "missing value in select box for field: '{0}', missing value: '{1}'"
+			selectboxItemNotFound: "missing value in select box for field: '{0}', missing value: '{1}'",
+			filterToolbar_operandTitle: "Click to select search operation"
 		}
 	};
 

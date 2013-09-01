@@ -61,6 +61,7 @@
 					searchOnEnter: false,
 					stringResult: true,
 					defaultSearch: 'cn',
+					operandTitle : $.jset.messages.filterToolbar_operandTitle,
 					beforeSearch: function(){
 						var $t = $(this);
 						var postData = $t.jqGrid('getGridParam','postData');

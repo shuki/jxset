@@ -11,7 +11,8 @@
 	// variable settings
 	var jset = {
 		messages: {
-			selectboxItemNotFound: "חסר ערך ברשימה לשדה : '{0}', הערך החסר : '{1}'"
+			selectboxItemNotFound: "חסר ערך ברשימה לשדה : '{0}', הערך החסר : '{1}'",
+			filterToolbar_operandTitle: "הקלק כדי לבחור פעולת סינון"
 		}
 	};
 

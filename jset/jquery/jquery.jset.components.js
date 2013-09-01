@@ -1042,6 +1042,7 @@
 				},
 				stype: 'text',
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				},
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
@@ -1123,7 +1124,8 @@
 				searchoptions:{
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
-					}
+					},
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			bit: {
@@ -1143,6 +1145,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			checkbox: {
@@ -1189,6 +1194,8 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					sopt:['eq'],
+					searchOperators: false,
 					value: {0:'No', 1:'Yes'},
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
@@ -1211,6 +1218,8 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					sopt:['eq'],
+					searchOperators: false,
 					value: {0:'No', 1:'Yes'},
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
@@ -1233,6 +1242,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1293,6 +1303,7 @@
 					}
 				},
 				searchoptions:{
+					sopt:['cn','nc','eq','ne','lt','le','gt','ge'],					
 					dataInit: function(col){
 						return $.jset.fn.dateInit;
 					}
@@ -1312,6 +1323,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			decimal:{
@@ -1330,6 +1344,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1342,7 +1357,7 @@
 					size: $.jset.fn.colsize,
 					maxlength: function(col){
 						return col.size ? (col.unsigned ? parseInt(col.size) + 2 : parseInt(col.size) + 1): $.jset.defaults.field_size;
-				},
+					},
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					},
@@ -1351,6 +1366,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1369,6 +1385,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			'enum':{
@@ -1386,6 +1405,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
 					}	
@@ -1407,6 +1427,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1462,28 +1483,7 @@
 					}
 				},
 				searchoptions:{
-					dataInit: function(col){
-						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
-					},
-					sopt:['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
-				}
-			},
-			'intexact':{
-				align:'right',
-				formatter:'text',
-				editoptions:{
-					size: $.jset.fn.colsize,
-					maxlength: function(col){
-						return col.size;
-					},
-					dataInit: function(col){
-						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
-					},
-					defaultValue: function(col){
-						return col.default_value;
-					}
-				},
-				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -1504,6 +1504,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			longtext:{
@@ -1520,6 +1523,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			mediumint:{
@@ -1538,6 +1544,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -1554,6 +1561,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			multicheckbox:{
@@ -1569,6 +1579,10 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn'],
+					searchOperators:false
 				},
 				beforeInitData: function(formid){
 					$(formid).find('input.multicheckbox').attr('checked', false);
@@ -1588,6 +1602,10 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn'],
+					searchOperators: false
 				},
 				onInitializeForm: function(formid){
 					//if in add mode
@@ -1609,6 +1627,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			orexact:{
@@ -1672,7 +1693,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
-					sopt:['eq','ne','lt','le','gt','ge'],					
+					sopt:['eq','ne'],					
 					dataInit: function(col){
 						return $.jset.fn.select_searchoptions_dataInit;
 					}	
@@ -1708,7 +1729,8 @@
 					}
 				},
 				stype: 'select',
-				searchoptions:{
+				searchoptions: {
+					sopt: ['eq','ne'],
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
 					}	
@@ -1729,6 +1751,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
+					sopt: ['eq','ne'],
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
 					}	
@@ -1749,7 +1772,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
-					
+					sopt: ['eq','ne'],
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
 					}	
@@ -1771,6 +1794,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -1827,6 +1851,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			textarea:{
@@ -1844,6 +1871,9 @@
 						return col.default_value;
 					},
 					'class': 'jset-field-padding'
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			editor_textarea:{
@@ -1860,6 +1890,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
@@ -1971,6 +2004,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			timestamp:{
@@ -1984,6 +2020,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			tinyint:{
@@ -2002,6 +2041,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -2018,6 +2058,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			real:{
@@ -2036,6 +2079,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -2308,6 +2352,9 @@
 					defaultValue: function(col){
 						return col.default_value;
 					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
 			weekday:{
@@ -2326,6 +2373,9 @@
 					},
 					custom_element: $.jset.fn.multicheckbox_element,
 					custom_value: $.jset.fn.multicheckbox_value
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				},
 				beforeInitData: function(formid){
 					$(formid).find('input.multicheckbox').attr('checked', false);
@@ -2347,6 +2397,7 @@
 					}
 				},
 				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
