@@ -407,7 +407,7 @@
 			});
 			
 			fn.set_help_tips(grid, formid);
-			$('select,input').addClass('inputfilter FormElement ui-widget-content ui-corner-all');
+			$('select,input', $(formid)).addClass('inputfilter FormElement ui-widget-content ui-corner-all');
 
 			if (grid.data('settings').hide_submit_row) 
 				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
@@ -645,6 +645,8 @@
 					
 					if ($t.data('settings').filterToolbar.hide)
 						this.toggleToolbar();
+
+					$('select,input', $.jset.fn.get_grid_container($t)).addClass('inputfilter FormElement ui-widget-content ui-corner-all');
 						
 					$('td.ui-search-input > input', $.jset.fn.get_grid_container($t))
 					.on('focus.jset', function(){
