@@ -1,2 +1,12 @@
 to update git submodules do:
 git submodule update --init --recursive
+
+to be able to commit changes to a submodle:
+cd to submodlue root directory
+git checkout master
+
+after changing some files commit and push them from the root submodule directory:
+git commit -a -m"some commit message"
+git push
+
+
