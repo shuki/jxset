@@ -218,7 +218,7 @@
 		        	}
 		        },
 		        success: function (label, element) {
-		        	fn.clear_tooltip(element);
+		        	$.jset.fn.clear_tooltip(element);
 		        }				
 			},
 			grid: {        
@@ -280,14 +280,14 @@
 						var grid = $(options.the_grid);
 						grid.data('form_action', 'edit');
 						if (grid.data('settings').load_edit_record)
-							fn.load_edit_record(grid, id, options);
+							$.jset.fn.load_edit_record(grid, id, options);
 						else
-							fn.editfunc(grid, id, options);
+							$.jset.fn.editfunc(grid, id, options);
 					},
 					addfunc: function(options){
 						var grid = $(this);
 						grid.data('form_action', 'add');
-						fn.addfunc(grid, options);
+						$.jset.fn.addfunc(grid, options);
 					}
 				},
 				edit:{
@@ -346,14 +346,14 @@
 		var t = this;
 		t.p = $.extend(true, {}, $.jset.defaults, events, param || {});
 		$(t).append('<img src="' + $.jset.dir_pre + t.p.loading_img + '">');
-		fn.set_source_param(t.p);
+		$.jset.fn.set_source_param(t.p);
 		
-		fn.get_grid_definitions(t.p, function(data){
-			t.p.grid.caption = fn.set(t.p.grid.caption, data.table.title);
-			fn.define_grid_columns(data.columns, t);
+		$.jset.fn.get_grid_definitions(t.p, function(data){
+			t.p.grid.caption = $.jset.fn.set(t.p.grid.caption, data.table.title);
+			$.jset.fn.define_grid_columns(data.columns, t);
 
 			t.each(function(i){
-				fn.setup_grid(t, i, data);
+				$.jset.fn.setup_grid(t, i, data);
 			});
 		});
 	
@@ -370,7 +370,7 @@
 			var $t = $(this);
 			if($t.data('settings') && $t.data('settings').detail){
 				$.each($t.data('settings').detail, function(){
-					fn.get_elem(this.elem).jset('unload');
+					$.jset.fn.get_elem(this.elem).jset('unload');
 				});
 			}
 			
@@ -406,7 +406,7 @@
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
 			});
 			
-			fn.set_help_tips(grid, formid);
+			$.jset.fn.set_help_tips(grid, formid);
 			$('select,input', $(formid)).addClass('FormElement ui-widget-content ui-corner-all');
 
 			if (grid.data('settings').hide_submit_row) 
@@ -425,8 +425,10 @@
 		beforeShowForm: function(formid){
 			var grid = $(this);
 			
-			if($.isFunction(grid.data('settings').beforeShowForm))
-				grid.data('settings').beforeShowForm.call(grid, formid);
+			$.each(grid.data('columns'), function(){
+				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
+					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
+			});
 		},
 		
 		afterShowForm: function(formid){
@@ -451,7 +453,7 @@
 		
 		onclickPgButtons : function (whichbutton, formid, rowid){
 			var grid = $(this);
-			fn.clear_form_tooltips(formid);
+			$.jset.fn.clear_form_tooltips(formid);
 
 			if($.isFunction(grid.data('settings').onclickPgButtons))
 				grid.data('settings').onclickPgButtons.call(grid, whichbutton, formid, rowid);
@@ -464,7 +466,7 @@
 					$.jset.defaults.control[this.control].afterclickPgButtons.call(grid, whichbutton, formid, rowid, this.Field);
 			});
 			
-			fn.load_edit_record(grid, rowid, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false,  formid: formid}));
+			$.jset.fn.load_edit_record(grid, rowid, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false,  formid: formid}));
 			
 			if($.isFunction(grid.data('settings').afterclickPgButtons))
 				grid.data('settings').afterclickPgButtons.call(grid, whichbutton, formid, rowid);
@@ -491,7 +493,7 @@
 				}
 			});
 			
-			var post = fn.unformat_columns(this, postdata);
+			var post = $.jset.fn.unformat_columns(this, postdata);
 			var hard_post = {};
 			
 			$.each(grid.data('settings').filter, function(){
@@ -499,13 +501,13 @@
 			});
 			
 			if(grid.data('settings').target)
-				hard_post[grid.data('settings').prmNames.target] = fn.get_value(grid.data('settings').target);
+				hard_post[grid.data('settings').prmNames.target] = $.jset.fn.get_value(grid.data('settings').target);
 			if(grid.data('settings').host)
-				hard_post[grid.data('settings').prmNames.host] = fn.get_value(grid.data('settings').host);
+				hard_post[grid.data('settings').prmNames.host] = $.jset.fn.get_value(grid.data('settings').host);
 			if(grid.data('settings').db_name)
-				hard_post[grid.data('settings').prmNames.db_name] = fn.get_value(grid.data('settings').db_name);
+				hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name);
 			if(grid.data('settings').db_name_target)
-				hard_post[grid.data('settings').prmNames.db_name] = fn.get_value(grid.data('settings').db_name_target);
+				hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name_target);
 	
 			if(grid.data('copy')){
 				var obj = $.extend(true, {}, grid.jqGrid('getGridParam', 'prmNames'), {
@@ -559,7 +561,7 @@
 		},
 		
 		onClose: function(formid){
-			fn.clear_form_tooltips(formid);
+			$.jset.fn.clear_form_tooltips(formid);
 		}
 	};
 	
@@ -569,10 +571,10 @@
 			beforeRequest: function(){
 				var $t = $(this);
 				var post = $t.jqGrid('getGridParam', 'postData');
-				var post_columns = fn.unformat_columns(this);
-				post_columns[$t.data('settings').prmNames.source] = fn.get_value($t.data('settings').source);
-				if($t.data('settings').db_name) post_columns[$t.data('settings').prmNames.db_name] = fn.get_value($t.data('settings').db_name);
-				if($t.data('settings').host) post_columns[$t.data('settings').prmNames.host] = fn.get_value($t.data('settings').host);
+				var post_columns = $.jset.fn.unformat_columns(this);
+				post_columns[$t.data('settings').prmNames.source] = $.jset.fn.get_value($t.data('settings').source);
+				if($t.data('settings').db_name) post_columns[$t.data('settings').prmNames.db_name] = $.jset.fn.get_value($t.data('settings').db_name);
+				if($t.data('settings').host) post_columns[$t.data('settings').prmNames.host] = $.jset.fn.get_value($t.data('settings').host);
 				if(!$t.data('settings').db_remote_definitions) post_columns[$t.data('settings').prmNames.db_remote_definitions] = $t.data('settings').db_remote_definitions;
 		
 				if ($t.data('init')) {
@@ -666,9 +668,9 @@
 				
 				if($t.data('settings').detail){
 					$.each($t.data('settings').detail, function(){
-						if(!$t.data('settings').pending_create || ($t.data('settings').pending_create && fn.get_elem(this.elem).is(':visible'))){
-							if(!fn.get_elem(this.elem).jset('defined'))
-								fn.get_elem(this.elem).jset($.extend(true, {master: $t}, this.settings));
+						if(!$t.data('settings').pending_create || ($t.data('settings').pending_create && $.jset.fn.get_elem(this.elem).is(':visible'))){
+							if(!$.jset.fn.get_elem(this.elem).jset('defined'))
+								$.jset.fn.get_elem(this.elem).jset($.extend(true, {master: $t}, this.settings));
 						}
 					});
 				}
@@ -689,11 +691,11 @@
 				else 
 					if ($t.data('settings').detail /*&& $t.data('settings').detail.elem.data('loaded')*/) {
 						$t.data('last_selection', null);
-						fn.filter_details($t, '_empty_');
+						$.jset.fn.filter_details($t, '_empty_');
 					}
 		
 				if ($t.data('settings').single_record.active)
-					fn.single_record($t);
+					$.jset.fn.single_record($t);
 		
 				$t.jqGrid('setGridParam', {scrollrows: false});
 				if($.isFunction($t.data('settings').loadComplete))
@@ -705,7 +707,7 @@
 				if(ids != $t.data('last_selection')){
 					if ($t.data('settings').detail){
 						$.each($t.data('settings').detail, function(i){
-							var elem = fn.get_elem(this.elem);
+							var elem = $.jset.fn.get_elem(this.elem);
 							if(this.recreate && elem.jset('defined')){
 								var settings = this.settings;
 								elem.jset('unload');
@@ -713,13 +715,13 @@
 									settings.host = settings.db_fields.host ? $t.jqGrid('getCell', ids, settings.db_fields.host) : '';
 									settings.db_name = settings.db_fields.db_name ? $t.jqGrid('getCell', ids, settings.db_fields.db_name) : '';
 								}
-								elem = fn.get_elem(this.elem);
+								elem = $.jset.fn.get_elem(this.elem);
 								setTimeout(function(){elem.jset($.extend(true, {master: $t}, settings));}, 0);
 							}
 						});
 
-						fn.db_details($t, ids);
-						fn.filter_details($t, ids);
+						$.jset.fn.db_details($t, ids);
+						$.jset.fn.filter_details($t, ids);
 					}
 					$t.data('last_selection', ids);
 					
@@ -743,7 +745,7 @@
 			view:{
 				beforeShowForm: function(formid){
 					var grid = $(this);
-					fn.set_help_tips(grid, formid);
+					$.jset.fn.set_help_tips(grid, formid);
 					if($.isFunction(grid.data('settings').beforeShowFormView))
 						grid.data('settings').beforeShowFormView.call(grid, formid);
 				}
@@ -771,13 +773,13 @@
 					var post = {};
 					var settings = $(eparams.the_grid).data('settings');
 					if(settings.target)
-						post[settings.prmNames.target] = fn.get_value(settings.target);
+						post[settings.prmNames.target] = $.jset.fn.get_value(settings.target);
 					if(settings.host)
-						post[settings.prmNames.host] = fn.get_value(settings.host);
+						post[settings.prmNames.host] = $.jset.fn.get_value(settings.host);
 					if(settings.db_name)
-						post[settings.prmNames.db_name] = fn.get_value(settings.db_name);
+						post[settings.prmNames.db_name] = $.jset.fn.get_value(settings.db_name);
 					if(settings.db_name_target)
-						post[settings.prmNames.db_name] = fn.get_value(settings.db_name_target);
+						post[settings.prmNames.db_name] = $.jset.fn.get_value(settings.db_name_target);
 					return post;
 				},
 
@@ -918,8 +920,8 @@
 				$t = $(this);
 				if($t.data('settings').detail){
 					$.each($t.data('settings').detail, function(){
-						if(!fn.get_elem(this.elem).jset('defined') && fn.get_elem(this.elem).is(':visible'))
-							fn.get_elem(this.elem).jset($.extend(true, {master: $t}, this.settings));
+						if(!$.jset.fn.get_elem(this.elem).jset('defined') && $.jset.fn.get_elem(this.elem).is(':visible'))
+							$.jset.fn.get_elem(this.elem).jset($.extend(true, {master: $t}, this.settings));
 					});
 				}
 			});
@@ -952,12 +954,12 @@
 				params[grid.data('settings').prmNames.db_name] = grid.data('settings').db_name;
 
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
-		}
+		},
 
-	});
+//	});
 
 	// private functions
-	var fn = {
+//	var fn = {
 		get_grid_definitions: function(settings, callback){
 			var jsetParams = {};
 			jsetParams[settings.grid.prmNames.oper] = 'columns,table,index';
@@ -997,12 +999,12 @@
 				lastID: false
 			});
 
-			fn.set_grid_reference($t);
-			fn.set_master_details($t);
-			fn.create_pager_div($t, i);
+			$.jset.fn.set_grid_reference($t);
+			$.jset.fn.set_master_details($t);
+			$.jset.fn.create_pager_div($t, i);
 			$t.addClass('jset_table');	
 			$t.jqGrid($t.data('settings').grid);
-			fn.create_navigator($t, $.jset.fn.get_grid_container($t));															
+			$.jset.fn.create_navigator($t, $.jset.fn.get_grid_container($t));															
 		},
 		
 		set_grid_reference: function($t){
@@ -1028,15 +1030,15 @@
 				$t.data('settings').navigation.view
 			);
 			
-			fn.navigator_refresh_button($t, grid_container);
-			fn.navigator_export_button($t, grid_container);
-			fn.navigator_filter_button($t, grid_container);
-			fn.navigator_copy_button($t, grid_container);
-			fn.navigator_help_button($t, grid_container);
-			fn.navigator_dump_button($t, grid_container);
-			fn.navigator_setup_button($t, grid_container);
-			fn.navigator_columnChooser_button($t, grid_container);
-			fn.filter_toolbar_init($t, grid_container);
+			$.jset.fn.navigator_refresh_button($t, grid_container);
+			$.jset.fn.navigator_export_button($t, grid_container);
+			$.jset.fn.navigator_filter_button($t, grid_container);
+			$.jset.fn.navigator_copy_button($t, grid_container);
+			$.jset.fn.navigator_help_button($t, grid_container);
+			$.jset.fn.navigator_dump_button($t, grid_container);
+			$.jset.fn.navigator_setup_button($t, grid_container);
+			$.jset.fn.navigator_columnChooser_button($t, grid_container);
+			$.jset.fn.filter_toolbar_init($t, grid_container);
 		},
 		
 		navigator_refresh_button: function($t, grid_container){
@@ -1150,7 +1152,7 @@
 							var id = $t.jqGrid('getGridParam', 'selrow');
 							if (id > 0) {
 								$('#' + $t.data('settings').dump.id).html('');
-								fn.get_dump($t, $t.data('settings'), function(data){
+								$.jset.fn.get_dump($t, $t.data('settings'), function(data){
 									$('#' + $t.data('settings').dump.id).html(htmlspecialchars(data));
 									$('#' + $t.data('settings').dump.id).focus().select();
 								});
@@ -1214,7 +1216,7 @@
 		get_dump: function($t, settings, callback){
 			var jsetParams = {};
 			jsetParams[settings.grid.prmNames.oper] = 'dump';
-			jsetParams[settings.prmNames.source] = fn.get_value(settings.source);
+			jsetParams[settings.prmNames.source] = $.jset.fn.get_value(settings.source);
 			jsetParams[settings.grid.prmNames.id] = $t.jqGrid('getGridParam', 'selrow');
 			jsetParams['_editing_state_'] = $t.jqGrid('getCell', jsetParams[settings.grid.prmNames.id], 'editing_state');
 			if(settings.db_name && settings.db_remote_definitions) jsetParams[settings.prmNames.db_name] = settings.db_name;
@@ -1241,8 +1243,8 @@
 		define_grid_columns: function(columns, t){
 			$.each(columns, function(i){
 				t.p.grid.colNames[i] = $.jset.fn.colNames(this);
-				t.p.grid.colModel[i] = fn.colModel(this, i, t);
-				if(this.search_default) fn.search_default(this, t);
+				t.p.grid.colModel[i] = $.jset.fn.colModel(this, i, t);
+				if(this.search_default) $.jset.fn.search_default(this, t);
 			}); 
 		},
 
@@ -1270,7 +1272,7 @@
 			obj.name = col.index ? col.index : col.Field;
 			obj.index = col.Field;
 			obj.width = col.width ? col.width : 80;
-			obj.align = fn.align(col, t);
+			obj.align = $.jset.fn.align(col, t);
 			if(col.hidden == 1){
 				obj.hidden = true;
 				obj.hidedlg = true;
@@ -1278,15 +1280,15 @@
 			if(col.unsortable == 1) obj.sortable = false;
 			obj.export = col.export;
 			obj.editable = (col.noedit == 1) ? false : true;
-			obj.edittype = fn.edittype(col, t);
-			obj.editoptions = fn.editoptions(col, t);
-			obj.editrules = fn.editrules(col);
-			obj.formatter = fn.formatter(col, t);
-			obj.unformat = fn.unformat(col);
-			obj.formatoptions = fn.formatoptions(col, t);
-			obj.formoptions = fn.formoptions(col, i, t);
-			obj.searchoptions = fn.searchoptions(col, t);
-			obj.stype = fn.stype(col, t);
+			obj.edittype = $.jset.fn.edittype(col, t);
+			obj.editoptions = $.jset.fn.editoptions(col, t);
+			obj.editrules = $.jset.fn.editrules(col);
+			obj.formatter = $.jset.fn.formatter(col, t);
+			obj.unformat = $.jset.fn.unformat(col);
+			obj.formatoptions = $.jset.fn.formatoptions(col, t);
+			obj.formoptions = $.jset.fn.formoptions(col, i, t);
+			obj.searchoptions = $.jset.fn.searchoptions(col, t);
+			obj.stype = $.jset.fn.stype(col, t);
 			if (col.object)
 				try {
 					obj = $.extend(true, {}, obj, eval('({' + col.object + '})'));
@@ -1451,7 +1453,7 @@
 		
 		filter_details: function(grid, ids){
 			$.each(grid.data('settings').detail, function(){
-				var elem = fn.get_elem(this.elem);
+				var elem = $.jset.fn.get_elem(this.elem);
 				if(elem.data('loaded')){
 					$.each(elem.data('settings').filter, function(){
 						$('#gs_' + this.target, $.jset.fn.get_grid_container(elem)).val(ids == '_empty_' ? ids : grid.jqGrid('getCell', ids, this.source));
@@ -1468,7 +1470,7 @@
 		
 		db_details: function(grid, ids){
 			$.each(grid.data('settings').detail, function(){
-				var elem = fn.get_elem(this.elem);
+				var elem = $.jset.fn.get_elem(this.elem);
 
 				if(elem.data('loaded')){
 					if(elem.data('settings').db_fields.host)
@@ -1550,7 +1552,7 @@
 					id: rowid,
 					_methods_: 'grid_rows',
 					_search_: true,
-					_source_: fn.get_value(grid.data('settings').source),
+					_source_: $.jset.fn.get_value(grid.data('settings').source),
 					async: false
 				};
 				if (grid.data('settings').host) 
@@ -1570,7 +1572,7 @@
 							$(options.formid).unblock();
 						else
 							$(grid).unblock();
-						fn.editfunc(grid, id, options);
+						$.jset.fn.editfunc(grid, id, options);
 					}else{
 						alert('this record no longer exists');
 						if (typeof options.formid != 'undefined')
@@ -1593,8 +1595,10 @@
 			var list = $(formid).find(':input');
 			$.each(list, function(i, e){
 				if($(e).prop('tooltip'))
-					fn.clear_tooltip(e);
+					$.jset.fn.clear_tooltip(e);
 			});
 		}
-	};
+//	};
+	});
+
 })(jQuery);

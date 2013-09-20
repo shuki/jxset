@@ -2110,80 +2110,81 @@
 				},
 				beforeInitData: function(formid){
 				},
-				onInitializeForm: function(formid){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
-					$.each($('.upload_image', formid), function(){
-						var $this = $(this);
-						$this.hide();
-						var options = grid.data('settings').grid.colModel[grid.data('index')[$(this).attr('id')]]['editoptions'];
-						var image_id = $(this).attr('id') + '_image';
-						if($('#' + image_id, formid).length == 0){
-							var div = $('<div></div>');
-							div.insertBefore($this);
-							var browse = $('<button><span class="ui-icon ui-icon-folder-open"></span></button>');
-							browse.appendTo(div);
-							$this.appendTo(div);
-							var button = $('<button><span class="ui-icon ui-icon-trash"></span></button>');							
-							button.appendTo(div);
-							var separator = $('<div style="height:6px"></div>');
-							separator.appendTo(div);
-							//button.hide();
-							var image = $('<input type="image" />');
+				onInitializeForm: function(formid, id){
+					var $this = $(formid).find('#' + id);
+					var grid = $(this);
+					//$.each($('.upload_image', formid), function(){
+					//var $this = $(this);
+					$this.hide();
+					var options = grid.data('settings').grid.colModel[grid.data('index')[$(this).attr('id')]]['editoptions'];
+					var image_id = $(this).attr('id') + '_image';
+					//if($('#' + image_id, formid).length == 0){
+					var div = $('<div></div>');
+					div.insertBefore($this);
+					var browse = $('<button><span class="ui-icon ui-icon-folder-open"></span></button>');
+					browse.appendTo(div);
+					$this.appendTo(div);
+					var button = $('<button><span class="ui-icon ui-icon-trash"></span></button>');							
+					button.appendTo(div);
+					var separator = $('<div style="height:6px"></div>');
+					separator.appendTo(div);
+					//button.hide();
+					var image = $('<input type="image" />');
 
-							image.attr('id', image_id);
-							image.bind('load', function(){
-								if($(this).width() > $.jset.defaults.upload_image.max_width)
-									$(this).width($.jset.defaults.upload_image.max_width);
-							});
-							image.bind('click', function(){
-								window.open($(this).attr('src'));
-							});
-							image.insertAfter(div);
-							button.bind('click', function(){
-								$this.val('');
-								image.attr('src', '');
-								image.hide();
-							});
+					image.attr('id', image_id);
+					image.bind('load', function(){
+						if($(this).width() > $.jset.defaults.upload_image.max_width)
+							$(this).width($.jset.defaults.upload_image.max_width);
+					});
+					image.bind('click', function(){
+						window.open($(this).attr('src'));
+					});
+					image.insertAfter(div);
+					button.bind('click', function(){
+						$this.val('');
+						image.attr('src', '');
+						image.hide();
+					});
 
-							$this.bind('change', function(){
-								image.attr('src', $(this).val());
-								if(image.attr('src') == '')
-									image.hide();
-								else
-									image.show();
-							});
-							
-							var ajax_upload = new AjaxUpload(browse, $.extend({}, options.upload.ajax,{
-								onSubmit : function(file , ext){
-									rg =	new RegExp("^(" + options.upload.ajax.data.ext + ")$", "i");
-							        if (!(ext && rg.test(ext))){
-							        	alert('this file extension is not allowed');
-							        	return false;
-							        }
-								},
-								onComplete: function(file, response){
-									if(response.error !== undefined){
-										alert(response.error.message);
-										return;
-									}
-						
-									$this.val((options.upload.ajax.data.dir == null ? '' : options.upload.ajax.data.dir) + response.fileName);
-									image.attr('src', $this.val());
-
-									if(image.attr('src') == '')
-										image.hide();
-									else
-										image.show();
-								}
-							}));
-						}
-						
-						$('#' + image_id, formid).attr('src', $this.val());
-						if($('#' + image_id, formid).attr('src') == '')
-							$('#' + image_id, formid).hide();
+					$this.bind('change', function(){
+						image.attr('src', $(this).val());
+						if(image.attr('src') == '')
+							image.hide();
 						else
-							$('#' + image_id, formid).show();
-					});				
+							image.show();
+					});
+					
+					var ajax_upload = new AjaxUpload(browse, $.extend({}, options.upload.ajax,{
+						onSubmit : function(file , ext){
+							rg =	new RegExp("^(" + options.upload.ajax.data.ext + ")$", "i");
+					        if (!(ext && rg.test(ext))){
+					        	alert('this file extension is not allowed');
+					        	return false;
+					        }
+						},
+						onComplete: function(file, response){
+							if(response.error !== undefined){
+								alert(response.error.message);
+								return;
+							}
+				
+							$this.val((options.upload.ajax.data.dir == null ? '' : options.upload.ajax.data.dir) + response.fileName);
+							image.attr('src', $this.val());
+
+							if(image.attr('src') == '')
+								image.hide();
+							else
+								image.show();
+						}
+					}));
+					//}
+					
+					$('#' + image_id, formid).attr('src', $this.val());
+					if($('#' + image_id, formid).attr('src') == '')
+						$('#' + image_id, formid).hide();
+					else
+						$('#' + image_id, formid).show();
+//					});				
 				},
 				empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg'
 			},
@@ -2196,58 +2197,65 @@
 						return col.Field;
 					}
 				},
-				onInitializeForm: function(formid){
+				onInitializeForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					
-					$.each($('input.upload_file', formid), function(){
-						var $this = $(this);
-						var editoptions = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('id')]]['editoptions'];							
-						if($this.siblings().length == 0){
-							$this.hide()
-							.bind('change', function(){
-								target_element.attr('src', $(this).val()) == '' ? target_element.hide() : target_element.show();
-							});
+					//$.each($('input.upload_file', formid), function(){
+					var $this = $('#' + id, formid);
+					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
+					//if($this.siblings().length == 0){
+					$this.hide()
+					.bind('change', function(){
+						target_element.attr('src', $(this).val()) == '' ? target_element.hide() : target_element.show();
+					});
 
-							var div = $('<div></div>')
-							.insertBefore($this)
-							.append($this);
+					var div = $('<div></div>')
+					.insertBefore($this)
+					.append($this);
+					
+					var target_element = $(editoptions.custom_options.target_element);
+					editoptions.custom_options.configure_target(target_element, editoptions);
+					target_element.insertAfter(div);
+											
+					var span = $('<span></span>')
+						.attr('title', editoptions.custom_options.browse_title)
+						.appendTo(div);
+						
+				    var fineUploader = span.fineUploader(editoptions.custom_options.fineUploader)
+				        .on('error', editoptions.custom_options.error_handler)
+				        .on('complete', function(event, id, filename, response){
+							if(response.error !== undefined){
+								alert(response.error);
+								return;
+							}
+
+							var dir = response.dir.replace(/\\\//g, "/");
+							$this.val(dir + response.fileName);
+							editoptions.custom_options.target_value.call(target_element, $this.val())
+				        });
 							
-							var target_element = $(editoptions.custom_options.target_element);
-							editoptions.custom_options.configure_target(target_element, editoptions);
-							target_element.insertAfter(div);
-													
-							var span = $('<span></span>')
-								.attr('title', editoptions.custom_options.browse_title)
-								.appendTo(div);
-								
-						    var fineUploader = span.fineUploader(editoptions.custom_options.fineUploader)
-						        .on('error', editoptions.custom_options.error_handler)
-						        .on('complete', function(event, id, filename, response){
-									if(response.error !== undefined){
-										alert(response.error);
-										return;
-									}
+					$('ul.qq-upload-list').hide();
+					
+					var trash = span.find('.qq-trash-button')
+						.attr('title', editoptions.custom_options.delete_title)
+						.bind('click', function(){
+							$this.val('');
+							editoptions.custom_options.target_value.call(target_element, '')
+						});
+					//}
+					//else
+					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
 
-									var dir = response.dir.replace(/\\\//g, "/");
-									$this.val(dir + response.fileName);
-									editoptions.custom_options.target_value.call(target_element, $this.val())
-						        });
-									
-							$('ul.qq-upload-list').hide();
-							
-							var trash = span.find('.qq-trash-button')
-								.attr('title', editoptions.custom_options.delete_title)
-								.bind('click', function(){
-									$this.val('');
-									editoptions.custom_options.target_value.call(target_element, '')
-								});
-						}
-						else
-							var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-
-						editoptions.custom_options.target_value.call(target_element, $this.val());
-					});				
-				}
+					editoptions.custom_options.target_value.call(target_element, $this.val());
+					//});				
+				},
+				beforeShowForm: function(formid, id){
+					var grid = $(this);
+					var $this = $('#' + id);
+					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
+					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
+					editoptions.custom_options.target_value.call(target_element, $this.val());
+				},
 			},
 			upload_video:{
 				edittype:'custom',
