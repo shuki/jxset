@@ -2199,11 +2199,9 @@
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
-					
-					//$.each($('input.upload_file', formid), function(){
 					var $this = $('#' + id, formid);
 					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
-					//if($this.siblings().length == 0){
+
 					$this.hide()
 					.bind('change', function(){
 						target_element.attr('src', $(this).val()) == '' ? target_element.hide() : target_element.show();
@@ -2231,7 +2229,7 @@
 
 							var dir = response.dir.replace(/\\\//g, "/");
 							$this.val(dir + response.fileName);
-							editoptions.custom_options.target_value.call(target_element, $this.val())
+							editoptions.custom_options.target_value.call(target_element, $this.val());
 				        });
 							
 					$('ul.qq-upload-list').hide();
@@ -2240,22 +2238,16 @@
 						.attr('title', editoptions.custom_options.delete_title)
 						.bind('click', function(){
 							$this.val('');
-							editoptions.custom_options.target_value.call(target_element, '')
+							editoptions.custom_options.target_value.call(target_element, '');
 						});
-					//}
-					//else
-					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-
-					editoptions.custom_options.target_value.call(target_element, $this.val());
-					//});				
 				},
 				beforeShowForm: function(formid, id){
 					var grid = $(this);
-					var $this = $('#' + id);
+					var $this = $('#' + id, formid);
 					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
 					editoptions.custom_options.target_value.call(target_element, $this.val());
-				},
+				}
 			},
 			upload_video:{
 				edittype:'custom',

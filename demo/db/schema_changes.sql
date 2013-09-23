@@ -8,6 +8,8 @@ update jset_column set object = "searchoptions:{
 	sopt: ['eq']
 }" where control in ('intexact', 'checkbox', 'selectbox_text', 'orexact');
 
+update jset_column set control = "int" where control = 'intexact';
+
 update jset_column set object = "searchoptions:{
 	sopt: ['cn']
 }" where control in ('orlike');

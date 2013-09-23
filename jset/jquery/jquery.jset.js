@@ -402,6 +402,7 @@
 			$(formid).validate(grid.data('settings').validate);
 
 			$.each(grid.data('columns'), function(){
+				console.log(this.control);
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
 			});
@@ -1549,7 +1550,7 @@
 				else
 					$.jset.fn.block(grid);
 				var params = {
-					id: rowid,
+					filters: '{"groupOp":"AND","rules":[{"field":"id","op":"eq","data":' + rowid + '}]}',
 					_methods_: 'grid_rows',
 					_search_: true,
 					_source_: $.jset.fn.get_value(grid.data('settings').source),
