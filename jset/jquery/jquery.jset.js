@@ -430,6 +430,9 @@
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
 					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
 			});
+			
+			if($.isFunction(grid.data('settings').beforeShowForm))
+				grid.data('settings').beforeShowForm.call(grid, formid);			
 		},
 		
 		afterShowForm: function(formid){
