@@ -48,6 +48,7 @@ EOT;
 </script>
 <script src="{$dir_pre}jset/i18n/jset.locale-{$lang}.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/jquery/jquery.jset.state.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.dump.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.blockUI.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.inputfilter.js" type="text/javascript"></script>

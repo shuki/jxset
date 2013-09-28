@@ -16,18 +16,22 @@
 	
 	$.jset = ($.jset == undefined) ? jset : $.extend(true, jset, $.jset);
 	
-	// private function used in defaults
-	var fd = {
-		onclickSubmit: function(params, postdata){
-			switch($(params.the_grid).data('form_action')){
-			case 'copy':
-				$(params.the_grid).data('copy', true);
-				break;
-			default:
-				$(params.the_grid).data('copy', false);
+	// function used in defaults
+	$.jset = $.extend(true, $.jset, {
+		fn:{
+			onclickSubmit: function(params, postdata){
+				var grid = $(this);
+				console.log(this);
+				switch(grid.data('form_action')){
+				case 'copy':
+					grid.data('copy', true);
+					break;
+				default:
+					grid.data('copy', false);
+				}
 			}
 		}
-	};
+	});
 
 	// defaults
 	$.jset = $.extend(true, $.jset, {
@@ -53,6 +57,7 @@
 			pending_create: false,
 			hide_submit_row: false,
 			clearSearch: false,
+			persist: true,
 			filterToolbar:{
 				hide: false,
 				navButtonAdd: false,
@@ -100,7 +105,7 @@
 					closeAfterAdd: true,
 					editCaption: 'Copy Record',
 					viewPagerButtons: false,
-					onclickSubmit: fd.onclickSubmit
+					onclickSubmit: $.jset.fn.onclickSubmit
 				},
 				clear_id: true,
 				options: {
@@ -268,7 +273,8 @@
 				toppager: false,
 				footerrow : false,
 				userDataOnFooter : false, 
-				hiddengrid: false
+				hiddengrid: false,
+				sortable: true
 			},
 			navigation:{
 				options : {
@@ -277,7 +283,7 @@
 					view: true,
 					cloneToTop: false,
 					editfunc: function(id, options){
-						var grid = $(options.the_grid);
+						var grid = $(this);
 						grid.data('form_action', 'edit');
 						if (grid.data('settings').load_edit_record)
 							$.jset.fn.load_edit_record(grid, id, options);
@@ -297,7 +303,7 @@
 					closeOnEscape: false,
 					closeAfterEdit: true,
 					closeAfterAdd: true,
-					onclickSubmit: fd.onclickSubmit
+					onclickSubmit: $.jset.fn.onclickSubmit
 				},
 				add:{
 					width: 'auto',
@@ -307,7 +313,7 @@
 					closeAfterAdd: true,
 					clearAfterAdd: false,
 					closeAfterEdit: true,
-					onclickSubmit: fd.onclickSubmit
+					onclickSubmit: $.jset.fn.onclickSubmit
 				},
 				del:{
 					reloadAfterSubmit: true,
@@ -327,15 +333,13 @@
 					closeOnEscape: false
 				}
 			}
-		},
-		
-		fn:{}
+		}
 	});
 
 	// main function
 	$.fn.jset = function(param){
 		if (typeof param == 'string') {
-		  	var f = fx[param];
+		  	var f = $.jset.fx[param];
 		  	if (!f) {
 		  		throw ('jset - No such method: ' + param);
 		  	}
@@ -360,8 +364,8 @@
 		return this;
 	};	
 
-	// exposed functions
-	var fx = {
+	// exposed functions - called using the form $(grid).jset('defined')	
+	$.jset.fx = {
 		defined: function(){
 			return ($(this).data('settings') != undefined);
 		},
@@ -376,13 +380,9 @@
 			
 			$($(this).jqGrid('getGridParam', 'pager')).remove();
 			$(this).jqGrid('GridUnload');
-		},
-		
-		addGrid: function(){
-			
 		}
 	};
-	
+
 	// common events
 	var add_edit_events = {
 		beforeInitData: function(formid){
@@ -402,7 +402,6 @@
 			$(formid).validate(grid.data('settings').validate);
 
 			$.each(grid.data('columns'), function(){
-				console.log(this.control);
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
 			});
@@ -666,10 +665,26 @@
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
+		            if($t.data('settings').persist && $t.data('persist_state')){
+		                $t.jqGrid('remapColumns', $t.data('persist_state').permutation, true);
+		            }
+		            /*
+		            if (typeof ($t[0].ftoolbar) !== "boolean" || !$t[0].ftoolbar) {
+		                // create toolbar if needed
+		                $t.jqGrid('filterToolbar',
+		                    {stringResult: true, searchOnEnter: true, defaultSearch: myDefaultSearch});
+		            }*/
+
 					if($.isFunction($t.data('settings').loadCompleteInit))
 						$t.data('settings').loadCompleteInit.call($t, data);
 				}
-				
+				/*
+				refreshSerchingToolbar($this, myDefaultSearch);
+				for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
+					$this.jqGrid('setSelection', idsOfSelectedRows[i], false);
+				}
+				saveColumnState.call($this, this.p.remapColumns);
+				 */
 				if($t.data('settings').detail){
 					$.each($t.data('settings').detail, function(){
 						if(!$t.data('settings').pending_create || ($t.data('settings').pending_create && $.jset.fn.get_elem(this.elem).is(':visible'))){
@@ -705,10 +720,14 @@
 				if($.isFunction($t.data('settings').loadComplete))
 					$t.data('settings').loadComplete.call($t, data);
 			},
-			onSelectRow: function(ids) {
+			onSelectRow: function(id, isSelected) {
 				var $t = $(this);
+				if($t.data('settings').persist){
+					$.jset.fn.updateIdsOfSelectedRows.call($t, id, isSelected);
+					$.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
+				}
 				var selrow = $t.jqGrid('getGridParam', 'selrow');
-				if(ids != $t.data('last_selection')){
+				if(id != $t.data('last_selection')){
 					if ($t.data('settings').detail){
 						$.each($t.data('settings').detail, function(i){
 							var elem = $.jset.fn.get_elem(this.elem);
@@ -716,29 +735,46 @@
 								var settings = this.settings;
 								elem.jset('unload');
 								if(settings.db_fields){
-									settings.host = settings.db_fields.host ? $t.jqGrid('getCell', ids, settings.db_fields.host) : '';
-									settings.db_name = settings.db_fields.db_name ? $t.jqGrid('getCell', ids, settings.db_fields.db_name) : '';
+									settings.host = settings.db_fields.host ? $t.jqGrid('getCell', id, settings.db_fields.host) : '';
+									settings.db_name = settings.db_fields.db_name ? $t.jqGrid('getCell', id, settings.db_fields.db_name) : '';
 								}
 								elem = $.jset.fn.get_elem(this.elem);
 								setTimeout(function(){elem.jset($.extend(true, {master: $t}, settings));}, 0);
 							}
 						});
 
-						$.jset.fn.db_details($t, ids);
-						$.jset.fn.filter_details($t, ids);
+						$.jset.fn.db_details($t, id);
+						$.jset.fn.filter_details($t, id);
 					}
-					$t.data('last_selection', ids);
+					$t.data('last_selection', id);
 					
 					if($.isFunction($t.data('settings').onSelectRow))
-						$t.data('settings').onSelectRow.call($t, ids);
+						$t.data('settings').onSelectRow.call($t, id, isSelected);
 				}
 			},
-			
+			onSelectAll: function (aRowids, isSelected) {
+				var $t = $(this);
+				if($t.data('settings').persist){
+			        var i, count, id;
+			        for (i = 0, count = aRowids.length; i < count; i++) {
+			            id = aRowids[i];
+			            $.jset.fn.updateIdsOfSelectedRows(id, isSelected);
+			        }
+			        $.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
+				}
+		    },
+
 			ondblClickRow: function(rowId, iRow, iCol, e){
 				if(rowId && $(this).data('settings').navigation.options.edit != false){
 					$(this).data('settings').navigation.options.editfunc(rowId, $(this).data('settings').navigation.edit);
 					$(this).jqGrid('setSelection',rowId);	
 				}
+			},
+			
+			resizeStop: function () {
+				var $t = $(this);
+				if($t.data('settings').persist)
+					$.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
 			}
 		},
 		
@@ -774,8 +810,10 @@
 				},
 				
 				onclickSubmit : function(eparams){
+					var grid = $(this);
 					var post = {};
-					var settings = $(eparams.the_grid).data('settings');
+					var settings = grid.data('settings');
+					console.log(settings);
 					if(settings.target)
 						post[settings.prmNames.target] = $.jset.fn.get_value(settings.target);
 					if(settings.host)
@@ -960,10 +998,6 @@
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
 
-//	});
-
-	// private functions
-//	var fn = {
 		get_grid_definitions: function(settings, callback){
 			var jsetParams = {};
 			jsetParams[settings.grid.prmNames.oper] = 'columns,table,index';
@@ -1000,22 +1034,24 @@
 				init: true,
 				loadCompleteInit: true,
 				loaded: false,
-				lastID: false
+				lastID: false,
+				idsOfSelectedRows: []
 			});
 
-			$.jset.fn.set_grid_reference($t);
 			$.jset.fn.set_master_details($t);
 			$.jset.fn.create_pager_div($t, i);
 			$t.addClass('jset_table');	
-			$t.jqGrid($t.data('settings').grid);
+			var grid_settings = {};
+			if($t.data('settings').persist){
+				$.extend(true, grid_settings, t.p.grid);
+				$t.data('persist_state', $.jset.fn.restoreColumnState.call($t, grid_settings.colModel));
+			}
+			$t.jqGrid(t.p.persist ? grid_settings : $t.data('settings').grid);
+			if($t.data('settings').persist)
+				$.jset.fn.get_grid_container($t).bind("sortstop", function(){
+				    $.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
+				});
 			$.jset.fn.create_navigator($t, $.jset.fn.get_grid_container($t));															
-		},
-		
-		set_grid_reference: function($t){
-				$t.data('settings').navigation.edit.the_grid = $t[0];
-				$t.data('settings').navigation.add.the_grid = $t[0];
-				$t.data('settings').navigation.del.the_grid = $t[0];
-				$t.data('settings').navigation.view.the_grid = $t[0];
 		},
 		
 		create_pager_div: function($t, i){
@@ -1042,6 +1078,7 @@
 			$.jset.fn.navigator_dump_button($t, grid_container);
 			$.jset.fn.navigator_setup_button($t, grid_container);
 			$.jset.fn.navigator_columnChooser_button($t, grid_container);
+			$.jset.fn.navigator_clearpersist_button($t, grid_container);
 			$.jset.fn.filter_toolbar_init($t, grid_container);
 		},
 		
@@ -1205,6 +1242,8 @@
 				                    if (perm) {
 				                        $t.jqGrid("remapColumns", perm, true);
 				                        $t.jqGrid("setGridWidth", $t.data('grid_width'));
+										if($t.data('settings').persist)
+											$.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
 									}
 								}
 							});
@@ -1214,9 +1253,33 @@
 				$.extend(true, $.jgrid.col, $t.data('settings').columnChooser.col);	
 							
 				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, options);
+				if ($t.data('settings').navigation.options.cloneToTop)
+					$t.jqGrid('navButtonAdd', $t.attr('id') + '_toppager', options);
 			}
 		},
-		
+
+		navigator_clearpersist_button: function($t, grid_container){
+			if ($t.data('settings').persist) {
+					var options = {
+				    caption: "",
+				    buttonicon: "ui-icon-closethick",
+				    title: "clear saved grid's settings",
+				    onClickButton: function () {
+				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
+				        var settings = $.extend(true, {}, $t.data('settings'));
+				        var id = $t.attr('id');
+				        $t.jset('unload');
+				        $('table#' + id).jset(settings);
+				        //window.location.reload();
+				    }
+				};
+							
+				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, options);
+				if ($t.data('settings').navigation.options.cloneToTop)
+					$t.jqGrid('navButtonAdd', $t.attr('id') + '_toppager', options);
+			}
+		},
+
 		get_dump: function($t, settings, callback){
 			var jsetParams = {};
 			jsetParams[settings.grid.prmNames.oper] = 'dump';
@@ -1602,7 +1665,6 @@
 					$.jset.fn.clear_tooltip(e);
 			});
 		}
-//	};
 	});
 
 })(jQuery);
