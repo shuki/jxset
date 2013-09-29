@@ -21,7 +21,6 @@
 		fn:{
 			onclickSubmit: function(params, postdata){
 				var grid = $(this);
-				console.log(this);
 				switch(grid.data('form_action')){
 				case 'copy':
 					grid.data('copy', true);
@@ -156,7 +155,8 @@
 				navButtonAdd: true,
 				options: {
 					caption: '',
-					title: 'Choose Columns',
+					//title: 'Choose Columns',
+					title: $.jset.nav.columnChooserCaption,
 					buttonicon: 'ui-icon-calculator',
 					position: 'last'
 				},
@@ -178,6 +178,23 @@
 				        hide: 'explode'
 				    }
 				}
+			},
+			clearPersist: {
+				navButtonAdd: true,
+				options: {
+				    caption: "",
+				    buttonicon: "ui-icon-closethick",
+				    title: $.jset.nav.clearPersistTitle,
+				    onClickButton: function () {
+				    	$t = $(this);
+				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
+				        var settings = $.extend(true, {}, $t.data('settings'));
+				        var id = $t.attr('id');
+				        $t.jset('unload');
+				        $('table#' + id).jset(settings);
+				        //localStorage.clear();
+				    }
+				}				
 			},
 			empty: false,
 			single_record: {
@@ -266,7 +283,7 @@
 				altRows: true,
 				altclass: 'altclass',
 				viewrecords: true,
-				sortorder: 'asc',
+				//sortorder: 'asc',
 				multiSort: false,
 				caption: '',
 				//toolbar : [true,'top'],
@@ -665,26 +682,18 @@
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
-		            if($t.data('settings').persist && $t.data('persist_state')){
-		                $t.jqGrid('remapColumns', $t.data('persist_state').permutation, true);
-		            }
-		            /*
-		            if (typeof ($t[0].ftoolbar) !== "boolean" || !$t[0].ftoolbar) {
-		                // create toolbar if needed
-		                $t.jqGrid('filterToolbar',
-		                    {stringResult: true, searchOnEnter: true, defaultSearch: myDefaultSearch});
-		            }*/
-
+		            if($t.data('settings').persist && $t.data('persist_state') && $t.data('persist_state').otherState){
+		            	if($t.data('persist_state').otherState.permutation.length)
+		            		$t.jqGrid('remapColumns', $t.data('persist_state').otherState.permutation, true);
+		            } 
+		                
 					if($.isFunction($t.data('settings').loadCompleteInit))
 						$t.data('settings').loadCompleteInit.call($t, data);
 				}
-				/*
-				refreshSerchingToolbar($this, myDefaultSearch);
-				for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
-					$this.jqGrid('setSelection', idsOfSelectedRows[i], false);
-				}
-				saveColumnState.call($this, this.p.remapColumns);
-				 */
+				
+				if($t.data('settings').persist)
+					$.jset.fn.saveGridState.call($t);
+				 
 				if($t.data('settings').detail){
 					$.each($t.data('settings').detail, function(){
 						if(!$t.data('settings').pending_create || ($t.data('settings').pending_create && $.jset.fn.get_elem(this.elem).is(':visible'))){
@@ -708,7 +717,7 @@
 					$t.jqGrid('setSelection', $t.jqGrid('getDataIDs')[0]);
 				}
 				else 
-					if ($t.data('settings').detail /*&& $t.data('settings').detail.elem.data('loaded')*/) {
+					if ($t.data('settings').detail) { //&& $t.data('settings').detail.elem.data('loaded')
 						$t.data('last_selection', null);
 						$.jset.fn.filter_details($t, '_empty_');
 					}
@@ -722,10 +731,6 @@
 			},
 			onSelectRow: function(id, isSelected) {
 				var $t = $(this);
-				if($t.data('settings').persist){
-					$.jset.fn.updateIdsOfSelectedRows.call($t, id, isSelected);
-					$.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
-				}
 				var selrow = $t.jqGrid('getGridParam', 'selrow');
 				if(id != $t.data('last_selection')){
 					if ($t.data('settings').detail){
@@ -752,29 +757,23 @@
 						$t.data('settings').onSelectRow.call($t, id, isSelected);
 				}
 			},
+			
 			onSelectAll: function (aRowids, isSelected) {
-				var $t = $(this);
-				if($t.data('settings').persist){
-			        var i, count, id;
-			        for (i = 0, count = aRowids.length; i < count; i++) {
-			            id = aRowids[i];
-			            $.jset.fn.updateIdsOfSelectedRows(id, isSelected);
-			        }
-			        $.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
-				}
+				//var $t = $(this);
 		    },
 
 			ondblClickRow: function(rowId, iRow, iCol, e){
-				if(rowId && $(this).data('settings').navigation.options.edit != false){
-					$(this).data('settings').navigation.options.editfunc(rowId, $(this).data('settings').navigation.edit);
-					$(this).jqGrid('setSelection',rowId);	
+				var $t = $(this);
+				if(rowId && $t.data('settings').navigation.options.edit != false){
+					$t.data('settings').navigation.options.editfunc.call($t, rowId, $t.data('settings').navigation.edit);
+					$t.jqGrid('setSelection',rowId);	
 				}
 			},
 			
 			resizeStop: function () {
 				var $t = $(this);
 				if($t.data('settings').persist)
-					$.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
+					$.jset.fn.saveGridState.call($t);
 			}
 		},
 		
@@ -813,7 +812,6 @@
 					var grid = $(this);
 					var post = {};
 					var settings = grid.data('settings');
-					console.log(settings);
 					if(settings.target)
 						post[settings.prmNames.target] = $.jset.fn.get_value(settings.target);
 					if(settings.host)
@@ -1044,12 +1042,13 @@
 			var grid_settings = {};
 			if($t.data('settings').persist){
 				$.extend(true, grid_settings, t.p.grid);
-				$t.data('persist_state', $.jset.fn.restoreColumnState.call($t, grid_settings.colModel));
+				$.jset.fn.restoreGridState.call($t, grid_settings);
 			}
 			$t.jqGrid(t.p.persist ? grid_settings : $t.data('settings').grid);
+
 			if($t.data('settings').persist)
 				$.jset.fn.get_grid_container($t).bind("sortstop", function(){
-				    $.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
+				    $.jset.fn.saveGridState.call($t);
 				});
 			$.jset.fn.create_navigator($t, $.jset.fn.get_grid_container($t));															
 		},
@@ -1078,7 +1077,7 @@
 			$.jset.fn.navigator_dump_button($t, grid_container);
 			$.jset.fn.navigator_setup_button($t, grid_container);
 			$.jset.fn.navigator_columnChooser_button($t, grid_container);
-			$.jset.fn.navigator_clearpersist_button($t, grid_container);
+			$.jset.fn.navigator_clearPersist_button($t, grid_container);
 			$.jset.fn.filter_toolbar_init($t, grid_container);
 		},
 		
@@ -1243,7 +1242,7 @@
 				                        $t.jqGrid("remapColumns", perm, true);
 				                        $t.jqGrid("setGridWidth", $t.data('grid_width'));
 										if($t.data('settings').persist)
-											$.jset.fn.saveColumnState.call($t, $t.jqGrid("getGridParam", "remapColumns"));
+											$.jset.fn.saveGridState.call($t);
 									}
 								}
 							});
@@ -1258,25 +1257,11 @@
 			}
 		},
 
-		navigator_clearpersist_button: function($t, grid_container){
-			if ($t.data('settings').persist) {
-					var options = {
-				    caption: "",
-				    buttonicon: "ui-icon-closethick",
-				    title: "clear saved grid's settings",
-				    onClickButton: function () {
-				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
-				        var settings = $.extend(true, {}, $t.data('settings'));
-				        var id = $t.attr('id');
-				        $t.jset('unload');
-				        $('table#' + id).jset(settings);
-				        //window.location.reload();
-				    }
-				};
-							
-				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, options);
+		navigator_clearPersist_button: function($t, grid_container){
+			if($t.data('settings').persist && $t.data('settings').clearPersist.navButtonAdd) {
+				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, $t.data('settings').clearPersist.options);
 				if ($t.data('settings').navigation.options.cloneToTop)
-					$t.jqGrid('navButtonAdd', $t.attr('id') + '_toppager', options);
+					$t.jqGrid('navButtonAdd', $t.attr('id') + '_toppager', $t.data('settings').clearPersist.options);
 			}
 		},
 

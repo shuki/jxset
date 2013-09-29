@@ -13,6 +13,10 @@
 		messages: {
 			selectboxItemNotFound: "missing value in select box for field: '{0}', missing value: '{1}'",
 			filterToolbar_operandTitle: "Click to select search operation"
+		},
+		nav: {
+			columnChooserTitle: 'Select Columns',
+			clearPersistTitle: 'Clear Personal Settings'
 		}
 	};
 
