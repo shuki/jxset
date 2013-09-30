@@ -12,6 +12,9 @@ class jset_autoload {
 		if(!isset($parts[1]))
 			return '';
 
+		// remove parameters from url
+		$clean = explode('?', $parts[1],2);
+		$parts[1] = $clean[0];
 		$last_part_array = explode('/', $parts[1]);
 
 		if(strstr($last_part_array[count($last_part_array) - 1], '.php') !== false)
