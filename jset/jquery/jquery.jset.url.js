@@ -1,19 +1,17 @@
-;(function ($) {
+;(function($){
 	$.extend($.jset.fn, {
 		url_filters: function(){
 			var urlVars = $.getUrlVars();
 			var searchDefaults = [];
 			var gridOptions = {};
 			var liveSettings = {};
-			//$.dump(urlVars);
 			$.each(urlVars, function(key, value){
-				//alert(key + ':' + value + ':' + urlVars[value]);
 				switch(value){
 					case '_order_by_':
 						gridOptions.sortname = urlVars[value];
 						break;
 					case '_order_direction_':
-						gridOptions.sortorder = urlVars[value];
+						gridOptions.sortorder = (urlVars[value] == 'desc') ? 'desc' : 'asc';
 						break;
 					default:
 						var obj = {};
@@ -22,7 +20,6 @@
 						searchDefaults.push(obj);
 				}
 			});
-			
 			liveSettings.grid = gridOptions;
 			liveSettings.search_default = searchDefaults;
 			return liveSettings;

@@ -609,10 +609,13 @@
 						return false;
 				  }
 				} 
-				
-				var order_by_name = post['_order_by_'] + '_name';
-				if(post._order_by_ && $t.data('columns')[$t.data('index')[post._order_by_]].list && typeof $t.data('columns')[$t.data('index')[post._order_by_ + '_name']] != "undefined")
-					post._order_by_ = post._order_by_ + '_name';
+									
+				if($t.data('index')[post._order_by_] != undefined){
+					var order_by_name = post['_order_by_'] + '_name';
+					if(post._order_by_ && $t.data('columns')[$t.data('index')[post._order_by_]].list && typeof $t.data('columns')[$t.data('index')[post._order_by_ + '_name']] != "undefined")
+						post._order_by_ = post._order_by_ + '_name';
+				} else
+					delete post._order_by_;
 					
 				if($t.data('export') === true){
 					$t.data('export', false);
@@ -1282,11 +1285,13 @@
 			if ($t.data('settings').search_default.length > 0) {
 				$.each($t.data('settings').search_default, function(i){
 					var acolModel = $t.data('settings').grid.colModel[$t.data('index')[this.name]];
-					var $elem = $('#gs_' + acolModel.name, grid_container);
-					if(acolModel.stype === 'custom' && acolModel.searchoptions != undefined && $.isFunction(acolModel.searchoptions.custom_value))
-						acolModel.searchoptions.custom_value.call($t, $elem, "set", this.value);
-					else
-						$elem.val(this.value);
+					if(acolModel != undefined){
+						var $elem = $('#gs_' + acolModel.name, grid_container);
+						if(acolModel.stype === 'custom' && acolModel.searchoptions != undefined && $.isFunction(acolModel.searchoptions.custom_value))
+							acolModel.searchoptions.custom_value.call($t, $elem, "set", this.value);
+						else
+							$elem.val(this.value);
+					}
 				});
 				$t[0].triggerToolbar();
 			}
