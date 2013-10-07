@@ -395,7 +395,9 @@ $.extend($.validator, {
 		// http://docs.jquery.com/Plugins/Validation/Validator/resetForm
 		resetForm: function() {
 			if ( $.fn.resetForm ) {
-				$( this.currentForm ).resetForm();
+				//shuki 6/10/2013 comment out as it conflicts with form plugin when in use 
+				//$( this.currentForm ).resetForm();
+				//shuki end
 			}
 			this.submitted = {};
 			this.lastElement = null;
