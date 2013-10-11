@@ -198,8 +198,10 @@
 		},
 		
 		custom_date_element: function(value, options){
+			console.log(options);
 			return $('<input type="text">')
 			.val($.jset.fn.format_date(value))
+			.attr('size', options.size)
 			.attr('validate', options.validate);
 		},
 		
@@ -784,6 +786,7 @@
 		datepicker: {
 			dateFormat:'dd/mm/yy',
 			changeYear:true,
+			changeMonth:true,
 			yearRange:'1800:2100',
 			onSelect: function(dateText, inst){
 				if($(this).attr('id').substr(0,3) == 'gs_' && $(this).attr('name').substr(0,3) != 'gs_')
@@ -1018,6 +1021,7 @@
 				edittype: 'custom',
 				editoptions: {
 					value: {},
+					size: $.jset.fn.colsize,
 					defaultValue: function(col){
 						return col.default_value;
 					},
@@ -1065,6 +1069,7 @@
 						var target_element = $('<input/>')
 						.attr('id', elem.attr('name') + '_autocomplete')
 						.attr('name', elem.attr('name') + '_autocomplete')
+						.attr('size', editoptions.size)
 						.addClass('ui-widget-content ui-corner-all ui-widget')
 						.css({'font-size': '1em', display: 'inline-block', 'vertical-align': 'text-top'})
 						.addClass('jset-field-padding')
@@ -1268,6 +1273,7 @@
 				edittype:'custom',
 				stype: 'custom',
 				editoptions:{
+					size: $.jset.fn.colsize,
 					defaultValue: function(col){
 						return col.default_value;
 					}
