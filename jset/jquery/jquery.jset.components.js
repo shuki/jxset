@@ -198,7 +198,6 @@
 		},
 		
 		custom_date_element: function(value, options){
-			console.log(options);
 			return $('<input type="text">')
 			.val($.jset.fn.format_date(value))
 			.attr('size', options.size)
