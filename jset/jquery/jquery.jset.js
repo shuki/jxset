@@ -710,7 +710,7 @@
 					$t.data('loaded', true);
 				}
 
-				if ($t.jqGrid('getGridParam', 'records') != 0) {
+				if ($t.jqGrid('getGridParam', 'records') != 0 && !$t.data('settings').grid.multiselect) {
 					if($t.data('lastID')){
 						$t.jqGrid('setSelection', $t.data('lastID'));
 						$t.data('lastID', false);
