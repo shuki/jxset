@@ -189,7 +189,7 @@
 				    	$t = $(this);
 				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
 				        var settings = $.extend(true, {}, $t.data('settings'));
-				        console.log(settings);
+				        //console.log(settings);
 				        var id = $t.attr('id');
 				        $t.jset('unload');
 				        $('table#' + id).jset(settings);
