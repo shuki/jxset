@@ -116,6 +116,11 @@
 			},
 			setup:{
 				navButtonAdd: false,
+				options: {
+					caption:'',
+					title:'Setup Grid', 
+					buttonicon :'ui-icon-wrench'
+				},
 				settings: {
 					source: 'jset_help',
 					setup:{
@@ -189,7 +194,6 @@
 				    	$t = $(this);
 				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
 				        var settings = $.extend(true, {}, $t.data('settings'));
-				        //console.log(settings);
 				        var id = $t.attr('id');
 				        $t.jset('unload');
 				        $('table#' + id).jset(settings);
@@ -733,6 +737,15 @@
 				if($.isFunction($t.data('settings').loadComplete))
 					$t.data('settings').loadComplete.call($t, data);
 			},
+			beforeSelectRow: function (rowid, e) {
+			    var grid = $(this);
+			    if(grid.data('settings').grid.multiselect){
+					var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+			        cm = grid.jqGrid('getGridParam', 'colModel');
+				    return (i == 0 && cm[i].name === 'cb');
+			    } else
+			    	return true;
+			},
 			onSelectRow: function(id, isSelected) {
 				var $t = $(this);
 				var selrow = $t.jqGrid('getGridParam', 'selrow');
@@ -1160,17 +1173,15 @@
 				grid_container.append(setup);
 				setup.dialog($t.data('settings').setup.dialog);
 				
-				var options = {
-					caption:'',
-					title:'Setup Grid', 
-					buttonicon :'ui-icon-wrench', 
+				var options = $.extend(true, {}, $t.data('settings').setup.options,
+					{
 					onClickButton:function(){
 						if(!$('#' + setup_id).jset('defined'))
 							$('#' + setup_id).jset($.extend(true, {}, $t.data('settings').setup.settings, {search_default:[{name: 'parent', value: $t.data('table').id}]}));
 						var position = grid_container.offset();
 						setup.dialog('isOpen') ? setup.dialog('close') : setup.dialog('option', 'position', [parseInt(position.left), parseInt(position.top)]), setup.dialog('open');
 					}
-				};
+				});
 				
 				$t.jqGrid('navButtonAdd',$t.data('settings').grid.pager, options);			
 				if ($t.data('settings').navigation.options.cloneToTop)
@@ -1347,14 +1358,18 @@
 			obj.formoptions = $.jset.fn.formoptions(col, i, t);
 			obj.searchoptions = $.jset.fn.searchoptions(col, t);
 			obj.stype = $.jset.fn.stype(col, t);
-			if (col.object)
+			if (col.object){
 				try {
-					obj = $.extend(true, {}, obj, eval('({' + col.object + '})'));
+					var col_object = eval('({' + col.object + '})');
 				} 
 				catch (e) {
 					alert( 'column ' + obj.name + '\nobject definition ' + e.name + '\n' + e.message);
 				}
-				
+				if(col_object.searchoptions && col_object.searchoptions.sopt && obj.searchoptions.sopt && obj.searchoptions.sopt.length > 0)
+					obj.searchoptions.sopt = [];
+					
+				obj = $.extend(true, {}, obj, col_object);
+			}
 			return obj;
 		},
 		
