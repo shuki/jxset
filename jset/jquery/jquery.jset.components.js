@@ -1718,6 +1718,8 @@
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					var elem = $(formid).find('#' + id);
 					var name = $(elem).attr('name');
+					//console.log(id);
+					//console.log(name, grid.data('columns')[grid.data('index')[name]]);
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.jset', [true]);
 				}

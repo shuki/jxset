@@ -193,10 +193,7 @@
 				    onClickButton: function () {
 				    	$t = $(this);
 				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
-				        var settings = $.extend(true, {}, $t.data('settings'));
-				        var id = $t.attr('id');
-				        $t.jset('unload');
-				        $('table#' + id).jset(settings);
+				        $t.jset('reload');
 				        //localStorage.clear();
 				    }
 				}				
@@ -402,6 +399,23 @@
 			
 			$($(this).jqGrid('getGridParam', 'pager')).remove();
 			$(this).jqGrid('GridUnload');
+		},
+		
+		pending_reload: function(){
+	    	$t = $(this);
+	    	if($t.jset('defined'))
+	    		$t.data('pending_reload', true);
+		},
+		
+		reload: function(){
+	    	$t = $(this);
+	    		
+	    	$t.data('pending_reload', false);
+	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
+	        var settings = $.extend(true, {}, $t.data('settings'));
+	        var id = $t.attr('id');
+	        $t.jset('unload');
+	        $('table#' + id).jset(settings);
 		}
 	};
 
@@ -424,6 +438,7 @@
 			$(formid).validate(grid.data('settings').validate);
 
 			$.each(grid.data('columns'), function(){
+				//console.log(this, this.control, $.jset.defaults.control[this.control]);
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
 			});
