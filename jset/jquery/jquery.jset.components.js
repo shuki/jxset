@@ -1397,6 +1397,12 @@
 					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
 				}
 			},
+			
+			email:{
+				align: 'left',
+				formatter: 'emailFmatter'
+			},
+			
 			'enum':{
 				align: 'left',
 				formatter: 'select',

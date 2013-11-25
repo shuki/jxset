@@ -88,7 +88,11 @@
 		},
 
 	    currencyFmatter : function(cellvalue, options, rowdata) {
-	    return "$$"+cellvalue;
+	    	return "$$"+cellvalue;
+		},
+		
+	    emailFmatter : function(cellvalue, options, rowdata, act) {
+	    	return '<a href="mailto:' + cellvalue + '">' + cellvalue + '</a>';
 		},
 		
 		checkbox_edit : function(cval, opts, rowdata) {

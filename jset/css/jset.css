@@ -1,3 +1,7 @@
+.ui-jqgrid .ui-jqgrid-btable{
+	border-collapse: separate;
+}
+
 .ui-datepicker {
 	z-index: 950;
 }

@@ -52,9 +52,11 @@
 			loading_img: '/jset/img/loading.gif',
 			spacing: '20px',
 			caption_class: 'CaptionField',
+			row_selection: true,
 			load_edit_record: false,
 			pending_create: false,
 			hide_submit_row: false,
+			hide_horizontal_scrollbar: false,
 			clearSearch: false,
 			persist: true,
 			filterToolbar:{
@@ -684,6 +686,7 @@
 		
 			loadComplete: function(data){
 				var $t = $(this);
+				var container = $.jset.fn.get_grid_container($t);
 
 				if ($t.data('loadCompleteInit')) {
 					$t.data('loadCompleteInit', false);
@@ -691,9 +694,9 @@
 					if ($t.data('settings').filterToolbar.hide)
 						this.toggleToolbar();
 
-					$('select,input', $.jset.fn.get_grid_container($t)).addClass('FormElement ui-widget-content ui-corner-all');
+					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
 						
-					$('td.ui-search-input > input', $.jset.fn.get_grid_container($t))
+					$('td.ui-search-input > input', container)
 					.on('focus.jset', function(){
 		   				var save_this = $(this);
 					    setTimeout (function(){ 
@@ -701,14 +704,17 @@
 					    },0);
 					});
 
-					$('td.ui-search-oper > a', $.jset.fn.get_grid_container($t)).css('padding', '0');
+					$('td.ui-search-oper > a', container).css('padding', '0');
 					
 					$t.data('grid_width', $t.jqGrid('getGridParam', 'width'));
 
 		            if($t.data('settings').persist && $t.data('persist_state') && $t.data('persist_state').otherState){
 		            	if($t.data('persist_state').otherState.permutation.length)
 		            		$t.jqGrid('remapColumns', $t.data('persist_state').otherState.permutation, true);
-		            } 
+		            }
+		            
+		            if($t.data('settings').hide_horizontal_scrollbar)
+		            	$('.ui-jqgrid .ui-jqgrid-bdiv').css('overflow-x', 'hidden');
 		                
 					if($.isFunction($t.data('settings').loadCompleteInit))
 						$t.data('settings').loadCompleteInit.call($t, data);
@@ -730,22 +736,23 @@
 					$t.data('loaded', true);
 				}
 
-				if ($t.jqGrid('getGridParam', 'records') != 0 && !$t.data('settings').grid.multiselect) {
+				if($t.data('settings').row_selection === true && $t.jqGrid('getGridParam', 'records') != 0 && !$t.data('settings').grid.multiselect) {
 					if($t.data('lastID')){
 						$t.jqGrid('setSelection', $t.data('lastID'));
 						$t.data('lastID', false);
 						if(!$t.jqGrid('getGridParam', 'selrow'))
 							$t.jqGrid('setSelection', $t.jqGrid('getDataIDs')[0]);
-					} else
-					$t.jqGrid('setSelection', $t.jqGrid('getDataIDs')[0]);
+					}
+					else
+						$t.jqGrid('setSelection', $t.jqGrid('getDataIDs')[0]);
 				}
 				else 
-					if ($t.data('settings').detail) { //&& $t.data('settings').detail.elem.data('loaded')
+					if($t.data('settings').detail) { //&& $t.data('settings').detail.elem.data('loaded')
 						$t.data('last_selection', null);
 						$.jset.fn.filter_details($t, '_empty_');
 					}
 		
-				if ($t.data('settings').single_record.active)
+				if($t.data('settings').single_record.active)
 					$.jset.fn.single_record($t);
 		
 				$t.jqGrid('setGridParam', {scrollrows: false});
@@ -754,6 +761,9 @@
 			},
 			beforeSelectRow: function (rowid, e) {
 			    var grid = $(this);
+			    if(grid.data('settings').row_selection !== true)
+			    	return false;
+			    	
 			    if(grid.data('settings').grid.multiselect){
 					var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
 			        cm = grid.jqGrid('getGridParam', 'colModel');
@@ -764,6 +774,7 @@
 			onSelectRow: function(id, isSelected) {
 				var $t = $(this);
 				var selrow = $t.jqGrid('getGridParam', 'selrow');
+				
 				if(id != $t.data('last_selection')){
 					if ($t.data('settings').detail){
 						$.each($t.data('settings').detail, function(i){
@@ -1082,7 +1093,10 @@
 				$.jset.fn.get_grid_container($t).bind("sortstop", function(){
 				    $.jset.fn.saveGridState.call($t);
 				});
+				
 			$.jset.fn.create_navigator($t, $.jset.fn.get_grid_container($t));															
+			if($t.data('settings').create_navigator === false)
+				$('div.ui-jqgrid-pager', $.jset.fn.get_grid_container($t)).hide();
 		},
 		
 		create_pager_div: function($t, i){
