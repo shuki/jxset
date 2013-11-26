@@ -376,6 +376,9 @@
 		$.jset.fn.get_grid_definitions(t.p, function(data){
 			if(!$.jset.fn.fetch_grid(t.p.source))
 				$.jset.fn.store_grid(t.p.source, data);
+
+			if($.isFunction(t.p.after_get_grid_definitions))
+				t.p.after_get_grid_definitions.call(t, data);
 				
 			t.p.grid.caption = $.jset.fn.set(t.p.grid.caption, data.table.title);
 			$.jset.fn.define_grid_columns(data.columns, t);
@@ -694,6 +697,7 @@
 				if ($t.data('loadCompleteInit')) {
 					$t.data('loadCompleteInit', false);
 					
+
 					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
 						
 					$('td.ui-search-input > input', container)
