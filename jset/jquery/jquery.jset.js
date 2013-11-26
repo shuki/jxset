@@ -694,9 +694,6 @@
 				if ($t.data('loadCompleteInit')) {
 					$t.data('loadCompleteInit', false);
 					
-					if ($t.data('settings').filterToolbar.hide)
-						this.toggleToolbar();
-
 					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
 						
 					$('td.ui-search-input > input', container)
@@ -1341,6 +1338,8 @@
 		
 		filter_toolbar_init: function($t, grid_container){
 			$t.jqGrid('filterToolbar', $t.data('settings').filterToolbar.options);
+			if ($t.data('settings').filterToolbar.hide)
+				$t[0].toggleToolbar();
 			
 			if ($t.data('settings').search_default.length > 0) {
 				$.each($t.data('settings').search_default, function(i){
