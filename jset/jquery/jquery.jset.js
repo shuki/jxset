@@ -374,6 +374,9 @@
 		$.jset.fn.set_source_param(t.p);
 		
 		$.jset.fn.get_grid_definitions(t.p, function(data){
+			if(!$.jset.fn.fetch_grid(t.p.source))
+				$.jset.fn.store_grid(t.p.source, data);
+				
 			t.p.grid.caption = $.jset.fn.set(t.p.grid.caption, data.table.title);
 			$.jset.fn.define_grid_columns(data.columns, t);
 
@@ -1039,7 +1042,23 @@
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
 
+		store_grid: function(source, data){
+			var obj = {};
+			obj[source] = data;
+			$.jset.gridStore = $.extend($.jset.gridStore || {}, true, obj);
+		},
+		
+		fetch_grid: function(source){
+			return $.jset.gridStore ? (source ? $.jset.gridStore[source] : $.jset.gridStore) : false;
+		},
+		
 		get_grid_definitions: function(settings, callback){
+			var grid_definitions = $.jset.fn.fetch_grid(settings.source);
+			if(grid_definitions){
+				callback.call(this, grid_definitions);
+				return;
+			}
+			
 			var jsetParams = {};
 			jsetParams[settings.grid.prmNames.oper] = 'columns,table,index';
 			jsetParams[settings.prmNames.source] = settings.source;
