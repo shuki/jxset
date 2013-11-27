@@ -696,7 +696,20 @@
 
 				if ($t.data('loadCompleteInit')) {
 					$t.data('loadCompleteInit', false);
-					
+
+					//disable right click row selections
+					var getEvents = $._data($t[0], "events");
+					if (getEvents && getEvents.contextmenu && getEvents.contextmenu.length === 1) {
+					    var orgContextmenu = getEvents.contextmenu[0].handler;
+					    $t.unbind('contextmenu', orgContextmenu);
+					    $t.bind('contextmenu', function(e) {
+					        var oldmultiselect = this.p.multiselect, result;
+					        this.p.multiselect = true; // set multiselect to prevent selection
+					        result = orgContextmenu.call(this, e);
+					        this.p.multiselect = oldmultiselect; // restore multiselect
+					        return result;
+					    });
+					}					
 
 					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
 						
