@@ -30,7 +30,8 @@ class config
 	const errorLogFile = 'log/error_log_file.txt';
 	//const export_dir = 'temp/';
 	//const export_charset = 'hebrew';
-	const export_limit = 1000000;
+	const export_limit = 150;
+	const no_export_limit = 1000000;
 	const export_charset_windows = 'Windows-1255';
 	
 	const join_list_suffix = '_jxlist';
