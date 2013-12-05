@@ -415,10 +415,12 @@
 	    		$t.data('pending_reload', true);
 		},
 		
-		reload: function(){
+		reload: function(unfetch_grid){
 	    	$t = $(this);
 	    		
 	    	$t.data('pending_reload', false);
+	    	if(unfetch_grid)
+	    		$.jset.fn.unfetch_grid($t.data('settings').source);
 	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
 	        var settings = $.extend(true, {}, $t.data('settings'));
 	        var id = $t.attr('id');
@@ -1064,6 +1066,10 @@
 		
 		fetch_grid: function(source){
 			return $.jset.gridStore ? (source ? $.jset.gridStore[source] : $.jset.gridStore) : false;
+		},
+		
+		unfetch_grid: function(source){
+			source ? delete $.jset.gridStore[source] : delete $.jset.gridStore;
 		},
 		
 		get_grid_definitions: function(settings, callback){
