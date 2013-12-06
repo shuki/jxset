@@ -412,11 +412,19 @@ private function export()
 	{
 //		if($this->settings->_search_ == 'true')
 //		{
+			$filters = '';
 			if(isset($this->settings->filters))
 			{
 				$searchstr = $this->strip($this->settings->filters);
 				$jsona = json_decode($searchstr,true);
 				$filters =  $this->getStringForGroup($jsona);
+			}
+				
+			if(isset($this->settings->_filters_))
+			{
+				$searchstr = $this->strip($this->settings->_filters_);
+				$jsona = json_decode($searchstr,true);
+				$filters =  $filters ? $filters . ' AND ' . $this->getStringForGroup($jsona) : $this->getStringForGroup($jsona);
 			}
 				
 			for($i=0; $i < $this->pairs->count; $i++)
@@ -599,9 +607,10 @@ private function export()
 	}
 	
 	private function aggregate($aggregate){
-		foreach($aggregate as $key => $value)
+		foreach($aggregate as $key => $value){
+			$keys[] = $key;
 			$fields .= $value . ' as ' . $this->sql_class->LD . $key . $this->sql_class->RD . ',';
-
+		}
 		$fields =  substr($fields, 0, -1);
 		
 		$sql = $this->table->sql ? $this->sql_class->GET_GRID_AGGREGATE_SQL_SOURCE : $this->sql_class->GET_GRID_AGGREGATE;
@@ -611,8 +620,12 @@ private function export()
 	    $this->db->query($sql);
 		$row = $this->db->fetch();
 		
-		foreach($row as $key => $value)
-			$result->$key = $value;
+		if($row === false)
+			foreach($keys as $key)
+				$result->$key = '';
+		else
+			foreach($row as $key => $value)
+				$result->$key = $value;
 		
 		return $result;
 	}
