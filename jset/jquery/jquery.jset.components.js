@@ -13,7 +13,10 @@
 		},
 
 		dateInit: function (elem){
-			$(elem).datepicker($.jset.defaults.datepicker);
+			if($(elem).children('input').length == 1)
+				$(elem).children('input').datepicker($.jset.defaults.datepicker);
+			else
+				$(elem).datepicker($.jset.defaults.datepicker);
 		},
 
 		intInit: function (elem){
@@ -45,13 +48,13 @@
 			$(elem).val('');
 		},
 		
-		select_searchoptions_dataInit: function(elem){
-			$.jset.fn.prepend_empty_select_option(elem);
-			$.jset.fn.set_dependent_fields(elem, true);
+		dataInit_checkbox: function(elem){
+			//$.jset.fn.set_search_refresh(elem);
+			return $.jset.fn.prepend_empty_select_option(elem);
+			
 		},
 
-		set_select_options: function (grid, elem, source, value, dont_preserve_value, name){
-			name = name ? name : $(elem).attr('name');
+		set_select_options: function (elem, grid, source, value, dont_preserve_value, name){
 			if(!name){
 				alert('set_select_options: missing name for select');
 				return;
@@ -75,7 +78,7 @@
 		},
 		
 		set_dependent_fields: function(elem, search){
-			$(elem).on('change.jset', function(event, preserve_value){
+			$(elem).on('change.dependent_fields', function(event, preserve_value){
 				var name = $(elem).attr('name');
 				var grid = $.jset.fn.get_grid_by_element(this);
 				var dependent_fields = grid.data('columns')[grid.data('index')[name]]['dependent_fields'];
@@ -83,17 +86,33 @@
 					$.each(dependent_fields, function(i, field){
 						var sql = $.jset.fn.get_select_list_sql(grid, field, $(elem).val());						
 						sql = sql.replace('{' + name + '}', $(elem).val());
-						var target_element = $('select[name="' + field + '"][id="' + (search ? 'gs_' : '') + field + '"]');
-						$.jset.fn.get_rows(grid, sql, function(data){
-							$.jset.fn.set_select_options(grid, target_element, data, target_element.val(), !preserve_value);
-							if(search)
-								grid[0].triggerToolbar();							
-						});
+						var target_element = $.jset.fn.get_dependent_field_element(elem, field);
+						if(target_element !== false && target_element.length > 0)
+							$.jset.fn.get_rows(grid, sql, function(data){
+								$.jset.fn.set_select_options(target_element, grid, data, target_element.val(), !preserve_value, target_element.attr('name'));
+								if(search)
+									grid[0].triggerToolbar();							
+							});
 					});
 			});
 			return elem;
 		},
 
+		get_dependent_field_element: function(source, target_name){
+			if($(source).parent('td[class="ui-search-input"]').length > 0){
+				var container = $(source).closest('tr[class="ui-search-toolbar"]');
+				var target = $('select[name="' + target_name + '"]', container);
+				return target;
+			}
+			else if($(source).parent('span[class="FormElement"]').length > 0){
+				var container = $(source).closest('form');
+				var target = $('select[name="' + target_name + '"]', container);
+				return target;
+			}
+			
+			return false;
+		},
+		
 		set_select_list_refresh: function(elem){
 			$(elem).on('mousedown.jset', function(event, preserve_value){
 				var name = $(this).attr('name');
@@ -106,6 +125,18 @@
 						$.jset.fn.select_option_append(elem, 45, 45);
 					});
 				}
+			});
+			return elem;
+		},
+		
+		set_search_refresh: function(elem){
+			$(elem).bind('change.search', function(){
+				var elem = $(this);
+				var grid = $.jset.fn.get_grid_by_element(elem);
+				if(elem.attr('id').substr(0,3) == 'gs_' && elem.attr('name').substr(0,3) != 'gs_')
+					grid[0].triggerToolbar();
+				else if(elem.parent().hasClass('input-elm'))
+					elem.parent().trigger('change');
 			});
 			return elem;
 		},
@@ -577,12 +608,12 @@
 		selectbox_element: function(value, options){
 			var grid = $(this);
 			var elem = $('<select />');
-			$.jset.fn.set_select_options(grid, elem, options.value, value, false, options.name);
+			$.jset.fn.set_select_options(elem, grid, options.value, value, false, options.name);
 			$.jset.fn.set_dependent_fields(elem);
 			$.jset.fn.set_select_list_refresh(elem);
+			$.jset.fn.set_search_refresh(elem);
 			elem.attr('validate', options.validate)
 			.addClass('jset-field-padding');
-
 			return elem;
 		},
 		
@@ -792,6 +823,10 @@
 				{
 					var grid = $.jset.fn.get_grid_by_element(this);
 					grid[0].triggerToolbar();
+				}
+				else if($(this).parent().hasClass('input-elm')){
+					$(this).trigger('change');
+					$(this).parent().trigger('change');
 				}
 			}
 		},
@@ -1105,7 +1140,7 @@
     							$(this).trigger("autocompleteselect", [ui]);
         					} 
         				});
-        				/*.on("autocompletechange.jset", function(event, ui){
+        				/*.on("autocompletechange.dependent_fields", function(event, ui){
         					$.dump(ui.item.id);
         					$('ul.ui-autocomplete').css('background-image', 'url("../gui_lib/panel/images/panel_bg_green.gif")');
         				});*/
@@ -1180,8 +1215,41 @@
 					searchOperators: false,					
 					value: {0:'No', 1:'Yes'},
 					dataInit: function(col){
-						return $.jset.fn.prepend_empty_select_option;
+						return $.jset.fn.dataInit_checkbox;
 					}						
+				}
+			},
+			custom_checkbox: {
+				align: 'center',
+				formatter: 'checkbox',
+				edittype: 'checkbox',
+				editoptions: {
+					value: '1:0',
+					defaultValue: function(col){
+						return col.default_value ? col.default_value : undefined; 
+					},
+					dataInit: function(col){
+						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
+					},
+					custom_options: {
+						readonly: function(formid, name){
+							$.jset.fn.disable_field(formid, name);
+						}
+					}
+				},
+				stype: 'custom',
+				searchoptions:{
+					custom_element: $.jset.fn.selectbox_element,
+					custom_value: $.jset.fn.selectbox_value,
+					value: {0:'No', 1:'Yes'},
+					defaultValue: function(col){
+						return col.search_default ? col.search_default : '';
+					},
+					sopt:['eq','ne'],					
+					//dataInit: function(col){
+						//return $.jset.fn.select_searchoptions_dataInit;
+					//},
+					searchOperators: true				
 				}
 			},
 			checkbox_edit: {
@@ -1704,30 +1772,23 @@
 						}
 					}
 				},
-				stype: 'select',
+				//stype: 'select',
+				stype: 'custom',
 				searchoptions:{
-					sopt:['eq','ne'],					
-					dataInit: function(col){
-						return $.jset.fn.select_searchoptions_dataInit;
-					}	
+					custom_element: $.jset.fn.selectbox_element,
+					custom_value: $.jset.fn.selectbox_value,
+					value: '',
+					defaultValue: function(col){
+						return col.search_default ? col.search_default : '';
+					},
+					sopt:['eq','ne']				
 				},
-				/*onInitializeForm: function(formid){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
-					var selects = $(formid).find('select');
-					$.each(selects, function(i, elem){
-						var name = $(elem).attr('name');
-						if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
-							$(elem).trigger('change.jset', [true]);
-					});
-				},*/
 				afterShowForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					var elem = $(formid).find('#' + id);
 					var name = $(elem).attr('name');
-					//console.log(id);
-					//console.log(name, grid.data('columns')[grid.data('index')[name]]);
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
-						$(elem).trigger('change.jset', [true]);
+						$(elem).trigger('change.dependent_fields', [true]);
 				}
 			},
 			selectbox_text:{

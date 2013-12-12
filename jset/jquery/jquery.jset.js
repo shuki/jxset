@@ -1505,7 +1505,7 @@
 							obj[key] = value;
 						}else{
 							if($.isFunction(value)) value = value(col);
-							if (key === 'value') {
+							if(key === 'value'){
 								if(col.values && col.values.error !== undefined)
 									alert('critical error in select options of field: ' +  col.Field + '\n' + col.values.error.message + '\n' + col.values.error.dump);
 								else
@@ -1528,6 +1528,7 @@
 				
 		searchoptions: function(col, t){
 			var obj = {};
+			obj.name =  col.index;
 			if(t.p.control[col.control]){
 				if(t.p.control[col.control].searchoptions){
 					$.each(t.p.control[col.control].searchoptions, function(key, value){
@@ -1539,7 +1540,8 @@
 								if(col.values && col.values.error !== undefined)
 									alert('critical error in select options of search field: ' +  col.Field + '\n' + col.values.error.message + '\n' + col.values.error.dump);
 								else
-									obj.value = col.values ? $.extend({}, value, col.values) : value;
+//									obj.value = col.values ? $.extend({}, value, col.values) : value;
+									obj.value = col.values ? col.values : value;
 							}
 							else
 								obj[key] = value;

@@ -414,18 +414,11 @@ private function export()
 //		{
 			$filters = '';
 			if(isset($this->settings->filters))
-			{
-				$searchstr = $this->strip($this->settings->filters);
-				$jsona = json_decode($searchstr,true);
-				$filters =  $this->getStringForGroup($jsona);
-			}
-				
+				$filters =  $this->getStringForGroup(json_decode($this->strip($this->settings->filters) ,true));
+			
 			if(isset($this->settings->_filters_))
-			{
-				$searchstr = $this->strip($this->settings->_filters_);
-				$jsona = json_decode($searchstr,true);
-				$filters =  $filters ? $filters . ' AND ' . $this->getStringForGroup($jsona) : $this->getStringForGroup($jsona);
-			}
+				if($f = $this->getStringForGroup(json_decode($this->strip($this->settings->_filters_),true)))
+					$filters .=  $filters ? ' AND ' . $f : $f;
 				
 			for($i=0; $i < $this->pairs->count; $i++)
 			{
