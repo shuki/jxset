@@ -23,7 +23,8 @@ $.extend($.jgrid,{
 		groupOps: [	{ op: "AND", text: "הכל" },	{ op: "OR",  text: "אחד מ" }	],
 		addRule: "הוסף תנאי",
 		deleteRule: "מחק תנאי",
-		addSubgroup: "הוסף תת קבוצה"
+		addSubgroup: "הוסף תת קבוצה",
+		deleteSubgroup: "מחק תת קבוצה"	
 	},
 	edit : {
 		addCaption: "הוסף רשומה",

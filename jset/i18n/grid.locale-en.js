@@ -23,7 +23,8 @@ $.extend($.jgrid,{
 		groupOps: [{ op: "AND", text: "all" },{ op: "OR",  text: "any" }],
 		addRule: "Add Rule",
 		deleteRule: "Delete Rule",
-		addSubgroup: "Add Subgroup"		
+		addSubgroup: "Add Subgroup",
+		deleteSubgroup: "Delete Subgroup"	
 	},
 	edit : {
 		addCaption: "Add Record",
