@@ -40,7 +40,7 @@
 		},
 		
 		default_sopt: function(){
-			return ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en'];
+			return ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','nu','nn'];
 		},
 		
 		prepend_empty_select_option: function(elem){
@@ -1082,7 +1082,7 @@
 				},
 				stype: 'text',
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				},
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
@@ -1166,7 +1166,7 @@
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					},
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			bit: {
@@ -1188,7 +1188,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			checkbox: {
@@ -1316,7 +1316,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1355,7 +1355,7 @@
 				searchoptions:{
 					custom_element: $.jset.fn.custom_date_element,
 					custom_value: $.jset.fn.custom_date_value,
-					sopt:['cn','nc','eq','ne','lt','le','gt','ge'],					
+					sopt:['cn','nc','eq','ne','lt','le','gt','ge','nu','nn'],					
 					dataInit: function(col){
 						return $.jset.fn.dateInit;
 					}
@@ -1378,7 +1378,7 @@
 					}
 				},
 				searchoptions:{
-					sopt:['cn','nc','eq','ne','lt','le','gt','ge'],					
+					sopt:['cn','nc','eq','ne','lt','le','gt','ge','nu','nn'],					
 					dataInit: function(col){
 						return $.jset.fn.dateInit;
 					}
@@ -1400,7 +1400,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			decimal:{
@@ -1419,7 +1419,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1441,7 +1441,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1462,7 +1462,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			
@@ -1486,7 +1486,7 @@
 				},
 				stype: 'select',
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return $.jset.fn.prepend_empty_select_option;
 					}	
@@ -1508,7 +1508,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -1564,7 +1564,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -1587,7 +1587,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			longtext:{
@@ -1606,7 +1606,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			mediumint:{
@@ -1625,7 +1625,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -1644,7 +1644,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			multicheckbox:{
@@ -1710,7 +1710,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			orexact:{
@@ -1870,7 +1870,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -1909,7 +1909,7 @@
 					}
 				},
 				searchoptions:{
-					sopt:['eq','bw','bn','cn','nc','ew','en']
+					sopt:['eq','bw','bn','cn','nc','ew','en','nu','nn']
 				}
 			},
 			plain:{
@@ -1929,7 +1929,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			textarea:{
@@ -1949,7 +1949,7 @@
 					'class': 'jset-field-padding'
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			editor_textarea:{
@@ -1968,7 +1968,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
@@ -2082,7 +2082,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			timestamp:{
@@ -2098,7 +2098,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			tinyint:{
@@ -2117,7 +2117,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
@@ -2136,7 +2136,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			real:{
@@ -2155,7 +2155,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
@@ -2430,7 +2430,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				}
 			},
 			weekday:{
@@ -2451,7 +2451,7 @@
 					custom_value: $.jset.fn.multicheckbox_value
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en']
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				},
 				beforeInitData: function(formid){
 					$(formid).find('input.multicheckbox').attr('checked', false);
@@ -2473,7 +2473,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en'],
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}

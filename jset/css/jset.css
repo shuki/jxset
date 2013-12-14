@@ -87,6 +87,14 @@
     padding-top: 0.3em;
 }
 
+.input-elm .jset-field-padding {
+	padding-bottom: 0.1em;
+    padding-left: 0.1em;
+    padding-right: 0.1em;
+    padding-top: 0.1em;
+}
+
+
 .jset-field-readonly {
 	background: #F0F0F0;
 }

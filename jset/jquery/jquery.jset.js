@@ -346,7 +346,9 @@
 					multipleSearch:true,
 					multipleGroup:true,
 					showQuery: false,
-					sFilter:'_filters_'
+					sFilter:'_filters_',
+					top: '100',
+					left: '200'
 				},
 				view:{
 					width: 'auto',
