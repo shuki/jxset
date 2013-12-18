@@ -430,6 +430,8 @@
 		},
 		
 		grid_frame_value: function(elem, action, value){
+			if($(elem).length == 0)
+				return '';
 			if(action == 'get'){
 				return '';
 			}
