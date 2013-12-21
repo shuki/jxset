@@ -518,7 +518,8 @@
 					$.jset.defaults.control[this.control].afterclickPgButtons.call(grid, whichbutton, formid, rowid, this.Field);
 			});
 			
-			$.jset.fn.load_edit_record(grid, rowid, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false,  formid: formid}));
+			if(grid.data('settings').load_edit_record === true)
+				$.jset.fn.load_edit_record(grid, rowid, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false,  formid: formid}));
 			
 			if($.isFunction(grid.data('settings').afterclickPgButtons))
 				grid.data('settings').afterclickPgButtons.call(grid, whichbutton, formid, rowid);
