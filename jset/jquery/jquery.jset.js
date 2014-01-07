@@ -74,6 +74,15 @@
 					}
 				}
 			},
+			clearFilterToolbar:{
+				navButtonAdd: true,
+				options: {
+					caption: '',
+					title: 'Clear Filter Toolbar',
+					buttonicon: 'ui-icon-cancel',
+					position: 'last'
+				}
+			},
 			help:{
 				hide: false,
 				navButtonAdd: true,
@@ -1158,6 +1167,7 @@
 			);
 			
 			$.jset.fn.navigator_refresh_button($t, grid_container);
+			$.jset.fn.navigator_clear_filter_toolbar_button($t, grid_container);
 			$.jset.fn.navigator_export_button($t, grid_container);
 			$.jset.fn.navigator_filter_button($t, grid_container);
 			$.jset.fn.navigator_copy_button($t, grid_container);
@@ -1182,6 +1192,20 @@
 						$t[0].triggerToolbar();
 					});
 				}
+			}
+		},
+		
+		navigator_clear_filter_toolbar_button: function($t, grid_container){
+			if (!$t.data('settings').filterToolbar.hide && $t.data('settings').clearFilterToolbar.navButtonAdd){
+				var options = $.extend(true, {}, $t.data('settings').clearFilterToolbar.options,
+					{onClickButton: function(){
+						grid_container.find('tr.ui-search-toolbar input[id^="gs_"]:visible, tr.ui-search-toolbar select[id^="gs_"]:visible').val('');
+						$t[0].triggerToolbar();
+					}});
+				
+				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, options);
+				if ($t.data('settings').navigation.options.cloneToTop)
+					$t.jqGrid('navButtonAdd', $t.attr('id') + '_toppager', options);
 			}
 		},
 		
