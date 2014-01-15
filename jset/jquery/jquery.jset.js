@@ -838,7 +838,7 @@
 
 			ondblClickRow: function(rowId, iRow, iCol, e){
 				var $t = $(this);
-				if(rowId && $t.data('settings').navigation.options.edit != false){
+				if(rowId && $t.data('settings').navigation.options.edit != false && !$t.data('settings').grid.multiselect){
 					$t.data('settings').navigation.options.editfunc.call($t, rowId, $t.data('settings').navigation.edit);
 					$t.jqGrid('setSelection',rowId);	
 				}
@@ -1166,8 +1166,8 @@
 				$t.data('settings').navigation.view
 			);
 			
-			$.jset.fn.navigator_refresh_button($t, grid_container);
 			$.jset.fn.navigator_clear_filter_toolbar_button($t, grid_container);
+			$.jset.fn.navigator_refresh_button($t, grid_container);
 			$.jset.fn.navigator_export_button($t, grid_container);
 			$.jset.fn.navigator_filter_button($t, grid_container);
 			$.jset.fn.navigator_copy_button($t, grid_container);
