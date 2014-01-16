@@ -203,6 +203,7 @@
 				    title: $.jset.nav.clearPersistTitle,
 				    onClickButton: function () {
 				    	$t = $(this);
+				    	$.jset.fn.storeFilterToolbar.call($t);
 				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
 				        $t.jset('reload');
 				        //localStorage.clear();
@@ -433,10 +434,10 @@
 	    	if(unfetch_grid)
 	    		$.jset.fn.unfetch_grid($t.data('settings').source);
 	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
-	        var settings = $.extend(true, {}, $t.data('settings'));
+	        var settings = $.extend(true, {}, $t.data('settings'), $.jset.fn.getFilterToolbar.call($t));
 	        var id = $t.attr('id');
 	        $t.jset('unload');
-	        $('table#' + id).jset(settings);
+	        return $('table#' + id).jset(settings);
 		}
 	};
 

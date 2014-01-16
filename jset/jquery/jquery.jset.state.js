@@ -70,5 +70,26 @@
 	        
 	        return $.extend(true, settings, columnsState);
 	    },
+	    
+	    storeFilterToolbar: function(){
+	    	//console.log($('tr.ui-search-toolbar', $.jset.fn.get_grid_container(this)).find('input, select'));
+	    	var filterTollbarState = {};
+	    	var search_default = [];
+	    	$.each($('tr.ui-search-toolbar', $.jset.fn.get_grid_container(this)).find('input, select'), function(i, v){
+	    		if($(v).val() != ''){
+		    		var item = {};
+		    		item.name = $(v).attr('name');
+		    		item.value = $(v).val();
+		    		search_default.push(item);
+	    		}
+	    	});
+	    	
+	    	filterTollbarState['search_default'] = search_default;
+	    	this.data('filterTollbarState', filterTollbarState);
+	    },
+
+	    getFilterToolbar: function(){
+	    	return this.data('filterTollbarState');
+	    }
 	});
 })(jQuery);
