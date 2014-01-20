@@ -67,6 +67,7 @@
 					searchOnEnter: false,
 					stringResult: true,
 					defaultSearch: 'cn',
+					ignore_column_search_default: false,
 					operandTitle : $.jset.messages.filterToolbar_operandTitle,
 					//weakness - copied from grid.custome.js
 					operands : { "eq" :"==", "ne":"!","lt":"<","le":"<=","gt":">","ge":">=","bw":"^","bn":"!^","in":"=","ni":"!=","ew":"|","en":"!@","cn":"~","nc":"!~","nu":"#","nn":"!#"},
@@ -436,7 +437,9 @@
 	    	if(unfetch_grid)
 	    		$.jset.fn.unfetch_grid($t.data('settings').source);
 	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
-	        var settings = $.extend(true, {}, $t.data('settings'), $.jset.fn.getFilterToolbar.call($t));
+	        var filterToolbarState = $.jset.fn.getFilterToolbar.call($t);
+	        var settings = $.extend(true, {}, $t.data('settings'), {filterToolbar: {options: {ignore_column_search_default: true}}});
+	        settings.search_default = filterToolbarState.search_default;
 	        var id = $t.attr('id');
 	        $t.jset('unload');
 	        return $('table#' + id).jset(settings);
@@ -462,7 +465,6 @@
 			$(formid).validate(grid.data('settings').validate);
 
 			$.each(grid.data('columns'), function(){
-				//console.log(this, this.control, $.jset.defaults.control[this.control]);
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
 			});
@@ -1481,6 +1483,9 @@
 		},
 		
 		search_default: function(col, t){
+			if(t.p.filterToolbar.options.ignore_column_search_default === true)
+				return;
+				
 		  	t.p.search_default.push({
 		  		name: col.Field,
 		  		value: col.search_default
