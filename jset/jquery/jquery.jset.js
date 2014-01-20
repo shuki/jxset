@@ -68,6 +68,8 @@
 					stringResult: true,
 					defaultSearch: 'cn',
 					operandTitle : $.jset.messages.filterToolbar_operandTitle,
+					//weakness - copied from grid.custome.js
+					operands : { "eq" :"==", "ne":"!","lt":"<","le":"<=","gt":">","ge":">=","bw":"^","bn":"!^","in":"=","ni":"!=","ew":"|","en":"!@","cn":"~","nc":"!~","nu":"#","nn":"!#"},
 					beforeSearch: function(){
 						var $t = $(this);
 						var postData = $t.jqGrid('getGridParam','postData');
@@ -1396,11 +1398,18 @@
 				$.each($t.data('settings').search_default, function(i){
 					var acolModel = $t.data('settings').grid.colModel[$t.data('index')[this.name]];
 					if(acolModel != undefined){
-						var $elem = $('#gs_' + acolModel.name, grid_container);
+						//var $elem = $('#gs_' + acolModel.name, grid_container);
+						var $elem = $('tr.ui-search-toolbar', $.jset.fn.get_grid_container($t)).find('input[name=' + acolModel.name + '], select[name=' + acolModel.name + ']');
 						if(acolModel.stype === 'custom' && acolModel.searchoptions != undefined && $.isFunction(acolModel.searchoptions.custom_value))
 							acolModel.searchoptions.custom_value.call($t, $elem, "set", this.value);
 						else
 							$elem.val(this.value);
+
+		    			var asoper = $elem.closest('tr').find('td.ui-search-oper').find('a.soptclass');
+		    			if(asoper != undefined){
+		    				asoper.attr('soper', this.soper);
+			    			asoper.html($t.data('settings').filterToolbar.options.operands[this.soper]);
+		    			}
 					}
 				});
 				$t[0].triggerToolbar();
