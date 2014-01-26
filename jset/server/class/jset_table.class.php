@@ -13,8 +13,13 @@ include_once("autoload.php");
 class jset_table {
 	public function get($db, $source, $target){
 		$sql_class = sql::create($db);
-	  	if(self::is_sql($source))
+	  	if(self::is_sql($source)){
+			if(defined('config::permission_source_sql') && config::permission_source_sql !== true)
+				die('not allowed to use sql as source: ' . $source);
+
 			return self::sql($source, $target);
+	  	}
+		
 	  	if(db_utils::table_exists($db, $sql_class->TABLE_TABLE))
 			return self::table($db, $source);
 		else
@@ -38,6 +43,9 @@ class jset_table {
 	}
 	
 	private function defaults($source){
+		if(defined('config::permission_source_table') && config::permission_source_table !== true)
+			die('not allowed to use table as source: ' . $source);
+			
 		$result->name = $source;
 		$result->source = $source;
 		$result->target = $source;

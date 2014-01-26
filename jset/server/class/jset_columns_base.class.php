@@ -52,12 +52,18 @@ class jset_columns_base {
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->source));
 		$cols = $this->process($db, $index, $aggregate);
+		if(!$cols)
+			die('no columns defined for source: ' . $table->name);
+		
 		return $this->lists($db, $cols);
 	}
 	
 	protected function columns_sql($db, $table, &$index){  
 		$cols = $this->columns_meta($db, $table->source, $index);
 		$cols = $this->columns_extension($db, $table->name, $index, $cols);
+		if(!$cols)
+			die('no columns defined for source: ' . $table->name);
+		
 		return $this->lists($db, $cols);
 	}
 	

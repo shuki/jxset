@@ -29,7 +29,9 @@ class sql_base
 	public $LOG_TABLE_SUFFIX = '_';
 	public $LOG_INSERT = "INSERT INTO #target# SELECT ?, #source#.* FROM #source# where #source#.#id# = ?";
 	
-	public $ATOM_INSERT = "SELECT f_insert_jset_atom(0, ?, ?) as id";
+	public $GET_UUID = "SELECT UUID_SHORT() as uuid";
+	public $ATOM_INSERT = "INSERT INTO jset_atom (id, stamp, user, kind, web_user, ip) VALUES (?, NOW(), USER(), ?, ?, ?);";
+	//public $ATOM_INSERT = "SELECT f_insert_jset_atom(0, ?, ?) as id";
 
 	public $ERROR_INSERT = "INSERT INTO #table# VALUES(?, ?, ?, ?)";
 	public $ERROR_TABLE = "jset_error";

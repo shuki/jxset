@@ -19,10 +19,13 @@ class config
 	const dbname = 'jxset';
 	const dbuser   = 'root';
 	const dbpassword = ''; 
-		
 	const dbfetchStyle = PDO::FETCH_OBJ;
 	const dberrorMode = PDO::ERRMODE_EXCEPTION;
 	const limit = 100;
+		
+	const permission_source_sql = true;
+	const permission_source_table = true;
+	
 	const upload_directory = 'uploads/';
 	const hosts_table = 'jset_host';
 	
