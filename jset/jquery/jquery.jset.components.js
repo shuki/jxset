@@ -1760,9 +1760,9 @@
 				edittype: 'custom',
 				editoptions: {
 					value: {},
-					/*defaultValue: function(col){
+					defaultValue: function(col){
 						return col.default_value;
-					},*/
+					},
 					dataInit: function(col){
 						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
 					},
