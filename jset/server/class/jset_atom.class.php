@@ -15,14 +15,16 @@ class jset_atom {
 		$sql_class = sql::create($db);
 		$db->query($sql_class->GET_UUID);
 		$uuid = $db->fetch()->uuid;
-		$db->query($sql_class->ATOM_INSERT, array($uuid, 0, ($_SERVER['PHP_AUTH_USER'] ? $_SERVER['PHP_AUTH_USER'] : $_SERVER['REMOTE_USER']), ($_SERVER['HTTP_X_FORWARTDED_FOR'] ? $_SERVER['HTTP_X_FORWARTDED_FOR'] : $_SERVER['REMOTE_ADDR'])));
+		$db->query($sql_class->ATOM_INSERT, array($uuid, 0, self::get_php_auth_user(), self::get_remote_address()));
 		return $uuid;
 	}
 	
-/*	public function add($db){
-		$sql_class = sql::create($db);
-		$db->query($sql_class->ATOM_INSERT, array($_SERVER['PHP_AUTH_USER'], $_SERVER['REMOTE_ADDR']));
-		return $db->fetch()->id;
-	} */
+	private function get_php_auth_user(){
+		return (isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : (isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'] : (isset($_POST['_PHP_AUTH_USER_']) ? $_POST['_PHP_AUTH_USER_'] : null)));
+	}
+	
+	private function get_remote_address(){
+		return (isset($_SERVER['HTTP_X_FORWARTDED_FOR']) ? $_SERVER['HTTP_X_FORWARTDED_FOR'] : (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null));
+	}
 }
 

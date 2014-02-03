@@ -11,6 +11,7 @@
 	// variable settings
 	var jset = {
 		dir_pre: '',
+		dir_rel: '',
 		url: 'jset/server/jset.php'
 	};
 	
@@ -48,6 +49,7 @@
 			db_name_target: '',
 			db_remote_definitions: true,
 			dir_pre: $.jset.dir_pre,
+			dir_rel: $.jset.dir_rel,
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
 			spacing: '20px',
@@ -277,11 +279,11 @@
 				scroll: 1,
 				scrollrows: false,
 				page:1,
-				url: $.jset.dir_pre + $.jset.url,
-				editurl: $.jset.dir_pre + $.jset.url,
+				url: $.jset.dir_rel + $.jset.url,
+				editurl: $.jset.dir_rel + $.jset.url,
 				cellurl: '',
 				cellEdit: false,
-				cellurl: $.jset.dir_pre + $.jset.url,
+				cellurl: $.jset.dir_rel + $.jset.url,
 				rowEdit: true,
 				rowurl: '',
 				datatype: 'json',
@@ -685,7 +687,7 @@
 
 					var get = $.extend({}, post, post_columns);
 					get[$t.data('settings').grid.prmNames.oper] = 'export';
-					var url = $t.data('settings').dir_pre + $.jset.defaults.url + '?';
+					var url = $t.data('settings').dir_rel + $.jset.defaults.url + '?';
 					$.each(get, function(key, value){
 						url += key + '=' + value + '&';
 					});
@@ -1101,7 +1103,7 @@
 			jsetParams[settings.prmNames.source] = settings.source;
 			if(settings.db_name && settings.db_remote_definitions) jsetParams[settings.prmNames.db_name] = settings.db_name;
 			if(settings.host && settings.db_remote_definitions) jsetParams[settings.prmNames.host] = settings.host;		
-			$.post(settings.dir_pre + $.jset.defaults.url, jsetParams, callback, 'json');
+			$.post(settings.dir_rel + settings.url, jsetParams, callback, 'json');
 		},
 		
 		set_source_param: function(settings){
@@ -1388,7 +1390,7 @@
 			jsetParams['_editing_state_'] = $t.jqGrid('getCell', jsetParams[settings.grid.prmNames.id], 'editing_state');
 			if(settings.db_name && settings.db_remote_definitions) jsetParams[settings.prmNames.db_name] = settings.db_name;
 			if(settings.host && settings.db_remote_definitions) jsetParams[settings.prmNames.host] = settings.host;		
-			$.post(settings.dir_pre + $.jset.defaults.url, jsetParams, callback, 'json');
+			$.post(settings.dir_rel + settings.url, jsetParams, callback, 'json');
 		},
 		
 		filter_toolbar_init: function($t, grid_container){

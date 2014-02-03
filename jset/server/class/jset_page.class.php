@@ -10,10 +10,10 @@
 
 class jset_page
 {
-	public static function create($dir_pre, $lang = 'en')
+	public static function create($dir_pre, $lang = 'en', $dir_rel = '')
 	{
 		self::doctype();
-		self::head($dir_pre, $lang);
+		self::head($dir_pre, $lang, $dir_rel);
 	}
 	
 	public static function doctype()
@@ -24,8 +24,9 @@ class jset_page
 EOT;
 	}
 	
-	public static function head($dir_pre, $lang){
+	public static function head($dir_pre, $lang, $dir_rel){
 		$dir_pre = isset($dir_pre) ? $dir_pre : '';
+		$dir_rel = isset($dir_rel) ? $dir_rel : '';
 		echo <<< EOT
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -44,7 +45,7 @@ EOT;
 <script src="{$dir_pre}jset/jquery-ui/js/jquery-ui-1.9.1.custom.min.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/i18n/jquery.ui.datepicker-he.js" type="text/javascript"></script>
 <script type="text/javascript">
-		$.jset = {dir_pre: '{$dir_pre}'};
+		$.jset = {dir_pre: '{$dir_pre}', dir_rel: '{$dir_rel}'};
 </script>
 <script src="{$dir_pre}jset/i18n/jset.locale-{$lang}.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.js" type="text/javascript"></script>

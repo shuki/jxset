@@ -55,6 +55,9 @@ function process($post){
 
 function get_real_POST_GET() {
 	$query_string = $_SERVER['QUERY_STRING'] ? $_SERVER['QUERY_STRING'] : file_get_contents("php://input");
+	if(!$query_string)
+		exit;
+	
     $pairs = explode("&", $query_string);
     $vars = array();
     foreach ($pairs as $pair) {
