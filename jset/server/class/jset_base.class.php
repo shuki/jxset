@@ -317,8 +317,7 @@ private function export()
 		$output .= substr($line, 0, -1) . "\n";
 		$line = '';
 	}
-	header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
-	header('Content-type: text/csv');
+
 	echo str_replace(",", ",", $field_names) . "\n";
 	echo $output;
 	return '';
