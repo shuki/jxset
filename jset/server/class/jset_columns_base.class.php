@@ -50,7 +50,7 @@ class jset_columns_base {
 
 	protected function columns_all($db, $table, &$index, &$aggregate){ 
 		$sql_class = sql::create($db);
-  		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->source));
+  		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->section, $table->source));
 		$cols = $this->process($db, $index, $aggregate);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
@@ -60,7 +60,7 @@ class jset_columns_base {
 	
 	protected function columns_sql($db, $table, &$index){  
 		$cols = $this->columns_meta($db, $table->source, $index);
-		$cols = $this->columns_extension($db, $table->name, $index, $cols);
+		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
@@ -129,12 +129,12 @@ class jset_columns_base {
 		return $cols;
 	}
 
-	protected function columns_extension($db, $name, $index, $cols){
+	protected function columns_extension($db, $name, $section, $index, $cols){
 		$sql_class = sql::create($db);
 		if(!db_utils::table_exists($db, $sql_class->TABLE_COLUMN))
 			return $cols;
 		
-		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_EXTENSION), array($name));
+		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_EXTENSION), array($name, $section));
 		while($row = $db->fetch()){
 			if(isset($index[$row->Field])){
 				foreach($row as $key => $value)

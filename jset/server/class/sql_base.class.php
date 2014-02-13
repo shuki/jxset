@@ -40,7 +40,7 @@ class sql_base
 	public $SQL_TABLE = "jset_sql";
 
 	public $GET = "SELECT * FROM #table#";	
-	public $GET_TABLE = "SELECT * FROM jset_table WHERE name = ? LIMIT 1";
+	public $GET_TABLE = "SELECT * FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1";
 	
 	public $TABLE_EVENT = "jset_event";
 	public $GET_EVENTS = "SELECT * FROM jset_event WHERE parent = ? LIMIT 1";
@@ -84,7 +84,7 @@ class sql_base
 		j.#LD#object#RD# as #LD#object#RD#
 		FROM information_schema.COLUMNS i
 		LEFT JOIN jset_column j
-		ON i.COLUMN_NAME = j.name AND j.parent = (SELECT id FROM jset_table WHERE name = ?)
+		ON i.COLUMN_NAME = j.name AND j.parent = (SELECT id FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1)
 		WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?
 		ORDER BY if(j.position is null, i.ORDINAL_POSITION, j.position)";
 	
@@ -114,7 +114,7 @@ class sql_base
 		#LD#validation#RD# as #LD#validation#RD#,
 		#LD#object#RD# as #LD#object#RD#
 		FROM jset_column
-		WHERE parent = (SELECT id FROM jset_table WHERE name = ?)
+		WHERE parent = (SELECT id FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1)
 		ORDER BY #LD#position#RD#";
 		
 	public $LAST_INSERT_ID = "SELECT LAST_INSERT_ID() as id";

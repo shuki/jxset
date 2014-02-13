@@ -11,35 +11,40 @@
 include_once("autoload.php");
 
 class jset_table {
-	public function get($db, $source, $target){
+	public function get($db, $settings){
 		$sql_class = sql::create($db);
-	  	if(self::is_sql($source)){
+	  	if(self::is_sql($settings->_source_)){
 			if(defined('config::permission_source_sql') && config::permission_source_sql !== true)
-				die('not allowed to use sql as source: ' . $source);
+				die('not allowed to use sql as source: ' . $settings->_source_);
 
-			return self::sql($source, $target);
+			return self::sql($settings->_source_, $settings->_target_);
 	  	}
 		
 	  	if(db_utils::table_exists($db, $sql_class->TABLE_TABLE))
-			return self::table($db, $source);
+			return self::table($db, $settings);
 		else
-			return self::defaults($source);
+			return self::defaults($settings->_source_);
 	}
 
 	public function is_sql($source){
 		return preg_match('/^select\s|^call\s/i', $source);
 	}
 	
-	private function table($db, $source){
+	private function table($db, $settings){
 		$sql_class = sql::create($db);
-	  	$db->query($sql_class->GET_TABLE, array($source));
+	  	$db->query($sql_class->GET_TABLE, array($settings->_source_, $settings->_section_));
 		$result = $db->fetch();
 		if($result){
 			if(self::is_sql($result->source))
 				$result->sql = true;
+
+			if(eval("\$sql = \"$result->source\";") === FALSE)
+				die("unable to eval source: {$result->source}");
+			
+			$result->source = $sql;
 			return $result;
 		}else
-			return self::defaults($source);
+			return self::defaults($settings->_source_);
 	}
 	
 	private function defaults($source){
