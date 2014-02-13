@@ -335,7 +335,7 @@ private function export()
 		$this->settings = $this->settings($request);
 		if($this->settings->_no_init_)
 			return;	
-		$this->table = jset_table::get($this->db_definitions, $this->settings->_source_, $this->settings->_target_);
+		$this->table = jset_table::get($this->db_definitions, $this->settings);
 		$jset_columns = jset_columns::create($this->db_definitions);
 		$this->columns = $jset_columns->get($this->db_definitions, $this->table);
 		//$this->columns = jset_columns::get($this->db_definitions, $this->table);
