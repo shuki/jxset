@@ -70,47 +70,55 @@ class jset_columns_base {
 	protected function columns_meta($db, $sql, &$index){
 		$sql_class = sql::create($db);
   		$res = $db->query(str_replace('#table#', $sql, $sql_class->GET_ONE_RECORD));
-		
-		if($row = $db->fetch()){
-			$i = 0;
-			foreach($row as $field){
-				try
-				{
-					$meta = $res->getColumnMeta($i);
-				}
-				catch (PDOException $e) {
-					return $this->columns_bare($row, $index);
-				}
-				
-				$meta = $res->getColumnMeta($i);
-				$attr = new stdClass;
-				$attr->Field = $meta['name'];
-				$attr->type = $this->translate_sql_type($meta['native_type']);
-				$attr->control = $attr->type;
-				switch($attr->type){
-					case 'int':
-						$attr->size = $meta['len'];
-						break;
-					case 'varchar':
-						$attr->size = (int)($meta['len'] / 3);
-						break;
-					case 'decimal':
-						$attr->size =  $meta['len'];;
-						$attr->precision = $meta['precision'];
-						break;
-					case 'date':
-					case 'datetime':
-						$attr->size =  $meta['len'];;
-						break;
-					default:
-				}
-				$cols[] = $attr;
-				$index[$attr->Field] = $i++;
-			}
 
-			return $cols;
-		}else
-			return false;
+		try
+		{
+			$column_count = $res->columnCount();
+		}
+		catch (PDOException $e) {
+			if($row = $db->fetch())
+				return $this->columns_bare($row, $index);
+			else 
+				return false;
+		}
+		
+		for ($i = 0; $i < $column_count; $i++) {
+			try
+			{
+				$meta = $res->getColumnMeta($i);
+			}
+			catch (PDOException $e) {
+				if($row = $db->fetch())
+					return $this->columns_bare($row, $index);
+				else 
+					return false;
+			}
+			
+			$attr = new stdClass;
+			$attr->Field = $meta['name'];
+			$attr->type = $this->translate_sql_type($meta['native_type']);
+			$attr->control = $attr->type;
+			switch($attr->type){
+				case 'int':
+					$attr->size = $meta['len'];
+					break;
+				case 'varchar':
+					$attr->size = (int)($meta['len'] / 3);
+					break;
+				case 'decimal':
+					$attr->size =  $meta['len'];;
+					$attr->precision = $meta['precision'];
+					break;
+				case 'date':
+				case 'datetime':
+					$attr->size =  $meta['len'];;
+					break;
+				default:
+			}
+			$cols[] = $attr;
+			$index[$attr->Field] = $i;
+		}
+		return $cols;
 	}
 
 	protected function columns_bare($row, &$index)
