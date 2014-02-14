@@ -845,6 +845,9 @@
 
 			ondblClickRow: function(rowId, iRow, iCol, e){
 				var $t = $(this);
+				if($.jset.fn.get_grid_container($t).find('#edit_grid').hasClass('ui-state-disabled'))
+					return;
+					
 				if(rowId && $t.data('settings').navigation.options.edit != false && !$t.data('settings').grid.multiselect){
 					$t.data('settings').navigation.options.editfunc.call($t, rowId, $t.data('settings').navigation.edit);
 					$t.jqGrid('setSelection',rowId);	
