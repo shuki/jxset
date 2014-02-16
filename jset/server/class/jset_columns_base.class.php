@@ -13,7 +13,7 @@ include_once("autoload.php");
 class jset_columns_base {
 	public function get($db, $table, $settings){
 		$result->source->cols = $this->columns($db, $table, $index, $aggregate, $settings);
-		$result->target->cols = $table->target && ($table->target != $table->source) ? $this->columns_base($db, $table->target, $notused) : $result->source->cols;
+		$result->target->cols = $table->target && ($table->target != $table->source) ? $this->columns_base($db, $table->target, $notused, $settings) : $result->source->cols;
 		$result->index = $index;
 		$result->aggregate = $aggregate;
 		$result->primary = $this->primary($result->target->cols);
@@ -45,13 +45,13 @@ class jset_columns_base {
 	protected function columns_base($db, $name, &$index, $settings) {
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#table#', '#LD#', '#RD#'), array($name, $sql_class->LD, $sql_class->RD), $sql_class->GET_COLUMNS_BASE));
-		return $this->process($db, $index);
+		return $this->process($db, $index, $notused, $settings);
 	}
 
 	protected function columns_all($db, $table, &$index, &$aggregate, $settings){ 
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->section, $table->source));
-		$cols = $this->process($db, $index, $aggregate);
+		$cols = $this->process($db, $index, $aggregate, $settings);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
@@ -156,7 +156,7 @@ class jset_columns_base {
 		return $cols;
 	}
 	
-	protected function process($db, &$index, &$aggregate = null, $settings){
+	protected function process($db, &$index, &$aggregate, $settings){
 		$rows = $db->fetchAll();
 		$i = 0;
 		foreach($rows as $row){
