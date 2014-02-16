@@ -11,8 +11,8 @@
 include_once("autoload.php");
 
 class jset_columns_base {
-	public function get($db, $table){
-		$result->source->cols = $this->columns($db, $table, $index, $aggregate);
+	public function get($db, $table, $settings){
+		$result->source->cols = $this->columns($db, $table, $index, $aggregate, $settings);
 		$result->target->cols = $table->target && ($table->target != $table->source) ? $this->columns_base($db, $table->target, $notused) : $result->source->cols;
 		$result->index = $index;
 		$result->aggregate = $aggregate;
@@ -34,21 +34,21 @@ class jset_columns_base {
 	}
 	
 //-----------------    internal functions ------------------------
-	protected function columns($db, $table, &$index, &$aggregate){
+	protected function columns($db, $table, &$index, &$aggregate, $settings){
 		$sql_class = sql::create($db);
-		return $table->sql ? $this->columns_sql($db, $table, $index) :
+		return $table->sql ? $this->columns_sql($db, $table, $index, $settings) :
 		(db_utils::table_exists($db, $sql_class->TABLE_COLUMN) ?
-			$this->columns_all($db, $table, $index, $aggregate) :
-			$this->columns_base($db, $table->name, $index));
+			$this->columns_all($db, $table, $index, $aggregate, $settings) :
+			$this->columns_base($db, $table->name, $index, $settings));
 	}
 
-	protected function columns_base($db, $name, &$index) {
+	protected function columns_base($db, $name, &$index, $settings) {
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#table#', '#LD#', '#RD#'), array($name, $sql_class->LD, $sql_class->RD), $sql_class->GET_COLUMNS_BASE));
 		return $this->process($db, $index);
 	}
 
-	protected function columns_all($db, $table, &$index, &$aggregate){ 
+	protected function columns_all($db, $table, &$index, &$aggregate, $settings){ 
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->section, $table->source));
 		$cols = $this->process($db, $index, $aggregate);
@@ -58,16 +58,16 @@ class jset_columns_base {
 		return $this->lists($db, $cols);
 	}
 	
-	protected function columns_sql($db, $table, &$index){  
-		$cols = $this->columns_meta($db, $table->source, $index);
-		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols);
+	protected function columns_sql($db, $table, &$index, $settings){  
+		$cols = $this->columns_meta($db, $table->source, $index, $settings);
+		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols, $settings);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
 		return $this->lists($db, $cols);
 	}
 	
-	protected function columns_meta($db, $sql, &$index){
+	protected function columns_meta($db, $sql, &$index, $settings){
 		$sql_class = sql::create($db);
   		$res = $db->query(str_replace('#table#', $sql, $sql_class->GET_ONE_RECORD));
 
@@ -137,7 +137,7 @@ class jset_columns_base {
 		return $cols;
 	}
 
-	protected function columns_extension($db, $name, $section, $index, $cols){
+	protected function columns_extension($db, $name, $section, $index, $cols, $settings){
 		$sql_class = sql::create($db);
 		if(!db_utils::table_exists($db, $sql_class->TABLE_COLUMN))
 			return $cols;
@@ -146,7 +146,7 @@ class jset_columns_base {
 		while($row = $db->fetch()){
 			if(isset($index[$row->Field])){
 				foreach($row as $key => $value)
-						$cols[$index[$row->Field]]->$key = $this->get_executed_value($db, $value);
+						$cols[$index[$row->Field]]->$key = $this->get_executed_value($db, $value, $settings);
 		
 			if(!$cols[$index[$row->Field]]->control)
 				$cols[$index[$row->Field]]->control = $cols[$index[$row->Field]]->type;
@@ -156,7 +156,7 @@ class jset_columns_base {
 		return $cols;
 	}
 	
-	protected function process($db, &$index, &$aggregate = null){
+	protected function process($db, &$index, &$aggregate = null, $settings){
 		$rows = $db->fetchAll();
 		$i = 0;
 		foreach($rows as $row){
@@ -164,7 +164,7 @@ class jset_columns_base {
 			if(!$row->control) $row->control = $attributes->type;
 			$privileges = $this->extract_privileges($row->Privileges);
 			unset($row->Type, $row->Privileges);
-			$a_row = $this->set_computed_values($db, $row);
+			$a_row = $this->set_computed_values($db, $row, $settings);
 			$cols[] = (object) array_merge((array) $a_row, (array) $attributes, (array) $privileges);
 			$index[$row->Field] = $i++;
 			if($row->aggregate) $aggregate[$row->Field] = $row->aggregate;
@@ -225,18 +225,18 @@ class jset_columns_base {
 		return $result;
 	}
 
-	protected function set_computed_values($db, $row){
+	protected function set_computed_values($db, $row, $settings){
 		foreach($row as $key => $value)
-		    $row->$key = $this->get_executed_value($db, $value);
+		    $row->$key = $this->get_executed_value($db, $value, $settings);
 			//if($value && substr($value, 0, 4) == 'fx: ') 
 				//$row->$key = $this->get_value($db, substr($value, 4));
 		
 		return $row;
 	}
 
-    protected function get_executed_value($db, $value){
+    protected function get_executed_value($db, $value, $settings){
         return ($value && substr($value, 0, 4) == 'fx: ')?
-    			$this->get_value($db, substr($value, 4)) :
+    			$this->get_value($db, substr($value, 4), $settings) :
     			$value;
     }
 	// get lists
@@ -259,11 +259,11 @@ class jset_columns_base {
 		return $cols;
 	}
 
-	public function get_value($db, $func){
+	public function get_value($db, $func, $settings){
 		if(!$func) return null;
 
 		$call = gen_utils::call_extract($func);
-		return call_user_func_array(array($call->class, $call->method), array($db));
+		return call_user_func_array(array($call->class, $call->method), array($db, $settings));
 	}
 
 	// get the primary field name

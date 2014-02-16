@@ -301,7 +301,7 @@ private function export()
 	$filters = substr($filters, 0, -1);
 	$order = $this->order();
 	$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
-	$limit = general::get_export_limit();
+	$limit = general::get_export_limit($this->settings);
 	$field_list = $this->coalesce($this->field_list($fields));
 	$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
 	//$sql = $this->sql_class->EXPORT;
@@ -337,7 +337,7 @@ private function export()
 			return;	
 		$this->table = jset_table::get($this->db_definitions, $this->settings);
 		$jset_columns = jset_columns::create($this->db_definitions);
-		$this->columns = $jset_columns->get($this->db_definitions, $this->table);
+		$this->columns = $jset_columns->get($this->db_definitions, $this->table, $this->settings);
 		//$this->columns = jset_columns::get($this->db_definitions, $this->table);
 		$this->pairs = $this->pairs();
 		$this->where = $this->where();
