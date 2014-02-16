@@ -146,7 +146,8 @@ class jset_columns_base {
 			return $cols;
 		
 		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_EXTENSION), array($name, $section));
-		while($row = $db->fetch()){
+		$rows = $db->fetchAll();
+		foreach($rows as $row){
 			if(isset($index[$row->Field])){
 				foreach($row as $key => $value)
 						$cols[$index[$row->Field]]->$key = $this->get_executed_value($db, $value);

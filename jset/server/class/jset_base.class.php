@@ -301,7 +301,7 @@ private function export()
 	$filters = substr($filters, 0, -1);
 	$order = $this->order();
 	$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
-	$limit = general::get_export_limit($this->settings);
+	$limit = general::get_export_limit($this->db, $this->settings);
 	$field_list = $this->coalesce($this->field_list($fields));
 	$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
 	//$sql = $this->sql_class->EXPORT;
