@@ -101,9 +101,16 @@ EOT;
 <script src="{$dir_pre}jset/widget/file-uploader/client/js/dnd.js"></script>
 <script src="{$dir_pre}jset/widget/file-uploader/client/js/uploader.js"></script>
 <script src="{$dir_pre}jset/widget/file-uploader/client/js/jquery-plugin.js"></script>
+<script src="{$dir_pre}jset/jquery/jquery.jset.template.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/template/panel/panel.js"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/css/jset.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/template/panel/panel.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/template/pane/pane.css" />
 
-</head>
 EOT;
+
+include("{$dir_pre}jset/template/panel/panel_template.html");
+include("{$dir_pre}jset/template/pane/pane_template.html");
+//echo '</head>';
 	}
 }

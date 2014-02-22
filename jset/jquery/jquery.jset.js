@@ -326,6 +326,14 @@
 						else
 							$.jset.fn.editfunc(grid, id, options);
 					},
+					viewfunc: function(id, options){
+						var grid = $(this);
+						grid.data('form_action', 'view');
+						if (grid.data('settings').load_edit_record)
+							$.jset.fn.load_edit_record(grid, id, options);
+						else
+							$.jset.fn.editfunc(grid, id, options);
+					},
 					addfunc: function(options){
 						var grid = $(this);
 						grid.data('form_action', 'add');
@@ -474,9 +482,12 @@
 			$.jset.fn.set_help_tips(grid, formid);
 			$('select,input', $(formid)).addClass('FormElement ui-widget-content ui-corner-all');
 
-			if (grid.data('settings').hide_submit_row) 
+			if(grid.data('settings').hide_submit_row) 
 				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
-					
+			
+			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
+				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
+				
 			if($.isFunction(grid.data('settings').onInitializeForm))
 				grid.data('settings').onInitializeForm.call(grid, formid);
 		},
@@ -489,6 +500,8 @@
 		
 		beforeShowForm: function(formid){
 			var grid = $(this);
+			//$.jset.fn.enable_fields(formid);
+			//$('#sData', $.jset.fn.get_grid_container(grid)).show();
 			
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
@@ -865,7 +878,9 @@
 			view:{
 				beforeShowForm: function(formid){
 					var grid = $(this);
-					$.jset.fn.set_help_tips(grid, formid);
+					//$.jset.fn.set_help_tips(grid, formid);
+					//$.jset.fn.readonly_fields(formid);
+					//$('#sData', $.jset.fn.get_grid_container(grid)).hide();
 					if($.isFunction(grid.data('settings').beforeShowFormView))
 						grid.data('settings').beforeShowFormView.call(grid, formid);
 				}
@@ -915,6 +930,10 @@
 	$.extend($.jset.fn, {
 		colNames: function(col){
 			return col.title ? col.title : col.Comment ? col.Comment : col.Field;
+		},
+		
+		get_column: function(grid, column_name){
+			return grid.data('index')[column_name] ? grid.data('columns')[grid.data('index')[column_name]] : false;
 		},
 		
 		get_grid_container: function(grid){
@@ -1608,7 +1627,7 @@
 			var options = t.p.control[col.control] && t.p.control[col.control].formoptions ? t.p.control[col.control].formoptions : {};
 			if(col.rowpos){
 				obj.rowpos = col.rowpos;
-				obj.elmprefix = options.label_hide ? '' : (col.title ? '<label class="' + t.p.caption_class + '" for="' + col.Field + '">' + col.title + ": </label>" : '');
+				obj.elmprefix = options.label_hide ? '' : ($.jset.fn.colNames(col) ? '<label class="' + t.p.caption_class + '" for="' + col.Field + '">' + $.jset.fn.colNames(col) + ": </label>" : '');
 				obj.elmsuffix = '<span name="' + col.Field + '_span" style="display:inline-block; width:' + t.p.spacing + '"/>';
 				obj.label = col.rowlabel;
 			}else{
