@@ -1,0 +1,75 @@
+/* panel base */
+
+
+/* Base */
+.panel
+{
+	
+}
+
+.panel-header
+{
+	vertical-align: middle;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+td.panel-header .panel-title
+{
+	
+}
+
+.panel-title
+{
+	float: left;/* - for tools */
+	margin: 0px;
+	margin-left: 5px;
+}
+
+.panel-title input
+{
+	background-color: transparent;
+	
+}
+
+.panel-header-tools
+{
+	float: right;/* - for tools*/
+	xdisplay: none;
+}
+
+.rtl
+.panel-title
+{
+	float: right;/* - for tools*/
+}
+
+.rtl
+.panel-header-tools
+{
+    float: left;/* - for tools */
+}
+
+.panel-body
+{
+	
+}
+
+.panel-open .panel-body
+{
+	
+}
+
+.panel-closed .panel-body
+{
+	display: none;
+}
+
+.panel-footer
+{
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 1px;
+}
+
+/* Additional */
