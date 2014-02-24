@@ -79,7 +79,7 @@ class jset_base
 	
 	private function rows($fields = null)
 	{
-	    $this->db->query($this->settings->_source_);
+	    $this->db->query(stripslashes($this->settings->_source_));
 		return $this->db->fetchAll();
 	}
 
