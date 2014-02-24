@@ -2341,7 +2341,7 @@
 					var $this = $('#' + id, formid);
 					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					target_element.attr('src', $.jset.defaults.dir_pre + 'jset/img/loading.gif');
+					//target_element.attr('src', $.jset.defaults.dir_pre + 'jset/img/loading.gif');
 					$('#' + id, formid).trigger('change', [true]);
 				},
 			},
