@@ -449,7 +449,8 @@
 	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName($t));
 	        var filterToolbarState = $.jset.fn.getFilterToolbar.call($t);
 	        var settings = $.extend(true, {}, $t.data('settings'), {filterToolbar: {options: {ignore_column_search_default: true}}});
-	        settings.search_default = filterToolbarState.search_default;
+	        if(filterToolbarState)
+	        	settings.search_default = filterToolbarState.search_default;
 	        var id = $t.attr('id');
 	        $t.jset('unload');
 	        return $('table#' + id).jset(settings);
@@ -933,7 +934,7 @@
 		},
 		
 		get_column: function(grid, column_name){
-			return grid.data('index')[column_name] ? grid.data('columns')[grid.data('index')[column_name]] : false;
+			return grid.data('index')[column_name] != undefined ? grid.data('columns')[grid.data('index')[column_name]] : false;
 		},
 		
 		get_grid_container: function(grid){
@@ -1468,6 +1469,7 @@
 		
 		colModel: function(col, i, t){
 			var obj = {};
+			var col_object = $.jset.fn.get_col_object(col);
 			obj.name = col.index ? col.index : col.Field;
 			obj.index = col.Field;
 			obj.width = col.width ? col.width : 80;
@@ -1485,22 +1487,29 @@
 			obj.formatter = $.jset.fn.formatter(col, t);
 			obj.unformat = $.jset.fn.unformat(col);
 			obj.formatoptions = $.jset.fn.formatoptions(col, t);
-			obj.formoptions = $.jset.fn.formoptions(col, i, t);
+			obj.formoptions = $.jset.fn.formoptions(col, i, t, col_object);
 			obj.searchoptions = $.jset.fn.searchoptions(col, t);
 			obj.stype = $.jset.fn.stype(col, t);
+			
+			if(col_object.searchoptions && col_object.searchoptions.sopt && obj.searchoptions.sopt && obj.searchoptions.sopt.length > 0)
+				obj.searchoptions.sopt = [];
+				
+			obj = $.extend(true, {}, obj, col_object);
+			
+			return obj;
+		},
+		
+		get_col_object: function(col){
 			if (col.object){
 				try {
-					var col_object = eval('({' + col.object + '})');
+					return eval('({' + col.object + '})');
 				} 
 				catch (e) {
 					alert( 'column ' + obj.name + '\nobject definition ' + e.name + '\n' + e.message);
 				}
-				if(col_object.searchoptions && col_object.searchoptions.sopt && obj.searchoptions.sopt && obj.searchoptions.sopt.length > 0)
-					obj.searchoptions.sopt = [];
-					
-				obj = $.extend(true, {}, obj, col_object);
 			}
-			return obj;
+			else
+				return {};
 		},
 		
 		search_default: function(col, t){
@@ -1622,12 +1631,14 @@
 			return (t.p.control[col.control] && t.p.control[col.control].stype) ? t.p.control[col.control].stype : t.p.control.stype;
 		},
 		
-		formoptions: function(col, i, t){
+		formoptions: function(col, i, t, col_object){
 			var obj = {};
-			var options = t.p.control[col.control] && t.p.control[col.control].formoptions ? t.p.control[col.control].formoptions : {};
+			var control_formoptions = t.p.control[col.control] && t.p.control[col.control].formoptions ? t.p.control[col.control].formoptions : {};
+			var col_formoptions = col_object.formoptions ? col_object.formoptions : {};
+			var options = $.extend(true, {}, control_formoptions, col_formoptions);
 			if(col.rowpos){
 				obj.rowpos = col.rowpos;
-				obj.elmprefix = options.label_hide ? '' : ($.jset.fn.colNames(col) ? '<label class="' + t.p.caption_class + '" for="' + col.Field + '">' + $.jset.fn.colNames(col) + ": </label>" : '');
+				obj.elmprefix = '<label name="' + col.Field +'" ' + (options.label_hide ? '' : 'class="' + t.p.caption_class + '"') + ' for="' + (col.index ? col.index : col.Field) + '">' + (options.label_hide ? '' : $.jset.fn.colNames(col) + ': ') + "</label>";
 				obj.elmsuffix = '<span name="' + col.Field + '_span" style="display:inline-block; width:' + t.p.spacing + '"/>';
 				obj.label = col.rowlabel;
 			}else{

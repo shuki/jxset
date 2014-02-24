@@ -19,16 +19,17 @@
 				td.clone().appendTo($('tr', pane));
 			
 			$.each($('table.EditTable tr.FormData:not(:last)', formid), function(i, e){
-				var panel = $($('#panel_template').html()).appendTo('table.pane-table > tbody > tr > td:nth-child(' + ((i % options.columns) + 1) + ')')
+				var panel = $($('#panel_template').html()).appendTo($('table.pane-table > tbody > tr > td:nth-child(' + ((i % options.columns) + 1) + ')', formid))
 					.hide();
 				$('span.panel-title', panel).html($('td.CaptionTD', e).html());
 				
-				var tr;
+				var tr, name;
 				$.each($('td.DataTD > *', e), function(j, a){
-					if((j % 3) == 0)
+					if((j % 3) == 0){
 						tr = $('<tr></tr>').appendTo($('div.panel-body > table > tbody', panel)).hide();
-						
-					if((j % 3) == 1 && $.jset.fn.get_column(grid, $(a).attr('name')) && $.jset.fn.get_column(grid, $(a).attr('name')).hidden != 1){
+						name = $(a).attr('name');
+					}
+					if((j % 3) == 1 && $.jset.fn.get_column(grid, name) && ($.jset.fn.get_column(grid, name).hidden != 1 || $.jset.fn.get_column(grid, name).edithidden == 1)){
 						panel.show();
 						tr.show();
 					}
