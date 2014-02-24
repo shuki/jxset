@@ -1791,7 +1791,14 @@
 					var name = $(elem).attr('name');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
-				}
+				},
+				afterclickPgButtons : function(whichbutton, formid, rowid, id){
+					var grid = $.jset.fn.get_grid_by_formid(formid);
+					var elem = $(formid).find('#' + id);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},
 			},
 			selectbox_text:{
 				align: 'left',
