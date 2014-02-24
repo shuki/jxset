@@ -2275,6 +2275,9 @@
 						return col.Field;
 					}
 				},
+				formoptions:{
+					label_hide: true
+				},
 				onInitializeForm: function(formid, id){
 					var grid = $.jset.fn.get_grid_by_formid(formid);
 					var $this = $('#' + id, formid);
