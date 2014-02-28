@@ -12,14 +12,13 @@ class config
 {
 	const jxset = '../';
 	const rel_path = '../../';
-	const errorLogFile = 'log/error_log_file.txt';
 	const dbhost = 'localhost';
 	const dbport = '3306';
 	const dbserver = 'mysql';
 	const dbcharset = 'utf8';
 	const dbname = 'jxset';
 	const dbuser   = 'root';
-	const dbpassword = 'earth12'; 
+	const dbpassword = ''; 
 	const dbfetchStyle = PDO::FETCH_OBJ;
 	const dberrorMode = PDO::ERRMODE_EXCEPTION;
 	const limit = 100;

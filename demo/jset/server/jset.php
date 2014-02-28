@@ -1,7 +1,8 @@
 <?php
-include('request.class.php');
+include('autoload.php');
 
-if(!isset($_SERVER['HTTP_REFERER']))
+$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : jset_autoload::get_header('Referer');
+if(!$referer)
 	exit;
 
 $request = $_REQUEST;
@@ -13,7 +14,8 @@ $php_auth_user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : 
 if($php_auth_user)
 	$request['_PHP_AUTH_USER_'] = $php_auth_user;
 
-session_start();
+if(!isset($_SESSION))
+	session_start();
 foreach($_SESSION as $key => $value)
 	$request['_session_' . $key . '_'] = $value;
  
@@ -25,7 +27,7 @@ $opts = array('http' =>
     array(
         'method'  => 'POST',
         'header'  => "Content-type: application/x-www-form-urlencoded\r\n" .
-        			"Referer: " . $_SERVER['HTTP_REFERER'] . "\r\n",
+        			"Referer: " . $referer . "\r\n",
         'content' => $postdata
     )
 );
