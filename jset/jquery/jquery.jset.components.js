@@ -1343,6 +1343,7 @@
 				formatter:'date',
 				edittype:'custom',
 				stype: 'custom',
+				unformat: $.jset.fn.unformat_date,
 				editoptions:{
 					size: $.jset.fn.colsize,
 					defaultValue: function(col){
