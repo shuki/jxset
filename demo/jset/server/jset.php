@@ -2,6 +2,12 @@
 include('autoload.php');
 
 $request = jset_dispatch::get_real_POST_GET();
+
+session_start();
+if(count($_SESSION))
+	foreach($_SESSION as $key => $value)
+		$request['_session_' . $key . '_'] = $value;
+
 $result = jset_dispatch::get($request);
 
 if($request['_methods_'] == 'export'){
