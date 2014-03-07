@@ -29,4 +29,7 @@ ALTER TABLE `jset_table`
 ALTER TABLE `jset_table`
 	DROP INDEX `unique_name`,
 	ADD UNIQUE INDEX `unique_name` (`name`, `section`);
-	
+
+-- 2014-03-04
+ALTER TABLE `jset_table`
+	CHANGE COLUMN `source` `source` TEXT NULL DEFAULT NULL AFTER `title`;

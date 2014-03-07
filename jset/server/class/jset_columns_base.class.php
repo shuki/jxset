@@ -48,7 +48,11 @@ class jset_columns_base {
 	protected function columns_base($db, $name, &$index) {
 		$sql_class = sql::create($db);
   		$db->query(str_replace(array('#table#', '#LD#', '#RD#'), array($name, $sql_class->LD, $sql_class->RD), $sql_class->GET_COLUMNS_BASE));
-		return $this->process($db, $index, $notused);
+		$cols = $this->process($db, $index, $notused);
+		if(!$cols)
+			die('no columns defined for source or target: ' . $name);
+		
+		return $cols;
 	}
 
 	protected function columns_all($db, $table, &$index, &$aggregate){ 
