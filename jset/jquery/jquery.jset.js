@@ -1175,6 +1175,9 @@
 			$.jset.fn.create_navigator($t, $.jset.fn.get_grid_container($t));															
 			if($t.data('settings').create_navigator === false)
 				$('div.ui-jqgrid-pager', $.jset.fn.get_grid_container($t)).hide();
+			
+			if($t.data('settings').grid.scroll == 1)
+				$('td' + $t.data('settings').grid.pager + '_center', $.jset.fn.get_grid_container($t)).css('width', '0');
 		},
 		
 		create_pager_div: function($t, i){
