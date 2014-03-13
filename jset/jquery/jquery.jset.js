@@ -347,6 +347,7 @@
 					closeOnEscape: false,
 					closeAfterEdit: true,
 					closeAfterAdd: true,
+					//checkOnUpdate: true,
 					onclickSubmit: $.jset.fn.onclickSubmit
 				},
 				add:{
@@ -357,6 +358,7 @@
 					closeAfterAdd: true,
 					clearAfterAdd: false,
 					closeAfterEdit: true,
+					//checkOnUpdate: true,
 					onclickSubmit: $.jset.fn.onclickSubmit
 				},
 				del:{
@@ -503,6 +505,8 @@
 			var grid = $(this);
 			//$.jset.fn.enable_fields(formid);
 			//$('#sData', $.jset.fn.get_grid_container(grid)).show();
+
+			$("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
 			
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
@@ -535,6 +539,7 @@
 		
 		onclickPgButtons : function (whichbutton, formid, rowid){
 			var grid = $(this);
+			
 			$.jset.fn.clear_form_tooltips(formid);
 
 			if($.isFunction(grid.data('settings').onclickPgButtons))

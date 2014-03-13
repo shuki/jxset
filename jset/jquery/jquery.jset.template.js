@@ -20,6 +20,7 @@
 			
 			$.each($('table.EditTable tr.FormData:not(:last)', formid), function(i, e){
 				var panel = $($('#panel_template').html()).appendTo($('table.pane-table > tbody > tr > td:nth-child(' + ((i % options.columns) + 1) + ')', formid))
+					//.css({float:'right'})
 					.hide();
 				$('span.panel-title', panel).html($('td.CaptionTD', e).html());
 				

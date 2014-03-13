@@ -394,16 +394,33 @@
 				$(elem).val(value);
 		},
 		
-		grid_element: function(value, options){
+		jsetgrid_element: function(value, options){
+			var grid = $(this);
+			var settings = grid.data('settings').grid.colModel[grid.data('index')[options.name]].settings;
+			var filter_name = settings.filter[0].target;
+			settings.search_default.push({
+		  		name: filter_name,
+		  		value: value
+		  	});
 			var elem = $('<TABLE></TABLE>');
 			return elem;
 		},
 		
-		grid_frame_value: function(elem, action, value){
+		jsetgrid_value: function(elem, action, value){
+			if($(elem).length == 0)
+				return '';
 			if(action == 'get'){
 				return '';
 			}
 			else if(action == 'set'){
+				var container = $.jset.fn.get_grid_container(elem);
+				var filter_name = elem.data('settings').filter[0].target;
+				var filter_field = container.find("#gs_" + filter_name);
+				if(filter_field.val() != value)
+				{
+					filter_field.val(value);
+					elem[0].triggerToolbar();
+				}
 			}
 		},
 		
@@ -1008,7 +1025,7 @@
 			height_offset: 122,
 			new_record_show: false
 		},
-		
+				
 		tab_frame:{
 			iframe: {
 				frameborder: '0',
@@ -1515,6 +1532,32 @@
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
+				}
+			},
+			jsetgrid:{
+				edittype:'custom',
+				editoptions: {
+				},
+				formoptions:{
+					label_hide: true
+				},
+				onInitializeForm: function(formid, id){
+					var elem = $(formid).find('#' + id);
+					var grid = $(this);
+					if(grid.data('form_action') == 'add')
+						elem.closest('span.FormElement').hide();
+						
+					var settings = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].settings;
+					elem.jset(settings);
+				},
+				beforeShowForm: function(formid, id){
+					var elem = $(formid).find('#' + id);
+					var grid = $(this);
+
+					if(grid.data('form_action') == 'add')
+						elem.closest('span.FormElement').hide();
+					else
+						elem.closest('span.FormElement').show();
 				}
 			},
 			grid_frame:{
