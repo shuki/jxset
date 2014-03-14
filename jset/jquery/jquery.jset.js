@@ -813,6 +813,10 @@
 					$.jset.fn.single_record($t);
 		
 				$t.jqGrid('setGridParam', {scrollrows: false});
+				
+				var nav_buttons = $('#edit_' + $t.attr('id') + ', #view_' + $t.attr('id') + ', #del_' + $t.attr('id') + ', #export_' + $t.attr('id') + ', #copy_' + $t.attr('id'), $.jset.fn.get_grid_container($t));
+				$t.getGridParam("reccount") == 0 ? nav_buttons.addClass('ui-state-disabled') : nav_buttons.removeClass('ui-state-disabled');
+				
 				if($.isFunction($t.data('settings').loadComplete))
 					$t.data('settings').loadComplete.call($t, data);
 			},
@@ -1250,7 +1254,9 @@
 					{onClickButton: function(){
 						$t.data('export', true);
 						$t[0].triggerToolbar();
-					}});
+					},
+					id: 'export_' + $t.attr('id')
+					});
 				
 				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, options);
 				if ($t.data('settings').navigation.options.cloneToTop)
@@ -1367,7 +1373,8 @@
 								else					
 									$t.jqGrid('editGridRow', id, options);
 							}
-					}
+					},
+					id: 'copy_' + $t.attr('id')
 				});
 				
 				$t.jqGrid('navButtonAdd', $t.data('settings').grid.pager, options);
