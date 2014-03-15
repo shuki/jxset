@@ -541,6 +541,7 @@
 			var grid = $(this);
 			
 			$.jset.fn.clear_form_tooltips(formid);
+			$("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
 
 			if($.isFunction(grid.data('settings').onclickPgButtons))
 				grid.data('settings').onclickPgButtons.call(grid, whichbutton, formid, rowid);
