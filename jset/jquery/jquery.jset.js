@@ -316,7 +316,7 @@
 				options : {
 					search: true,
 					refresh: true,
-					view: true,
+					view: false,
 					cloneToTop: false,
 					editfunc: function(id, options){
 						var grid = $(this);
