@@ -1361,6 +1361,9 @@
 				edittype:'custom',
 				stype: 'custom',
 				unformat: $.jset.fn.unformat_date,
+				formatoptions:{
+					reformatAfterEdit: true
+				},
 				editoptions:{
 					size: $.jset.fn.colsize,
 					defaultValue: function(col){

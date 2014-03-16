@@ -1799,8 +1799,9 @@
 					if (data != null && typeof data.rows != 'undefined') {
 						var data_array = data.rows[0].cell;
 						var row_array = [];
+						
 						$.each(grid.data('settings').grid.colModel, function(i){
-							row_array[this.index] = data_array[i];
+							row_array[this.name] = data_array[i];
 						});
 						grid.jqGrid('setRowData', rowid, row_array);
 						if (typeof options.formid != 'undefined')
