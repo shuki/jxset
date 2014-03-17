@@ -29,8 +29,9 @@ function process($files, $post){
 	$db = db::create();
 	$sql_class = sql::create($db);
 	$id = $db->insert($sql_class->INSERT_UPLOAD, array($pathinfo['basename']));
-	
-	$file_name = $id . $extension;
+  	$db->query($sql_class->SELECT_UPLOAD, array($id));
+  	$upload_name = $db->fetch()->upload_name;
+	$file_name = $upload_name . $extension;
 	$result->fileName = $file_name;
 	$upload_dir = config::rel_path . config::upload_directory;
 	$upload_path = $upload_dir .  $file_name;

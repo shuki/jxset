@@ -882,7 +882,7 @@
 		            inputName: "userfile",
 		            paramsInBody: true,
 		            params: {
-		            	dir: "img/",
+		            	dir: "files/",
 		            	max: "10000000"
 		            }
 		        },

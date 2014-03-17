@@ -33,3 +33,8 @@ ALTER TABLE `jset_table`
 -- 2014-03-04
 ALTER TABLE `jset_table`
 	CHANGE COLUMN `source` `source` TEXT NULL DEFAULT NULL AFTER `title`;
+	
+-- 2014-03-17
+ALTER TABLE `jset_upload`
+	ADD COLUMN `upload_name` VARCHAR(40) NULL DEFAULT NULL AFTER `name`,
+	ADD UNIQUE INDEX `upload_name` (`upload_name`);

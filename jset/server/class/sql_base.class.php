@@ -119,7 +119,8 @@ class sql_base
 		
 	public $LAST_INSERT_ID = "SELECT LAST_INSERT_ID() as id";
 	
-	public $INSERT_UPLOAD = "INSERT INTO jset_upload VALUES(null, null, ?)";
+	public $INSERT_UPLOAD = "INSERT INTO jset_upload VALUES(null, null, ?, uuid())";
+	public $SELECT_UPLOAD = "SELECT * FROM jset_upload WHERE id = ?";
 	
 	//-- general section ---//
 	public $TABLE_EXISTS = "SELECT COUNT(*) as result
