@@ -40,7 +40,7 @@
 				});
 				$(e).remove();
 			});
-			set_panel_img_on_click_handler();
+			set_panel_img_on_click_handler(pane);
 	    }
 	});
 })(jQuery);
