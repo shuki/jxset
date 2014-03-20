@@ -42,7 +42,8 @@
 				db_name: '_db_name_',
 				host: '_host_',
 				db_remote_definitions: '_db_remote_definitions_',
-				copy: '_copy_'
+				copy: '_copy_',
+				param: '_param_'
 			},
 			host: '',
 			db_name: '',
@@ -1132,7 +1133,11 @@
 			jsetParams[settings.grid.prmNames.oper] = 'columns,table,index';
 			jsetParams[settings.prmNames.source] = settings.source;
 			if(settings.db_name && settings.db_remote_definitions) jsetParams[settings.prmNames.db_name] = settings.db_name;
-			if(settings.host && settings.db_remote_definitions) jsetParams[settings.prmNames.host] = settings.host;		
+			if(settings.host && settings.db_remote_definitions) jsetParams[settings.prmNames.host] = settings.host;
+			if(settings.params)
+				$.each(settings.params, function(key, value){
+					jsetParams[settings.prmNames.param + key] = value;
+				});	
 			$.post(settings.dir_rel + settings.url, jsetParams, callback, 'json');
 		},
 		
