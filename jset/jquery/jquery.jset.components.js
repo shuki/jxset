@@ -922,17 +922,25 @@
 				return element;
 			},
 			target_value: function(val)
-			{
-				var extension = val.split('.').pop();
-				if(extension == 'pdf'){
-					$(this).attr('src', '../jxset/jset/img/file.jpg');
-					$(this).attr('path', val);
-					$(this).show();
+			{				
+				if(!val){
+					$(this).attr('src', '');
+					$(this).hide();
+					return;
+				}
+
+				var extension = val.split('.').pop().toLowerCase();
+									
+				$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
+				if(extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png'){
+					$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
+					$(this).removeAttr('path');
 				}
 				else
 				{
-					$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
-					$(this).removeAttr('path');
+					$(this).attr('src', '../jxset/jset/img/file.jpg');
+					$(this).attr('path', val);
+					$(this).show();
 				}
 									
 			},
@@ -1845,14 +1853,14 @@
 					sopt:['eq','ne']				
 				},
 				afterShowForm: function(formid, id){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
+					var grid = $(this);
 					var elem = $(formid).find('#' + id);
 					var name = $(elem).attr('name');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
+					var grid = $(this);
 					var elem = $(formid).find('#' + id);
 					var name = $(elem).attr('name');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
@@ -2039,7 +2047,7 @@
 					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				},
 				onInitializeForm: function(formid, id){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
+					var grid = $(this);
 						
 					$.each($('#' + id, formid), function(){
 						var $this = $(this);
@@ -2351,7 +2359,7 @@
 					label_hide: true
 				},
 				onInitializeForm: function(formid, id){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
+					var grid = $(this);
 					var $this = $('#' + id, formid);
 					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
 
@@ -2423,7 +2431,7 @@
 				beforeInitData: function(formid){
 				},
 				onInitializeForm: function(formid){
-					var grid = $.jset.fn.get_grid_by_formid(formid);
+					var grid = $(this);
 					$.each($('.upload_video'), function(){
 						var $this = $(this);
 						var options = grid.data('settings').grid.colModel[grid.data('index')[$(this).attr('id')]]['editoptions'];

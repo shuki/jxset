@@ -158,7 +158,12 @@
 		},
 		
 		uploadFileFmatter : function(cellvalue, options, rowdata, act){
-			return cellvalue ? '<a target="_blank" href="' + cellvalue +'">' + (cellvalue.split('.').pop() == 'pdf' ? options.colModel.formatoptions.file_lable :  options.colModel.formatoptions.picture_lable) + '</a>' : '';
+			if(!cellvalue)
+				return '';
+				
+			var extension = cellvalue.split('.').pop().toLowerCase();							
+			var file_lable = (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png') ? options.colModel.formatoptions.picture_lable : options.colModel.formatoptions.file_lable;
+			return '<a target="_blank" href="' + cellvalue +'">' + file_lable + ' ' + extension + '</a>';
 		}
 	});
 	

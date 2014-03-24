@@ -504,8 +504,6 @@
 		
 		beforeShowForm: function(formid){
 			var grid = $(this);
-			//$.jset.fn.enable_fields(formid);
-			//$('#sData', $.jset.fn.get_grid_container(grid)).show();
 
 			$("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
 			
@@ -949,15 +947,15 @@
 		},
 		
 		get_grid_container: function(grid){
-			return $('#gbox_' + grid.attr('id'));
+			return $('div#gbox_' + grid.attr('id'));
 		},
 		
 		get_grid: function(id){
-			return $('#gview_' + id).find('.jset_table');
+			return $('div#gview_' + id).find('.jset_table');
 		},
 		
 		get_grid_by_formid: function(formid){
-			return $('#' + $(formid).attr('id').substr(8));
+			return $('table#' + $(formid).attr('id').substr(8));
 		},
 		
 		get_grid_by_element: function(elem){
