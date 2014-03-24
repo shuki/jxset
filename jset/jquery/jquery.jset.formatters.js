@@ -144,17 +144,21 @@
 			return (formatoptions != undefined) ? $.jset.fn.format_time(cellvalue, formatoptions.minutes, formatoptions.seconds) : $.jset.fn.format_time(cellvalue);
 		},
 		
-		plainFmatter : function(cellvalue, options, rowdata) {
+		plainFmatter : function(cellvalue, options, rowdata){
 			return $('<div>' + cellvalue + '</div>').text().replace(/\n/g, ' ');
 		},
 		
-		linkFmatter : function(cellvalue, options, rowdata, act) {
+		linkFmatter : function(cellvalue, options, rowdata, act){
 			var grid = $(this);
 			var url = options.colModel.formatoptions.url;
 			var idname = options.colModel.formatoptions.idname;
 			url = url.replace(/#value#/g, cellvalue);
 			url = url.replace(/#idname#/g, rowdata[grid.data('index')[idname]]);
 			return url;
+		},
+		
+		uploadFileFmatter : function(cellvalue, options, rowdata, act){
+			return cellvalue ? '<a target="_blank" href="' + cellvalue +'">' + (cellvalue.split('.').pop() == 'pdf' ? options.colModel.formatoptions.file_lable :  options.colModel.formatoptions.picture_lable) + '</a>' : '';
 		}
 	});
 	
@@ -272,6 +276,12 @@
 	$.extend($.fn.fmatter.linkFmatter , {
 	    unformat : function(cellvalue, options) {
 			return cellvalue;
+		}
+	});
+	
+	$.extend($.fn.fmatter.uploadFileFmatter , {
+	    unformat : function(cellval,options,pos,cnt) {
+	    	return cellval ? $('a', pos).attr('href') : '';
 		}
 	});
 	

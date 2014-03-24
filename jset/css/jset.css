@@ -155,3 +155,8 @@
 .ui-jqgrid .ui-search-table .ui-search-oper {
 	width: 0;
 }
+
+ul#sopt_menu
+{
+	z-index:1000;
+} 

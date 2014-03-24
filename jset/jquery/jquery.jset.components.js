@@ -915,14 +915,26 @@
 					$(this).hide();
 				})
 				.bind('click', function(){
-					window.open($(this).attr('src'));
+					var path = $(this).attr('path') ? $(this).attr('path') : $(this).attr('src');
+					window.open(path);
 				});
 				
 				return element;
 			},
 			target_value: function(val)
 			{
-				$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();					
+				var extension = val.split('.').pop();
+				if(extension == 'pdf'){
+					$(this).attr('src', '../jxset/jset/img/file.jpg');
+					$(this).attr('path', val);
+					$(this).show();
+				}
+				else
+				{
+					$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
+					$(this).removeAttr('path');
+				}
+									
 			},
 			error_handler: function(event, id, fileName, reason) {
 		        alert("id: " + id + ", fileName: " + fileName + ", reason: " + reason);
@@ -2322,7 +2334,13 @@
 			},
 			
 			upload_file:{
-				edittype:'custom',
+				align:'left',
+				edittype: 'custom',
+				formatter: 'uploadFileFmatter',
+				formatoptions:{
+					picture_lable: 'Picture',
+					file_lable: 'File'
+				},
 				editoptions:{
 					custom_options: $.jset.defaults.upload_file,
 					id: function(col){
