@@ -38,6 +38,9 @@
 						$('<td></td>').appendTo($('div.panel-body > table > tbody > tr:last', panel))
 						.append(a);
 				});
+				
+				if($('div.panel-header > span.panel-title', panel).html() == '')
+					$('div.panel-header', panel).hide();
 				$(e).remove();
 			});
 			set_panel_img_on_click_handler(pane);

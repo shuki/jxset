@@ -518,47 +518,36 @@
 		},
 		
 		multicheckbox_element: function(value, options){
-			var v = value.split(',');
-			var s = '';
-
-			if($.isArray(options.value))
-			for (var i = 0; i < options.value.length; i++) {
-				var option = options.value[i];
-				s += '<input type="checkbox" id="' + options.name + option.id + '" value="' + option.id +  (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + '" /><label for="' + options.name + option.id + '"> ' + option.name + ' </label><br />';
-			}
-			else
-				$.each(options.value, function(key, val){
-					s += '<input type="checkbox" id="' + options.name + key + '" value="' + key +  (v.indexOf(key) != -1 ? '" checked="checked"' : '') + '" /><label for="' + options.name + key + '"> ' + val + ' </label><br />';
-				});
-			
-			var elem = $(s);
-			$(elem).addClass('multicheckbox');
-			elem.attr('validate', options.validate);
-			return elem;
+			return $('<input />')
+				.val(value)
+				.attr('validate', options.validate)
+				.addClass('jset-multicheckbox');
 		},
 		
 		multicheckbox_value: function(elem, action, value){
+			var fields = elem.closest('div').find('input[type="checkbox"].jset-multicheckbox');
 			if(action == 'get'){
-				var v = [];
-				
-				$.each($(elem).closest('span').children('input.multicheckbox'), function(i){
+				var s = [];
+				$.each(fields, function(){
 					if($(this).is(':checked'))
-						v.push($(this).val());
+						s.push($(this).val());
 				});
-				return v.length > 0 ? v.join(',') : '';
-			} 
-			else if(action == 'set'){
-				var v = value.split(',');
 				
-				$.each($(elem).closest('span').children('input.multicheckbox'), function(i){
-					if(v.indexOf($(this).val()) != -1)
-						$(this).attr('checked', true);
+				$(elem).val(s.join(','));
+				return $(elem).val();
+			}
+			else if(action == 'set'){
+				var values = value.split(',');
+				$.each(fields, function(){
+					if(values.indexOf($(this).val()) != -1)
+						$(this).attr('checked', 'checked');
 					else
-						$(this).attr('checked', false);
+						$(this).removeAttr('checked');
 				});
+				$(elem).val(value);
 			}
 		},
-
+		
 		multiselect_element: function(value, options){
 			var elem = $("<select multiple='multiple' />");
 			if(options.size) $(elem).css('width', options.size);
@@ -892,7 +881,8 @@
 				  template: '<div class="qq-uploader">' +
 				              '<pre class="qq-upload-drop-area"><span>{dragZoneText}</span></pre>' +
 				              '<table><tr><td><div class="qq-upload-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-folder-open"></span></div></td>' +
-				              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-trash"></span></div></td></tr></table>' +
+				              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-trash"></span></div></td>' +
+				              '<td><div id="qq-progress-bar" class="qq-progress-bar"></div></td></tr></table>' +
 				              '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
 				              '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
 				            '</div>',
@@ -1728,14 +1718,51 @@
 					},
 					defaultValue: function(col){
 						return col.default_value;
+					},
+					custom_options: {
+						columns: 2
 					}
 				},
 				searchoptions:{
 					sopt: ['cn'],
 					searchOperators:false
 				},
+				formoptions:{
+					label_hide: true
+				},
 				beforeInitData: function(formid){
 					$(formid).find('input.multicheckbox').attr('checked', false);
+				},
+				onInitializeForm: function(formid, id){
+					var elem = $(formid).find('input.jset-multicheckbox#' + id);
+					var grid = $(this);
+
+					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
+
+					if(elem.siblings().length == 0){
+						elem.hide();
+
+						var div = $('<div></div>')
+							.insertBefore(elem)
+							.append(elem);
+						var table = $('<table class="jset-multicheckbox"><tr><td></td></tr></table>')
+							.appendTo(div);
+						
+						var td = $('td', table);
+						for(var i = 1; i < editoptions.custom_options.columns; i++)
+							td.clone().appendTo($('tr', table));
+					
+						value = elem.val();
+						var v = value.split(',');
+						
+						if($.isArray(editoptions.value)){
+							for (var i = 0; i < editoptions.value.length; i++) {	
+								var option = editoptions.value[i];
+								$('<label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label><br />')
+									.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
+							}						
+						}
+					}
 				}
 			},
 			multiselect:{
@@ -2391,7 +2418,19 @@
 							var dir = response.dir.replace(/\\\//g, "/");
 							$this.val(dir + response.fileName);
 							editoptions.custom_options.target_value.call(target_element, $this.val());
-				        });
+				        })
+				        .on('progress', function (event, id, fileName, uploadedBytes, totalBytes) {
+							if (uploadedBytes < totalBytes) {
+								var progress = Math.round(uploadedBytes / totalBytes * 100);
+								
+								$('div.qq-progress-bar', this).show()
+								.css('width', (progress > 20 ? progress : '20') + 'px')
+								.html(progress + '%');
+							}
+							else {
+								$('div.qq-progress-bar', this).hide();
+							}
+						});
 							
 					$('ul.qq-upload-list').hide();
 					
