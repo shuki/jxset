@@ -1423,8 +1423,9 @@
 				unformat: $.jset.fn.unformat_datetime,
 				edittype:'text',
 				editoptions:{
-					//size: $.jset.fn.colsize,
-					size: 25,
+					size: function(col){
+						return col.usize ? col.usize : 20;
+					},
 					maxlength: function(col){
 						return col.size;
 					},
