@@ -827,13 +827,13 @@
 			changeMonth:true,
 			yearRange:'1800:2100',
 			onSelect: function(dateText, inst){
-				if($(this).attr('id').substr(0,3) == 'gs_' && $(this).attr('name').substr(0,3) != 'gs_')
+				$(this).trigger('change');
+				if($(this).parents('tr.ui-search-toolbar').length != 0)
 				{
 					var grid = $.jset.fn.get_grid_by_element(this);
 					grid[0].triggerToolbar();
 				}
 				else if($(this).parent().hasClass('input-elm')){
-					$(this).trigger('change');
 					$(this).parent().trigger('change');
 				}
 			}
