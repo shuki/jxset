@@ -828,7 +828,7 @@
 			    if(grid.data('settings').grid.multiselect){
 					var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
 			        cm = grid.jqGrid('getGridParam', 'colModel');
-				    return (i == 0 && cm[i].name === 'cb');
+				    return (cm[i].name === 'cb' && $(e.target).attr('id').substr(0,4) === 'jqg_');
 			    } else
 			    	return true;
 			},
