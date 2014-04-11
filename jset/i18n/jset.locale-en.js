@@ -16,7 +16,8 @@
 		},
 		nav: {
 			columnChooserTitle: 'Select Columns',
-			clearPersistTitle: 'Clear Personal Settings'
+			clearPersistTitle: 'Clear Personal Settings',
+			selectedCounter: "Selected: {0}"
 		}
 	};
 

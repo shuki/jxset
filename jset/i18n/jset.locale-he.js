@@ -16,7 +16,8 @@
 		},
 		nav: {
 			columnChooserTitle: 'בחר עמודות',
-			clearPersistTitle: 'בטל התאמה אישית'			
+			clearPersistTitle: 'בטל התאמה אישית',		
+			selectedCounter: "מסומנים: {0}"
 		}
 	};
 

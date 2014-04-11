@@ -75,8 +75,8 @@
 					//weakness - copied from grid.custome.js
 					operands : { "eq" :"==", "ne":"!","lt":"<","le":"<=","gt":">","ge":">=","bw":"^","bn":"!^","in":"=","ni":"!=","ew":"|","en":"!@","cn":"~","nc":"!~","nu":"#","nn":"!#"},
 					beforeSearch: function(){
-						var $t = $(this);
-						var postData = $t.jqGrid('getGridParam','postData');
+						//var $t = $(this);
+						//var postData = $t.jqGrid('getGridParam','postData');
 					}
 				}
 			},
@@ -457,7 +457,17 @@
 	        var id = $t.attr('id');
 	        $t.jset('unload');
 	        return $('table#' + id).jset(settings);
-		}
+		},
+		
+		getMultiselectedRows: function(){
+			var grid = $(this);
+			if(!grid.data('settings').grid.multiselect)
+				return false;
+				
+			return (grid.data('settings').grid.scroll == 1) ? 
+				grid.jqGrid('getGridParam','selarrrow') :
+				grid.data('multiselectedRows').array.slice();
+		}		
 	};
 
 	// common events
@@ -667,6 +677,9 @@
 		
 				if ($t.data('init')) {
 					$t.data('init', false);
+					
+					$.jset.fn.initMultiselectedRows.call($t);
+											
 					if ($t.data('settings').empty) {
 						post_columns[$t.data('settings').grid.prmNames.oper] = 'grid_empty';
 						$.extend(post, post_columns);
@@ -724,6 +737,8 @@
 
 				if($.isFunction($t.data('settings').beforeRequest))
 					$t.data('settings').beforeRequest.call($t);
+					
+				$.jset.fn.setNavigationSelectedFilters.call($t, post['filters']);
 			},
 			
 			gridComplete: function(){
@@ -814,6 +829,8 @@
 		
 				$t.jqGrid('setGridParam', {scrollrows: false});
 				
+				$.jset.fn.selectMultiselectedRows.call($t);
+
 				var nav_buttons = $('#edit_' + $t.attr('id') + ', #view_' + $t.attr('id') + ', #del_' + $t.attr('id') + ', #export_' + $t.attr('id') + ', #copy_' + $t.attr('id'), $.jset.fn.get_grid_container($t));
 				$t.getGridParam("reccount") == 0 ? nav_buttons.addClass('ui-state-disabled') : nav_buttons.removeClass('ui-state-disabled');
 				
@@ -828,7 +845,11 @@
 			    if(grid.data('settings').grid.multiselect){
 					var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
 			        cm = grid.jqGrid('getGridParam', 'colModel');
-				    return (cm[i].name === 'cb' && $(e.target).attr('id').substr(0,4) === 'jqg_');
+				    if(cm[i].name === 'cb' && $(e.target).attr('id') && $(e.target).attr('id').substr(0,4) === 'jqg_'){
+			        	$.jset.fn.updateMultiselectedRow.call(grid, rowid, $(e.target).attr('checked') == 'checked');
+			        	$.jset.fn.updateNavigationSelectedCounter.call(grid);
+			        	return true;
+				    }
 			    } else
 			    	return true;
 			},
@@ -863,7 +884,9 @@
 			},
 			
 			onSelectAll: function (aRowids, isSelected) {
-				//var $t = $(this);
+				var grid = $(this);
+				var ids = grid.jqGrid('getGridParam','selarrrow');
+				$.jset.fn.updateMultiselectedRows.call(grid, aRowids, isSelected);
 		    },
 
 			ondblClickRow: function(rowId, iRow, iCol, e){
@@ -1836,6 +1859,61 @@
 				if($(e).prop('tooltip'))
 					$.jset.fn.clear_tooltip(e);
 			});
+		},
+
+		initMultiselectedRows: function(){
+			var grid = $(this);
+			if(grid.data('settings').grid.multiselect)
+				grid.data('multiselectedRows', {array: [], filters: '', include: true});
+		},
+			
+		updateMultiselectedRow: function(id, isSelected){
+			var grid = $(this);
+	        var index = $.inArray(id, grid.data('multiselectedRows').array);
+	        if (!isSelected && index >= 0){
+	            grid.data('multiselectedRows').array.splice(index, 1); // remove id from the list
+	        } else if(index < 0){
+	            grid.data('multiselectedRows').array.push(id);
+	        }
+		},
+		
+		updateMultiselectedRows: function(ids, isSelected) {
+			var grid = $(this);
+			var i, count;
+			for (i = 0, count = ids.length; i < count; i++) {
+				$.jset.fn.updateMultiselectedRow.call(grid, ids[i], isSelected);
+			}
+			$.jset.fn.updateNavigationSelectedCounter.call(grid);			
+		},
+		
+		selectMultiselectedRows: function(){
+			var grid = $(this);
+			if(grid.data('settings').grid.multiselect){
+				var i, count;
+				for (i = 0, count = grid.data('multiselectedRows').array.length; i < count; i++) {
+					grid.jqGrid('setSelection', grid.data('multiselectedRows').array[i], false);
+				}
+			}
+		},
+		
+		updateNavigationSelectedCounter: function(){
+			var grid = $(this);
+			if(!grid.data('settings').grid.scroll == 1)
+				$('div.ui-paging-info-selected', $.jset.fn.get_grid_container(grid))
+					.html($.jgrid.format($.jset.nav.selectedCounter, grid.data('multiselectedRows').array.length));
+		},
+		
+		setNavigationSelectedFilters: function(filters){
+			var grid = $(this);
+			if(!grid.data('settings').grid.multiselect)
+				return;
+				
+			filters = (filters === undefined || filters == '{"groupOp":"AND","rules":[]}' || filters == '') ? '' : filters;
+			if(grid.data('multiselectedRows').filters != filters){
+				grid.data('multiselectedRows').filters = filters;
+				grid.data('multiselectedRows').array.length = 0;
+				$.jset.fn.updateNavigationSelectedCounter.call(grid);
+			}
 		}
 	});
 
