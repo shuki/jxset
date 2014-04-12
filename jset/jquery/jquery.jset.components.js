@@ -213,21 +213,6 @@
 			return cellvalue;
 		},
 
-		custom_test_element: function(value, options){
-			var elem = $('<input type="text">');
-			elem.val(value);
-			elem.addClass('custom_test');
-			elem.attr('validate', options.validate);
-			return elem;
-		},
-		
-		custom_test_value: function(elem, action, value){
-			if(action == 'get')
-				return $(elem).val();
-			else if(action == 'set')
-				$(elem).val(value);
-		},
-		
 		custom_date_element: function(value, options){
 			return $('<input type="text">')
 			.val($.jset.fn.format_date(value))
@@ -242,54 +227,6 @@
 				$(elem).val($.jset.fn.format_date(value));
 		},
 		
-		upload_element: function(value, options){
-			var elem = $("<input type='image' />").attr('src', value ? value : options.upload.empty_url).attr('height', options.upload.height);
-			elem.attr('validate', options.validate);
-			new AjaxUpload(elem, $.extend({}, options.upload.ajax,{
-				onSubmit : function(file , ext){
-					rg =	new RegExp("^(" + options.upload.ajax.data.ext + ")$", "i");
-			        if (!(ext && rg.test(ext))){
-		            alert('this file extension is not allowed');
-		            return false;
-			        }
-					$('#loading').show();
-				},
-				onComplete: function(file, response){
-					$('#loading').hide();
-					if(response.error !== undefined){
-						alert(response.error.message);
-						return;
-					}
-		
-					elem.attr('src', options.upload.ajax.dir_pre + options.upload.ajax.data.dir + response.fileName);
-				}
-			})); 
-		
-			return elem;
-		},
-		
-		upload_value: function(elem, action, value){
-			if(action == 'get')
-				return $(elem).attr('src');
-			else if(action == 'set')
-				$(elem).attr('src', $(value).attr('src'));
-		},
-
-		upload_image_element: function(value, options){
-			var elem = $('<input type="text">');
-			elem.val(value);
-			elem.attr('validate', options.validate);
-			elem.addClass('upload_image');
-			return elem;
-		},
-		
-		upload_image_value: function(elem, action, value){
-			if(action == 'get')
-				return $(elem).val();
-			else if(action == 'set')
-				$(elem).val(value);
-		},
-
 		upload_file_element: function(value, options){
 			var grid = $(this);
 			return $(options.custom_options.input_element)
@@ -464,59 +401,7 @@
 			else
 				$(elem).show();
 		},
-		
-		tab_frame_element: function(value, options){
-			var elem = $('<IFRAME></IFRAME>');
-			$(elem).attr($.jset.defaults.tab_frame.iframe);
-			$(elem).attr('height', options.height);
-			$(elem).attr('width', options.width);
-			$(elem).attr('src', options.src);
-			$(elem).load(function(){
-				var c = $(elem).contents().find('iframe');
-				$.each(c, function(item){
-					$(this).attr($.jset.defaults.grid_frame.iframe);
-					var w = this.contentWindow;
-					var filter_name = w.settings.filter[0].target;
-					w.settings.search_default.push({
-				  		name: filter_name,
-				  		value: value
-				  	});
-					$(this).attr('height', options.height - $.jset.defaults.tab_frame.height_offset);
-					$(this).attr('width', options.width - $.jset.defaults.tab_frame.width_offset);
-					if(w.settings.manual_size === undefined){
-						w.settings.grid.height = options.height - $.jset.defaults.tab_frame.height_offset - $.jset.defaults.grid_frame.height_offset;
-						w.settings.grid.width = options.width - $.jset.defaults.tab_frame.width_offset - $.jset.defaults.grid_frame.width_offset;
-					}
-					w.create_grid();
-				});
-			}); 
-			if(value== '')
-				$(elem).hide();
-			else
-				$(elem).show();
-			return elem;
-		},
-		
-		tab_frame_value: function(elem, action, value){
-			if(action == 'get'){
-				return '';
-			}
-			else if(action == 'set'){
-				var c = $(elem).contents().find('iframe');
-				$.each(c, function(item){
-					var w = this.contentWindow;
-					var filter_name = w.settings.filter[0].target;
-					$(this).contents().find("#gs_" + filter_name).val(value);
-					var e = $(this).contents().find(".jset_table");
-					e[0].triggerToolbar();
-				});
-			}
-			if(value== '')
-				$(elem).hide();
-			else
-				$(elem).show(); 
-		},
-		
+				
 		multicheckbox_element: function(value, options){
 			return $('<input />')
 				.val(value)
@@ -632,35 +517,6 @@
 				$.jset.fn.handle_change_select_options(elem, value);
 		},
 		
-		selectbox_text_element: function(value, options){
-			var elem = $('<select />');
-			var select_options = '<option value=""></option>';
-			if($.isArray(options.value))
-			for (var i = 0; i < options.value.length; i++) {
-				var option = options.value[i];
-				select_options += '<option value="' + option.id + '">' + option.name + '</option>';
-			}
-			else
-				$.each(options.value, function(key, value){
-					select_options += '<option value="' + key + '">' + value + '</option>';
-				});
-			$(elem).append(select_options);
-
-			$.jset.fn.handle_change_select_options(elem, value);
-			$(elem).val(value);
-			elem.attr('validate', options.validate);
-			return elem;
-		},
-		
-		selectbox_text_value:function(elem, action, value){
-			if(action == 'get')
-				return $(elem).val();
-			else if(action == 'set'){
-				$.jset.fn.handle_change_select_options(elem, value);
-				$(elem).val(value);
-			}
-		},
-		
 		autocomplete_element: function(value, options){
 			var elem = $('<input />');
 			$(elem).val(value);
@@ -725,25 +581,6 @@
 			var table = $(cellObject).parents('table:first');
 			var store = table.data('store');
 			return store[options.colModel.name][options.rowId];
-		},
-		
-		upload_formatter : function(cellvalue, options, rowobject) {
-			var src = cellvalue ? cellvalue : $(this).data('settings').upload.empty_url;
-			return '<input type="image" src="' + src + '" rowId="' + options.rowId + '" height="' + $(this).data('settings').upload.row_height + '" />';
-		},
-		
-		upload_unformatter: function(cellvalue, options, cellObject) {
-			return $(cellObject.innerHTML).attr('src');
-		},
-		
-		upload_image_formatter : function(cellvalue, options, rowobject) {
-			return cellvalue ? '<input type="image" src="' + cellvalue + '" rowId="' + options.rowId + '" height="' + $(this).data('settings').upload.row_height + '" />' :
-			'<div style="display:block; height:' + $(this).data('settings').upload.row_height + 'px"></div>';
-		},
-		
-		upload_image_unformatter: function(cellvalue, options, cellObject) {
-			//alert($($(cellObject)[0].innerHTML).attr('src'));
-			return $($(cellObject)[0].innerHTML).attr('src') != undefined ? $($(cellObject)[0].innerHTML).attr('src') : '';
 		},
 		
 		select_option_exists: function(elem, value){
@@ -839,22 +676,6 @@
 			}
 		},
 		
-		upload: {
-			empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg',
-			ajax:{
-				action: $.jset.defaults.dir_pre + 'jset/server/jset_upload.php',
-				dir_pre: '',
-				data: {
-					dir: 'img/',
-					ext: 'jpg|jpeg|gif|png',
-					max: 500000
-				},
-				responseType: 'json'
-			},
-			height: '140',
-			row_height: '80'
-		},
-		
 		upload_file: {
 			height: '140',
 			row_height: '80',
@@ -939,25 +760,6 @@
 		   },
 		},
 		
-		upload_image: {
-			empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg',
-			ajax:{
-				action: $.jset.defaults.dir_pre + 'jset/server/jset_upload.php',
-				dir_pre: '',
-				data: {
-					dir: 'img/',
-					ext: 'jpg|jpeg|gif|png',
-					max: 10000000
-				},
-				responseType: 'json'
-			},
-			height: '140',
-			row_height: '80',
-			max_width: '1000',
-			browse_title: 'Upload Image',
-			delete_title: 'Delete Image'
-		},
-		
 		upload_video: {
 			//empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg',
 			empty_url: '',
@@ -1035,21 +837,7 @@
 			height_offset: 122,
 			new_record_show: false
 		},
-				
-		tab_frame:{
-			iframe: {
-				frameborder: '0',
-				marginheight: '0',
-				marginwidth: '0',
-				jsetype: 'tab_frame'
-			},
-
-			width: 902,
-			height: 544,
-			width_offset: 30,
-			height_offset: 100
-		},
-		
+						
 		grid_multiselect:{
 			filterToolbar:{
 				hide: true,
@@ -1281,54 +1069,6 @@
 					searchOperators: true				
 				}
 			},
-			checkbox_edit: {
-				align: 'center',
-				formatter: 'checkbox_edit',
-				formatoptions: {disabled : false},
-				edittype: 'checkbox',
-				editoptions: {
-					value: '1:0',
-					defaultValue: function(col){
-						return col.default_value ? col.default_value : undefined; 
-					},
-					dataInit: function(col){
-						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
-					}
-				},
-				stype: 'select',
-				searchoptions:{
-					sopt:['eq'],
-					searchOperators: false,
-					value: {0:'No', 1:'Yes'},
-					dataInit: function(col){
-						return $.jset.fn.prepend_empty_select_option;
-					}						
-				}
-			},
-			checkbox_edit_not_null: {
-				align: 'center',
-				formatter: 'checkbox_edit_not_null',
-				formatoptions: {disabled : false},
-				edittype: 'checkbox',
-				editoptions: {
-					value: '1:0',
-					defaultValue: function(col){
-						return col.default_value ? col.default_value : undefined; 
-					},
-					dataInit: function(col){
-						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
-					}
-				},
-				stype: 'select',
-				searchoptions:{
-					sopt:['eq'],
-					searchOperators: false,
-					value: {0:'No', 1:'Yes'},
-					dataInit: function(col){
-						return $.jset.fn.prepend_empty_select_option;
-					}						
-				}
-			},
 			currency:{
 				align:'right',
 				formatter:'currency',
@@ -1349,20 +1089,6 @@
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pnumInit : $.jset.fn.numInit;
 					}
-				}
-			},
-			custom_test:{
-				align: 'left',
-				edittype:'custom',
-				stype: 'custom',
-				editoptions:{
-					defaultValue: function(col){
-						return col.default_value;
-					}
-				},
-				searchoptions:{
-					custom_element: $.jset.fn.custom_test_element,
-					custom_value: $.jset.fn.custom_test_value
 				}
 			},
 			custom_date:{
@@ -1791,51 +1517,6 @@
 						$(formid).find('.multiselector').val('');
 				}
 			},
-			numtext:{
-				align:'right',
-				edittype:'text',
-				editoptions:{
-					cols: $.jset.fn.colsize,
-					maxlength: function(col){
-						return col.size;
-					},
-					rows: function(col){
-						return col.height ? col.height : 2;
-					},
-					defaultValue: function(col){
-						return col.default_value;
-					}
-				},
-				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
-				}
-			},
-			orexact:{
-				align:'left',
-				edittype:'text',
-				editoptions:{
-					size: $.jset.fn.colsize,
-					maxlength: function(col){
-						return col.size;
-					},
-					defaultValue: function(col){
-						return col.default_value;
-					}
-				}
-			},
-			orlike:{
-				align:'left',
-				edittype:'text',
-				editoptions:{
-					size: $.jset.fn.colsize,
-					maxlength: function(col){
-						return col.size;
-					},
-					defaultValue: function(col){
-						return col.default_value;
-					}
-				}
-			},
 			password:{
 				align:'left',
 				edittype:'password',
@@ -1895,27 +1576,6 @@
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
 			},
-			selectbox_text:{
-				align: 'left',
-				formatter: 'select',
-				edittype: 'custom',
-				editoptions: {
-					value: {},
-					defaultValue: function(col){
-						return col.default_value;
-					},
-					dataInit: function(col){
-						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
-					}
-				},
-				stype: 'select',
-				searchoptions: {
-					sopt: ['eq','ne'],
-					dataInit: function(col){
-						return $.jset.fn.prepend_empty_select_option;
-					}	
-				}
-			},
 			select: {
 				align: 'left',
 				formatter: 'select',
@@ -1937,27 +1597,6 @@
 					}	
 				}
 			}, 
-			select_required: {
-				align: 'left',
-				formatter: 'select',
-				edittype: 'select',
-				editoptions: {
-					value: {},
-					defaultValue: function(col){
-						return col.default_value;
-					},
-					dataInit: function(col){
-						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
-					}
-				},
-				stype: 'select',
-				searchoptions:{
-					sopt: ['eq','ne'],
-					dataInit: function(col){
-						return $.jset.fn.prepend_empty_select_option;
-					}	
-				}
-			},
 			smallint:{
 				align:'right',
 				formatter:'integer',
@@ -1978,23 +1617,6 @@
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
-				}
-			},
-			tab_frame:{
-				edittype:'custom',
-				editoptions: {
-					src: function(col){
-						return col.src ? col.src : undefined;
-					},
-					width: function(col){
-						return col.usize ? col.usize : $.jset.defaults.tab_frame.width;
-					},
-					height: function(col){
-						return col.height ? col.height : $.jset.defaults.tab_frame.height;
-					}
-				},
-				formoptions:{
-					label_hide: true
 				}
 			},
 			text:{
@@ -2265,110 +1887,7 @@
 					}
 				}
 			},
-			upload:{
-				edittype:'custom',
-				editoptions:{
-					upload: $.jset.defaults.upload,
-					custom_options: $.jset.defaults.upload,
-					id: function(col){
-						return col.Field;
-					}
-				},
-				beforeInitData: function(formid){
-					$(formid).find('input[type=image]').attr('src', $.jset.defaults.upload.empty_url);
-				},
-				empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg'
-			},
-			upload_image:{
-				edittype:'custom',
-				editoptions:{
-					upload: $.jset.defaults.upload_image,
-					custom_options: $.jset.defaults.upload_image,
-					id: function(col){
-						return col.Field;
-					}
-				},
-				beforeInitData: function(formid){
-				},
-				onInitializeForm: function(formid, id){
-					var $this = $(formid).find('#' + id);
-					var grid = $(this);
-					//$.each($('.upload_image', formid), function(){
-					//var $this = $(this);
-					$this.hide();
-					var options = grid.data('settings').grid.colModel[grid.data('index')[$(this).attr('id')]]['editoptions'];
-					var image_id = $(this).attr('id') + '_image';
-					//if($('#' + image_id, formid).length == 0){
-					var div = $('<div></div>');
-					div.insertBefore($this);
-					var browse = $('<button><span class="ui-icon ui-icon-folder-open"></span></button>');
-					browse.appendTo(div);
-					$this.appendTo(div);
-					var button = $('<button><span class="ui-icon ui-icon-trash"></span></button>');							
-					button.appendTo(div);
-					var separator = $('<div style="height:6px"></div>');
-					separator.appendTo(div);
-					//button.hide();
-					var image = $('<input type="image" />');
 
-					image.attr('id', image_id);
-					image.bind('load', function(){
-						if($(this).width() > $.jset.defaults.upload_image.max_width)
-							$(this).width($.jset.defaults.upload_image.max_width);
-					});
-					image.bind('click', function(){
-						window.open($(this).attr('src'));
-					});
-					image.insertAfter(div);
-					button.bind('click', function(){
-						$this.val('');
-						image.attr('src', '');
-						image.hide();
-					});
-
-					$this.bind('change', function(){
-						image.attr('src', $(this).val());
-						if(image.attr('src') == '')
-							image.hide();
-						else
-							image.show();
-					});
-					
-					var ajax_upload = new AjaxUpload(browse, $.extend({}, options.upload.ajax,{
-						onSubmit : function(file , ext){
-							rg =	new RegExp("^(" + options.upload.ajax.data.ext + ")$", "i");
-					        if (!(ext && rg.test(ext))){
-					        	alert('this file extension is not allowed');
-					        	return false;
-					        }
-						},
-						onComplete: function(file, response){
-							if(response.error !== undefined){
-								alert(response.error.message);
-								return;
-							}
-				
-							$this.val((options.upload.ajax.data.dir == null ? '' : options.upload.ajax.data.dir) + response.fileName);
-							image.attr('src', $this.val());
-
-							if(image.attr('src') == '')
-								image.hide();
-							else
-								image.show();
-						}
-					}));
-					//}
-					
-					$('#' + image_id, formid).attr('src', $this.val());
-					if($('#' + image_id, formid).attr('src') == '')
-						$('#' + image_id, formid).hide();
-					else
-						$('#' + image_id, formid).show();
-//					});				
-				},
-				empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg'
-			},
-			
 			upload_file:{
 				align:'left',
 				edittype: 'custom',
