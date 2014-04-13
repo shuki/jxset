@@ -467,6 +467,16 @@
 			return (grid.data('settings').grid.scroll == 1) ? 
 				grid.jqGrid('getGridParam','selarrrow') :
 				grid.data('multiselectedRows').array.slice();
+		},
+		
+		getMultiselectedRowsData: function(){
+			var grid = $(this);
+			if(!grid.data('settings').grid.multiselect)
+				return false;
+				
+			return (grid.data('settings').grid.scroll == 1) ? 
+				false :
+				$.extend(true, {}, grid.data('multiselectedRows').rows);
 		}		
 	};
 
@@ -1864,7 +1874,7 @@
 		initMultiselectedRows: function(){
 			var grid = $(this);
 			if(grid.data('settings').grid.multiselect)
-				grid.data('multiselectedRows', {array: [], filters: '', include: true});
+				grid.data('multiselectedRows', {array: [], rows: {}, filters: '', include: true});
 		},
 			
 		updateMultiselectedRow: function(id, isSelected){
@@ -1872,8 +1882,10 @@
 	        var index = $.inArray(id, grid.data('multiselectedRows').array);
 	        if (!isSelected && index >= 0){
 	            grid.data('multiselectedRows').array.splice(index, 1); // remove id from the list
+	            delete grid.data('multiselectedRows').rows[id]; // remove id from the list
 	        } else if(index < 0){
 	            grid.data('multiselectedRows').array.push(id);
+	            grid.data('multiselectedRows').rows[id] = grid.jqGrid ('getRowData', id);
 	        }
 		},
 		
