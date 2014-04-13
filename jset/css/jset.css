@@ -174,7 +174,16 @@
 }
 
 .ui-jqgrid .ui-paging-info {float:right}
-.ui-jqgrid .ui-paging-info-selected {font-weight: normal;height:19px; margin-top:3px;margin-right:4px;float:left;text-align:left}
+.ui-jqgrid .ui-paging-info-selected {
+		font-weight: normal;
+		height: 19px; 
+		margin-top: 3px;
+		margin-right: 4px;
+		float: left;
+		text-align: left;
+		padding-left: 4px;
+		padding-right: 4px;
+	}
 
 ul#sopt_menu
 {
