@@ -477,6 +477,11 @@
 			return (grid.data('settings').grid.scroll == 1) ? 
 				false :
 				$.extend(true, {}, grid.data('multiselectedRows').rows);
+		},
+		
+		resetMultiselectedRows:function(){
+			var grid = $(this);
+			$.jset.fn.resetMultiselectedRows.call(grid);
 		}		
 	};
 
@@ -1908,6 +1913,16 @@
 			}
 		},
 		
+		resetMultiselectedRows: function(){
+			var grid = $(this);
+			if(grid.data('settings').grid.multiselect){
+				grid.jqGrid('resetSelection');
+				grid.data('multiselectedRows').array.length = 0;
+				grid.data('multiselectedRows').rows = {};
+				$.jset.fn.updateNavigationSelectedCounter.call(grid);
+			}
+		},
+		
 		updateNavigationSelectedCounter: function(){
 			var grid = $(this);
 			if(!grid.data('settings').grid.scroll == 1)
@@ -1923,8 +1938,7 @@
 			filters = (filters === undefined || filters == '{"groupOp":"AND","rules":[]}' || filters == '') ? '' : filters;
 			if(grid.data('multiselectedRows').filters != filters){
 				grid.data('multiselectedRows').filters = filters;
-				grid.data('multiselectedRows').array.length = 0;
-				$.jset.fn.updateNavigationSelectedCounter.call(grid);
+				$.jset.fn.resetMultiselectedRows.call(grid);
 			}
 		}
 	});
