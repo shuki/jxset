@@ -2130,7 +2130,7 @@
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
 					}
 				}
-			},
+			}
 		}
 	});	
 })(jQuery);
