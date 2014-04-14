@@ -753,7 +753,8 @@
 				if($.isFunction(grid.data('settings').beforeRequest))
 					grid.data('settings').beforeRequest.call(grid);
 					
-				$.jset.fn.setNavigationSelectedFilters.call(grid, post['filters']);
+				//$.jset.fn.setNavigationSelectedFilters.call(grid, post['filters']);
+				$.jset.fn.setNavigationSelectedFilters.call(grid, post);
 			},
 			
 			gridComplete: function(){
@@ -1879,7 +1880,7 @@
 		initMultiselectedRows: function(){
 			var grid = $(this);
 			if(grid.data('settings').grid.multiselect)
-				grid.data('multiselectedRows', {array: [], rows: {}, filters: '', include: true});
+				grid.data('multiselectedRows', {array: [], rows: {}, filters: '', params: '', include: true});
 		},
 			
 		updateMultiselectedRow: function(id, isSelected){
@@ -1930,16 +1931,32 @@
 					.html($.jgrid.format($.jset.nav.selectedCounter, grid.data('multiselectedRows').array.length));
 		},
 		
-		setNavigationSelectedFilters: function(filters){
+		setNavigationSelectedFilters: function(post){
 			var grid = $(this);
 			if(!grid.data('settings').grid.multiselect)
 				return;
-				
+			
+			var reset = false;
+			var filters = post['filters'];
 			filters = (filters === undefined || filters == '{"groupOp":"AND","rules":[]}' || filters == '') ? '' : filters;
 			if(grid.data('multiselectedRows').filters != filters){
 				grid.data('multiselectedRows').filters = filters;
-				$.jset.fn.resetMultiselectedRows.call(grid);
+				reset = true;
 			}
+			
+			var params = '';
+			$.each(post, function(key, value){
+				if(key.substr(0,7) == '_param_')
+					params += key + value;
+			});
+			
+			if(grid.data('multiselectedRows').params != params){
+				grid.data('multiselectedRows').params = params;
+				reset = true;
+			}
+			
+			if(reset)
+				$.jset.fn.resetMultiselectedRows.call(grid);
 		}
 	});
 
