@@ -348,8 +348,6 @@
 		},
 		
 		jsetgrid_value: function(elem, action, value){
-			if($(elem).attr('name')== 'plan')
-				console.log(elem, $(elem).length);
 			if($(elem).length == 0)
 				return '';
 			if(action == 'get'){
