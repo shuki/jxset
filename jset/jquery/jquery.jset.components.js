@@ -282,8 +282,12 @@
 		editor_value: function(elem, action, value){
 			if(action == 'get')
 				return $(elem).html();
-			else if(action == 'set')
+			else if(action == 'set'){
 				$(elem).html(value);
+				var editor_id = $(elem).attr('id');
+				if(typeof tinyMCE !== 'undefined' && typeof tinyMCE.get(editor_id) !== 'undefined')
+					tinyMCE.get(editor_id).undoManager.clear();
+			}
 		},
 
 		editor_textarea_element: function(value, options){
@@ -344,6 +348,8 @@
 		},
 		
 		jsetgrid_value: function(elem, action, value){
+			if($(elem).attr('name')== 'plan')
+				console.log(elem, $(elem).length);
 			if($(elem).length == 0)
 				return '';
 			if(action == 'get'){
