@@ -153,6 +153,14 @@
 			return elem;
 		},
 		
+		set_selectbox_plus_change: function(elem){
+			$(elem).bind('change.selectbox_plus', function(){
+				var s = $(this).siblings('button').data();
+				s.dlg.dialog('close');
+			});
+			return elem;
+		},
+		
 		get_select_list_sql: function(grid, name, value){
 			return (value && grid.data('columns')[grid.data('index')[name]]['sqls']) ?
 				grid.data('columns')[grid.data('index')[name]]['sqls'][1] :
@@ -540,6 +548,7 @@
 			$.jset.fn.set_dependent_fields(elem);
 			$.jset.fn.set_select_list_refresh(elem);
 			$.jset.fn.set_search_refresh(elem);
+			$.jset.fn.set_selectbox_plus_change(elem);
 			elem.attr('validate', options.validate)
 			.addClass('jset-field-padding');
 			return elem;
