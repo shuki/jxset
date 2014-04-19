@@ -530,7 +530,7 @@
 		beforeShowForm: function(formid){
 			var grid = $(this);
 
-			$("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
+			$.jset.fn.closeSubForms(formid, grid);
 			
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
@@ -565,7 +565,7 @@
 			var grid = $(this);
 			
 			$.jset.fn.clear_form_tooltips(formid);
-			$("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
+			$.jset.fn.closeSubForms(formid, grid);
 
 			if($.isFunction(grid.data('settings').onclickPgButtons))
 				grid.data('settings').onclickPgButtons.call(grid, whichbutton, formid, rowid);
@@ -674,7 +674,13 @@
 		},
 		
 		onClose: function(formid){
+			var grid = $(this);
 			$.jset.fn.clear_form_tooltips(formid);
+			
+			$.each(grid.data('columns'), function(){
+				if($.isFunction($.jset.defaults.control[this.control].onClose))
+					$.jset.defaults.control[this.control].onClose.call(grid, formid, this.index || this.Field);
+			});			
 		}
 	};
 	
@@ -1957,7 +1963,10 @@
 			
 			if(reset)
 				$.jset.fn.resetMultiselectedRows.call(grid);
+		},
+		
+		closeSubForms: function(formid, grid){
+			$("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
 		}
 	});
-
 })(jQuery);

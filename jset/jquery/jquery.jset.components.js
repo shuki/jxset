@@ -1620,21 +1620,11 @@
 					},
 					dialog: {
 						autoOpen: false,
-						title: 'Pop Plus',
 						width:'auto',
 						resizable: false,
-						dialogClass: 'selectbox_plus-dialog',
-						position: 'top'
-					},
-					settings:{
-						source: 'bar',
-					    grid: {
-					    	width:480,
-					        height:200
-						}						
+						dialogClass: 'selectbox_plus-dialog'
 					}
 				},
-				//stype: 'select',
 				stype: 'custom',
 				searchoptions:{
 					custom_element: $.jset.fn.selectbox_element,
@@ -1647,17 +1637,23 @@
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
-					var container = $.jset.fn.get_grid_container(grid);
 					var elem = $(formid).find('select#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
-					
 					var pluspop = $('<div></div>');
+					var button = $('<input type="button" value="+" />');
 					var table_id = 'pluspop_' + id + '_' + grid.attr('id');
 					pluspop.html('<table id ="' + table_id + '"></table>');
-					container.append(pluspop);
-					pluspop.dialog(options.dialog);
+					var di = pluspop.dialog($.extend(true, {}, options.dialog, {
+						//appendTo: $.jset.fn.get_grid_container(grid),
+						title: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
+						position: { 
+						    my: 'left',
+						    at: 'right',
+						    of: button
+					    }
+					}));
+					$.jset.fn.get_grid_container(grid).append(pluspop.parent());
 					
-					var button = $('<input type="button" value="+" />');
 					button.bind('click', function(){
 						pluspop.dialog('isOpen') ? pluspop.dialog('close') : pluspop.dialog('open');
 						if(!$('table#' + table_id, pluspop).jset('defined'))
@@ -1679,6 +1675,10 @@
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
+				onClose: function(formid, id){
+					var grid = $(this);
+					$("div.selectbox_plus-dialog a.ui-dialog-titlebar-close", $.jset.fn.get_grid_container(grid)).trigger('click');
+				}
 			},
 			select: {
 				align: 'left',
