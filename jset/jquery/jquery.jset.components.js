@@ -113,6 +113,18 @@
 			return false;
 		},
 		
+		select_list_refresh: function(elem, value){
+			var name = $(elem).attr('name');
+			var grid = $.jset.fn.get_grid_by_element(elem);
+			var sql = $.jset.fn.get_select_list_sql(grid, name);
+			var value = value ? value : $(elem).val();
+			$.jset.fn.get_rows(grid, sql, function(data){
+				elem.children('option').remove();
+				$.jset.fn.set_select_options(elem, grid, data, value, false, elem.attr('name'));
+			});
+			return elem;
+		},
+		
 		set_select_list_refresh: function(elem){
 			$(elem).on('mousedown.jset', function(event, preserve_value){
 				var name = $(this).attr('name');
@@ -1623,6 +1635,32 @@
 						width:'auto',
 						resizable: false,
 						dialogClass: 'selectbox_plus-dialog'
+					},
+					settings:{
+						search_default:[],
+						single_record: {
+							active: true,
+							displayAlert: false,
+							mode: '',
+							options:{
+								closeOnEscape: false,
+								closeAfterEdit: false,
+								closeAfterAdd: false,
+								drag: false,
+								resize: false,
+								viewPagerButtons: false,
+								editCaption: 'Edit',
+								addCaption: 'Add'
+							}
+						},
+						afterSubmit: function(response, postdata){
+							var grid = $(this);
+							var s = grid.data('selectbox_plus');
+							var value = grid.data('lastID') ? grid.data('lastID') : false;
+							$.jset.fn.select_list_refresh(s.target_field, value);
+							s.dlg.dialog('close');
+							return [true];
+						}
 					}
 				},
 				stype: 'custom',
@@ -1639,12 +1677,13 @@
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
-					var pluspop = $('<div></div>');
-					var button = $('<input type="button" value="+" />');
-					var table_id = 'pluspop_' + id + '_' + grid.attr('id');
-					pluspop.html('<table id ="' + table_id + '"></table>');
-					var di = pluspop.dialog($.extend(true, {}, options.dialog, {
-						//appendTo: $.jset.fn.get_grid_container(grid),
+					var dlg = $('<div></div>');
+					var button = $('<button class="selectbox_plus-button">+</button>');
+					var grid_id = 'dlg_' + id + '_' + grid.attr('id');
+					
+					elem.after(button);
+					dlg.html('<table id ="' + grid_id + '"></table>');
+					dlg.dialog($.extend(true, {}, options.dialog, {
 						title: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
 						position: { 
 						    my: 'left',
@@ -1652,14 +1691,44 @@
 						    of: button
 					    }
 					}));
-					$.jset.fn.get_grid_container(grid).append(pluspop.parent());
+					$.jset.fn.get_grid_container(grid).append(dlg.parent());
+					
+					button.data({
+						dlg: dlg,
+						grid_id: grid_id,
+						options: options
+					});
 					
 					button.bind('click', function(){
-						pluspop.dialog('isOpen') ? pluspop.dialog('close') : pluspop.dialog('open');
-						if(!$('table#' + table_id, pluspop).jset('defined'))
-							$('table#' + table_id, pluspop).jset(options.settings);					
+						var s = $(this).data();
+						s.dlg.dialog('isOpen') ? s.dlg.dialog('close') : s.dlg.dialog('open');
+						if(!s.dlg.dialog('isOpen'))
+							return;
+							
+						var target_field = $(this).siblings('select');
+						var value = target_field.val();
+						value = value ? value : -1;
+						if(!$('table#' + s.grid_id, s.dlg).jset('defined')){
+							$('table#' + s.grid_id, s.dlg).data('selectbox_plus', {
+								target_field: target_field,
+								dlg: s.dlg
+							});
+							s.options.settings.search_default.push({
+						  		name: 'id',
+						  		value: value
+						  	});
+							$('table#' + s.grid_id, s.dlg).jset(s.options.settings);
+						}else{
+							//var filter_name = elem.data('settings').filter[0].target;
+							var this_container = $.jset.fn.get_grid_container($('table#' + s.grid_id, s.dlg));
+							var filter_field = this_container.find("#gs_" + 'id');
+							if(filter_field.val() != value)
+							{
+								filter_field.val(value);
+								$('table#' + s.grid_id, s.dlg)[0].triggerToolbar();
+							}
+						}				
 					});
-					elem.after(button);
 				},
 				afterShowForm: function(formid, id){
 					var grid = $(this);
@@ -1672,12 +1741,18 @@
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
 					var name = $(elem).attr('name');
+					var button = elem.siblings('button');
+					var s = button.data();
+					s.dlg.dialog('close');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
 				onClose: function(formid, id){
 					var grid = $(this);
-					$("div.selectbox_plus-dialog a.ui-dialog-titlebar-close", $.jset.fn.get_grid_container(grid)).trigger('click');
+					var elem = $(formid).find('select#' + id);
+					var button = elem.siblings('button');
+					var s = button.data();
+					s.dlg.dialog('close');
 				}
 			},
 			select: {

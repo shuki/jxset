@@ -213,3 +213,9 @@ input[type='checkbox'].jset-multicheckbox{
 .selectbox_plus-dialog .ui-dialog-content{
 	padding: 0.2em 0 0 0;
 }
+
+.selectbox_plus-button{
+	cursor: pointer;
+    height: 25px;
+    vertical-align: bottom;
+}
