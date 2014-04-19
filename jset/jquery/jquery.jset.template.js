@@ -44,6 +44,34 @@
 				$(e).remove();
 			});
 			set_panel_img_on_click_handler(pane);
+	    },
+	    
+	    append_fields: function(formid, source, count){
+	    	var source_tr = $.jset.fn.get_form_field(formid, source).closest('tr');
+	    	var siblings = source_tr.siblings(); 
+	    	var source_last_td = $('td:last-child', source_tr);
+	    	count = count != undefined ? count : siblings.length - source_tr.index();
+	    	
+	    	for (var i=0; i<count; i++){
+	    		var current_tr = $(siblings.get(source_tr.index() + i));
+	    		$.each($('td',current_tr), function(){
+	    			source_last_td.append($(this).html());
+	    		});
+	    		current_tr.remove();
+	    	}
+	    	source_last_td.children('label.CaptionField').addClass('ajust-appended-label');	
+	    },
+
+	    append_fields_td: function(formid, source, count){
+	    	var source_tr = $.jset.fn.get_form_field(formid, source).closest('tr');
+	    	var siblings = source_tr.siblings(); 
+	    	count = count != undefined ? count : siblings.length - source_tr.index();
+	    	
+	    	for (var i=0; i<count; i++){
+	    		var current_tr = $(siblings.get(source_tr.index() + i));
+	    		source_tr.append(current_tr.html());
+	    		current_tr.remove();
+	    	}
 	    }
 	});
 })(jQuery);

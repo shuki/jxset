@@ -35,6 +35,10 @@
 	vertical-align:text-top;
 }
 
+.ui-jqdialog-content, .ui-jqdialog .ui-jqdialog-content{
+	padding:0;
+}
+
 .ui-widget .ui-widget {
     font-size: 11px;
 }
@@ -200,4 +204,12 @@ label.jset-multicheckbox{
 
 input[type='checkbox'].jset-multicheckbox{
 	margin:0 0 5px 5px;
+}
+
+.ajust-appended-label{
+	padding: 5px 4px 0px 2px;
+}
+
+.selectbox_plus-dialog .ui-dialog-content{
+	padding: 0.2em 0 0 0;
 }

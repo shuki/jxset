@@ -521,6 +521,25 @@
 				$.jset.fn.handle_change_select_options(elem, value);
 		},
 		
+		selectbox_plus_element: function(value, options){
+			var grid = $(this);
+			var elem = $('<select />');
+			$.jset.fn.set_select_options(elem, grid, options.value, value, false, options.name);
+			$.jset.fn.set_dependent_fields(elem);
+			$.jset.fn.set_select_list_refresh(elem);
+			$.jset.fn.set_search_refresh(elem);
+			elem.attr('validate', options.validate)
+			.addClass('jset-field-padding');
+			return elem;
+		},
+		
+		selectbox_plus_value:function(elem, action, value){
+			if(action == 'get')
+				return $(elem).val();
+			else if(action == 'set')
+				$.jset.fn.handle_change_select_options(elem, value);
+		},
+		
 		autocomplete_element: function(value, options){
 			var elem = $('<input />');
 			$(elem).val(value);
@@ -1286,7 +1305,7 @@
 					label_hide: true
 				},
 				onInitializeForm: function(formid, id){
-					var elem = $(formid).find('#' + id);
+					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
 					if(grid.data('form_action') == 'add')
 						elem.closest('span.FormElement').hide();
@@ -1295,7 +1314,7 @@
 					elem.jset(settings);
 				},
 				beforeShowForm: function(formid, id){
-					var elem = $(formid).find('#' + id);
+					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
 
 					if(grid.data('form_action') == 'add')
@@ -1575,6 +1594,87 @@
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
 					var grid = $(this);
 					var elem = $(formid).find('#' + id);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},
+			},
+			selectbox_plus:{
+				align: 'left',
+				formatter: 'selectbox',
+				edittype: 'custom',
+				editoptions: {
+					value: {},
+					defaultValue: function(col){
+						return col.default_value;
+					},
+					dataInit: function(col){
+						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
+					},
+					no_empty_first_row: false,
+					select_list_refresh: false,
+					custom_options: {
+						readonly: function(formid, name){
+							$.jset.fn.disable_field(formid, name);
+						}
+					},
+					dialog: {
+						autoOpen: false,
+						title: 'Pop Plus',
+						width:'auto',
+						resizable: false,
+						dialogClass: 'selectbox_plus-dialog',
+						position: 'top'
+					},
+					settings:{
+						source: 'bar',
+					    grid: {
+					    	width:480,
+					        height:200
+						}						
+					}
+				},
+				//stype: 'select',
+				stype: 'custom',
+				searchoptions:{
+					custom_element: $.jset.fn.selectbox_element,
+					custom_value: $.jset.fn.selectbox_value,
+					value: '',
+					defaultValue: function(col){
+						//return col.search_default ? col.search_default : '';
+					},
+					sopt:['eq','ne']				
+				},
+				onInitializeForm: function(formid, id){
+					var grid = $(this);
+					var container = $.jset.fn.get_grid_container(grid);
+					var elem = $(formid).find('select#' + id);
+					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
+					
+					var pluspop = $('<div></div>');
+					var table_id = 'pluspop_' + id + '_' + grid.attr('id');
+					pluspop.html('<table id ="' + table_id + '"></table>');
+					container.append(pluspop);
+					pluspop.dialog(options.dialog);
+					
+					var button = $('<input type="button" value="+" />');
+					button.bind('click', function(){
+						pluspop.dialog('isOpen') ? pluspop.dialog('close') : pluspop.dialog('open');
+						if(!$('table#' + table_id, pluspop).jset('defined'))
+							$('table#' + table_id, pluspop).jset(options.settings);					
+					});
+					elem.after(button);
+				},
+				afterShowForm: function(formid, id){
+					var grid = $(this);
+					var elem = $(formid).find('select#' + id);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},
+				afterclickPgButtons : function(whichbutton, formid, rowid, id){
+					var grid = $(this);
+					var elem = $(formid).find('select#' + id);
 					var name = $(elem).attr('name');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);

@@ -278,7 +278,7 @@
 					deloper: 'delete'
 				},
 				scroll: 1,
-				scrollrows: false,
+				scrollrows: true,
 				page:1,
 				url: $.jset.dir_rel + $.jset.url,
 				editurl: $.jset.dir_rel + $.jset.url,
@@ -665,7 +665,7 @@
 				grid.data('lastID', obj.id);
 
 			
-			grid.jqGrid('setGridParam', {scrollrows: true});
+			//grid.jqGrid('setGridParam', {scrollrows: true});
 
 			if($.isFunction(grid.data('settings').afterSubmit))
 				return grid.data('settings').afterSubmit.call(grid, response, postdata);
@@ -843,7 +843,7 @@
 				if(grid.data('settings').single_record.active)
 					$.jset.fn.single_record(grid);
 		
-				grid.jqGrid('setGridParam', {scrollrows: false});
+				//grid.jqGrid('setGridParam', {scrollrows: false});
 				
 				$.jset.fn.selectMultiselectedRows.call(grid);
 
