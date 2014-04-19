@@ -121,6 +121,7 @@
 			$.jset.fn.get_rows(grid, sql, function(data){
 				elem.children('option').remove();
 				$.jset.fn.set_select_options(elem, grid, data, value, false, elem.attr('name'));
+				elem.trigger('change.selectbox_plus');
 			});
 			return elem;
 		},
@@ -155,7 +156,9 @@
 		
 		set_selectbox_plus_change: function(elem){
 			$(elem).bind('change.selectbox_plus', function(){
-				var s = $(this).siblings('button').data();
+				var button = $(this).siblings('button');
+				button.html($(this).val() ? '?' : '+');
+				var s = button.data();
 				s.dlg.dialog('close');
 			});
 			return elem;
@@ -1743,6 +1746,7 @@
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
 					var name = $(elem).attr('name');
+					$(elem).trigger('change.selectbox_plus');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
@@ -1753,6 +1757,7 @@
 					var button = elem.siblings('button');
 					var s = button.data();
 					s.dlg.dialog('close');
+					$(elem).trigger('change.selectbox_plus');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
