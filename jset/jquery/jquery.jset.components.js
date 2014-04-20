@@ -113,15 +113,22 @@
 			return false;
 		},
 		
-		select_list_refresh: function(elem, value){
+		select_list_refresh: function(elem, value, update_toolbar){
 			var name = $(elem).attr('name');
 			var grid = $.jset.fn.get_grid_by_element(elem);
 			var sql = $.jset.fn.get_select_list_sql(grid, name);
 			var value = value ? value : $(elem).val();
 			$.jset.fn.get_rows(grid, sql, function(data){
 				elem.children('option').remove();
-				$.jset.fn.set_select_options(elem, grid, data, value, false, elem.attr('name'));
+				$.jset.fn.set_select_options(elem, grid, data, value, false, name);
 				elem.trigger('change.selectbox_plus');
+				grid.jqGrid('setColProp', name, {editoptions:{value:data}}); 
+				if(update_toolbar){
+					toolbar_elem = $.jset.fn.get_filterToolbar_field(grid, name);
+					value = toolbar_elem.val();
+					toolbar_elem.children('option').remove();
+					$.jset.fn.set_select_options(toolbar_elem, grid, data, value, false, name);
+				}
 			});
 			return elem;
 		},
@@ -1676,7 +1683,7 @@
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
 							var value = grid.data('lastID') ? grid.data('lastID') : false;
-							$.jset.fn.select_list_refresh(s.target_field, value);
+							$.jset.fn.select_list_refresh(s.source_field, value, true);
 							s.dlg.dialog('close');
 							return [true];
 						},
@@ -1699,12 +1706,13 @@
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
+					console.log(options);
 					var dlg = $('<div style="overflow:hidden;"></div>');
 					var button = $('<button class="selectbox_plus-button">+</button>');
-					var grid_id = 'dlg_' + id + '_' + grid.attr('id');
+					var target_grid_id = 'dlg_' + id + '_' + grid.attr('id');
 					
 					elem.after(button);
-					dlg.html('<table id ="' + grid_id + '"></table>');
+					dlg.html('<table id ="' + target_grid_id + '"></table>');
 					dlg.dialog($.extend(true, {}, options.dialog, {
 						title: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
 						position: { 
@@ -1717,8 +1725,9 @@
 					
 					button.data({
 						dlg: dlg,
-						grid_id: grid_id,
-						options: options
+						options: options,
+						target_grid_id: target_grid_id,
+						source_grid_id: grid.attr('id')
 					});
 					
 					button.bind('click', function(){
@@ -1727,24 +1736,25 @@
 						if(!s.dlg.dialog('isOpen'))
 							return;
 							
-						var target_field = $(this).siblings('select');
-						var value = target_field.val();
+						var source_field = $(this).siblings('select');
+						var value = source_field.val();
 						value = value ? value : -1;
-						if(!$('table#' + s.grid_id, s.dlg).jset('defined')){
-							$('table#' + s.grid_id, s.dlg).data('selectbox_plus', {
-								target_field: target_field,
+						if(!$('table#' + s.target_grid_id, s.dlg).jset('defined')){
+							$('table#' + s.target_grid_id, s.dlg).data('selectbox_plus', {
+								source_field: source_field,
+								source_grid_id: s.source_grid_id,
 								dlg: s.dlg
 							});
 							s.options.settings.search_default[0].value = value;
-							$('table#' + s.grid_id, s.dlg).jset(s.options.settings);
+							$('table#' + s.target_grid_id, s.dlg).jset(s.options.settings);
 						}else{
 							//var filter_name = elem.data('settings').filter[0].target;
-							var this_container = $.jset.fn.get_grid_container($('table#' + s.grid_id, s.dlg));
+							var this_container = $.jset.fn.get_grid_container($('table#' + s.target_grid_id, s.dlg));
 							var filter_field = this_container.find("#gs_" + s.options.settings.search_default[0].name);
 							if(filter_field.val() != value)
 							{
 								filter_field.val(value);
-								$('table#' + s.grid_id, s.dlg)[0].triggerToolbar();
+								$('table#' + s.target_grid_id, s.dlg)[0].triggerToolbar();
 							}
 						}				
 					});
