@@ -1706,7 +1706,6 @@
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
-					console.log(options);
 					var dlg = $('<div style="overflow:hidden;"></div>');
 					var button = $('<button class="selectbox_plus-button">+</button>');
 					var target_grid_id = 'dlg_' + id + '_' + grid.attr('id');
