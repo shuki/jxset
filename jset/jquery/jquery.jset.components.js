@@ -1649,7 +1649,7 @@
 						dialogClass: 'selectbox_plus-dialog'
 					},
 					settings:{
-						search_default:[],
+						search_default:[{name:'id', value:''}],
 						single_record: {
 							active: true,
 							displayAlert: false,
@@ -1667,8 +1667,8 @@
 						},
 						onInitializeForm : function(formid) {
 							var grid = $(this);
-							$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
 							var s = grid.data('selectbox_plus');
+							$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
 							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1);
 							s.dlg.dialog('option', 'height', $(formid).closest('.ui-jqdialog').height()+33);
 						},		
@@ -1679,8 +1679,11 @@
 							$.jset.fn.select_list_refresh(s.target_field, value);
 							s.dlg.dialog('close');
 							return [true];
-						}
-					}
+						},
+						 grid: {
+							width:80,
+							height:50
+						}					}
 				},
 				stype: 'custom',
 				searchoptions:{
@@ -1732,15 +1735,12 @@
 								target_field: target_field,
 								dlg: s.dlg
 							});
-							s.options.settings.search_default.push({
-						  		name: 'id',
-						  		value: value
-						  	});
+							s.options.settings.search_default[0].value = value;
 							$('table#' + s.grid_id, s.dlg).jset(s.options.settings);
 						}else{
 							//var filter_name = elem.data('settings').filter[0].target;
 							var this_container = $.jset.fn.get_grid_container($('table#' + s.grid_id, s.dlg));
-							var filter_field = this_container.find("#gs_" + 'id');
+							var filter_field = this_container.find("#gs_" + s.options.settings.search_default[0].name);
 							if(filter_field.val() != value)
 							{
 								filter_field.val(value);
