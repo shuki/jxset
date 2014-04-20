@@ -1644,7 +1644,7 @@
 					},
 					dialog: {
 						autoOpen: false,
-						width:'auto',
+						//width:'auto',
 						resizable: false,
 						dialogClass: 'selectbox_plus-dialog'
 					},
@@ -1665,6 +1665,13 @@
 								addCaption: 'Add'
 							}
 						},
+						onInitializeForm : function(formid) {
+							var grid = $(this);
+							$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
+							var s = grid.data('selectbox_plus');
+							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1);
+							s.dlg.dialog('option', 'height', $(formid).closest('.ui-jqdialog').height()+33);
+						},		
 						afterSubmit: function(response, postdata){
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
@@ -1689,7 +1696,7 @@
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
-					var dlg = $('<div></div>');
+					var dlg = $('<div style="overflow:hidden;"></div>');
 					var button = $('<button class="selectbox_plus-button">+</button>');
 					var grid_id = 'dlg_' + id + '_' + grid.attr('id');
 					
