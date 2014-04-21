@@ -218,4 +218,12 @@ input[type='checkbox'].jset-multicheckbox{
 	cursor: pointer;
     height: 25px;
     vertical-align: bottom;
+    padding: 0 0.2em;
 }
+/*
+.panel-body .selectbox_plus-button{
+	cursor: pointer;
+    height: 25px;
+    vertical-align: bottom;
+}
+*/

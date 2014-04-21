@@ -1651,7 +1651,6 @@
 					},
 					dialog: {
 						autoOpen: false,
-						//width:'auto',
 						resizable: false,
 						dialogClass: 'selectbox_plus-dialog'
 					},
@@ -1675,9 +1674,18 @@
 						onInitializeForm : function(formid) {
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
-							$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
-							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1);
-							s.dlg.dialog('option', 'height', $(formid).closest('.ui-jqdialog').height()+33);
+							if(grid.data('settings').grid.direction  == 'ltr')
+								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
+							else{
+								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -$(formid).closest('.ui-jqdialog').width()+78});
+							}
+							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1)
+								.dialog('option', 'height', $(formid).closest('.ui-jqdialog').height()+33)
+								.dialog("widget").position({
+								   my: (grid.data('settings').grid.direction  == 'ltr') ? 'left' : 'right',
+								   at: (grid.data('settings').grid.direction  == 'ltr') ? 'right' : 'left',
+							       of: s.button
+							    });	
 						},		
 						afterSubmit: function(response, postdata){
 							var grid = $(this);
@@ -1715,8 +1723,8 @@
 					dlg.dialog($.extend(true, {}, options.dialog, {
 						title: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
 						position: { 
-						    my: 'left',
-						    at: 'right',
+						    my: (grid.data('settings').grid.direction  == 'ltr') ? 'left' : 'right',
+						    at: (grid.data('settings').grid.direction  == 'ltr') ? 'right' : 'left',
 						    of: button
 					    }
 					}));
@@ -1742,7 +1750,8 @@
 							$('table#' + s.target_grid_id, s.dlg).data('selectbox_plus', {
 								source_field: source_field,
 								source_grid_id: s.source_grid_id,
-								dlg: s.dlg
+								dlg: s.dlg,
+								button: $(this)
 							});
 							s.options.settings.search_default[0].value = value;
 							$('table#' + s.target_grid_id, s.dlg).jset(s.options.settings);
