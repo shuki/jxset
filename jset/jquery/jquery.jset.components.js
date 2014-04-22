@@ -1674,6 +1674,8 @@
 						onInitializeForm : function(formid) {
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
+							$('.ui-jqdialog-titlebar', $(formid).closest('.ui-jqdialog')).hide();
+							s.dlg.dialog('option', 'title', $('.ui-jqdialog-titlebar span.ui-jqdialog-title', $(formid).closest('.ui-jqdialog')).html() + ' - ' + s.dlg.dialog('option', 'title'));
 							if(grid.data('settings').grid.direction  == 'ltr')
 								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
 							else{
