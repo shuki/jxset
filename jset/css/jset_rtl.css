@@ -1,10 +1,12 @@
-.ui-dialog .ui-dialog-titlebar{
-	/*float:right;*/
+.selectbox_plus-dialog {
+	direction:ltr;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
-	/*left: .3em !important;*/
+	left: .3em !important;
 }
+
 .ui-dialog .ui-dialog-title {
-	/*margin: .1em 0 .1em .8em !important;*/
+	float: right;
+	margin: .1em 0 .1em .8em !important;
 }

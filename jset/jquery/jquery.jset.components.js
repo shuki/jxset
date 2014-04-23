@@ -1668,10 +1668,7 @@
 							s.dlg.children('div').show();
 							$('.ui-jqdialog-titlebar', $(formid).closest('.ui-jqdialog')).hide();
 							s.dlg.dialog('option', 'title', $('.ui-jqdialog-titlebar span.ui-jqdialog-title', $(formid).closest('.ui-jqdialog')).html() + ' - ' + s.dlg.dialog('option', 'title'));
-							if(source_grid.data('settings').grid.direction  == 'ltr')
-								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
-							else
-								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: grid.data('settings').grid.width - $(formid).closest('.ui-jqdialog').width() -2});
+							$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
 
 							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1)
 								.dialog('option', 'height', $(formid).closest('.ui-jqdialog').height()+33)
