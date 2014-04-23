@@ -1657,38 +1657,39 @@
 					settings:{
 						search_default:[{name:'id', value:''}],
 						single_record: {
-							active: true,
-							displayAlert: false,
-							mode: '',
-							options:{
-								closeOnEscape: false,
-								closeAfterEdit: false,
-								closeAfterAdd: false,
-								drag: false,
-								resize: false,
-								viewPagerButtons: false,
-								editCaption: 'Edit',
-								addCaption: 'Add'
-							}
+							active: true
 						},
 						onInitializeForm : function(formid) {
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
+							var source_grid = $('table#' + s.source_grid_id);
+
+							s.dlg.children('img').hide();
+							s.dlg.children('div').show();
 							$('.ui-jqdialog-titlebar', $(formid).closest('.ui-jqdialog')).hide();
 							s.dlg.dialog('option', 'title', $('.ui-jqdialog-titlebar span.ui-jqdialog-title', $(formid).closest('.ui-jqdialog')).html() + ' - ' + s.dlg.dialog('option', 'title'));
-							if(grid.data('settings').grid.direction  == 'ltr')
+							if(source_grid.data('settings').grid.direction  == 'ltr')
 								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
-							else{
-								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -$(formid).closest('.ui-jqdialog').width()+78});
-							}
+							else
+								$(formid).closest('.ui-jqdialog').offset({ top: -4, left: grid.data('settings').grid.width - $(formid).closest('.ui-jqdialog').width() -2});
+
 							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1)
 								.dialog('option', 'height', $(formid).closest('.ui-jqdialog').height()+33)
 								.dialog("widget").position({
-								   my: (grid.data('settings').grid.direction  == 'ltr') ? 'left' : 'right',
-								   at: (grid.data('settings').grid.direction  == 'ltr') ? 'right' : 'left',
+								   my: (source_grid.data('settings').grid.direction  == 'ltr') ? 'left' : 'right',
+								   at: (source_grid.data('settings').grid.direction  == 'ltr') ? 'right' : 'left',
 							       of: s.button
-							    });	
+							    })
+							    .on( "dialogclose", function(event, ui) {
+							    	$.jset.fn.clear_form_tooltips(formid);
+							    });
 						},		
+						beforeShowForm: function(formid){
+							var grid = $(this);
+							var s = grid.data('selectbox_plus');
+							s.dlg.children('img').hide();
+							s.dlg.children('div').show();
+						},
 						afterSubmit: function(response, postdata){
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
@@ -1715,13 +1716,13 @@
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
 					var elem = $(formid).find('select#' + id);
-					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
-					var dlg = $('<div style="overflow:hidden;"></div>');
-					var button = $('<button class="selectbox_plus-button">+</button>');
 					var target_grid_id = 'dlg_' + id + '_' + grid.attr('id');
-					
+					var dlg = $('<div style="overflow:hidden;"><img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '"><div style="display:none"><table id ="' + target_grid_id + '"></table></div></div>');
+					var button = $('<button class="selectbox_plus-button">+</button>');
+					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
+
 					elem.after(button);
-					dlg.html('<table id ="' + target_grid_id + '"></table>');
+
 					dlg.dialog($.extend(true, {}, options.dialog, {
 						title: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
 						position: { 
@@ -1741,32 +1742,51 @@
 					
 					button.bind('click', function(){
 						var s = $(this).data();
-						s.dlg.dialog('isOpen') ? s.dlg.dialog('close') : s.dlg.dialog('open');
-						if(!s.dlg.dialog('isOpen'))
+						if(s.dlg.dialog('isOpen')){
+							s.dlg.dialog('close');
 							return;
-							
+						}
+						
 						var source_field = $(this).siblings('select');
 						var value = source_field.val();
-						value = value ? value : -1;
+						
 						if(!$('table#' + s.target_grid_id, s.dlg).jset('defined')){
+							s.dlg.children('div').hide();
+							s.dlg.children('img').show();
+							s.dlg.dialog('open');
 							$('table#' + s.target_grid_id, s.dlg).data('selectbox_plus', {
 								source_field: source_field,
 								source_grid_id: s.source_grid_id,
 								dlg: s.dlg,
 								button: $(this)
 							});
+						
+							value = value ? value : -1;
 							s.options.settings.search_default[0].value = value;
 							$('table#' + s.target_grid_id, s.dlg).jset(s.options.settings);
+							return;
+						}
+						
+						var this_container = $.jset.fn.get_grid_container($('table#' + s.target_grid_id, s.dlg));
+						var filter_field = this_container.find("#gs_" + s.options.settings.search_default[0].name);
+						if(value == ''){
+							filter_field.val(-1);
+							$('table#' + s.target_grid_id, s.dlg).jqGrid('editGridRow', 'new', s.options);
+							$('.ui-jqdialog-titlebar-close', this_container).hide();
+							$('#cData', this_container).hide();
+							s.dlg.dialog('open');
+							return;
+						}
+						
+						if(filter_field.val() == value){
+							s.dlg.dialog('open');							
 						}else{
-							//var filter_name = elem.data('settings').filter[0].target;
-							var this_container = $.jset.fn.get_grid_container($('table#' + s.target_grid_id, s.dlg));
-							var filter_field = this_container.find("#gs_" + s.options.settings.search_default[0].name);
-							if(filter_field.val() != value)
-							{
-								filter_field.val(value);
-								$('table#' + s.target_grid_id, s.dlg)[0].triggerToolbar();
-							}
-						}				
+							s.dlg.children('div').hide();
+							s.dlg.children('img').show();
+							s.dlg.dialog('open');
+							filter_field.val(value);
+							$('table#' + s.target_grid_id, s.dlg)[0].triggerToolbar();
+						}			
 					});
 				},
 				afterShowForm: function(formid, id){

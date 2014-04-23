@@ -1,0 +1,10 @@
+.ui-dialog .ui-dialog-titlebar{
+	/*float:right;*/
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+	/*left: .3em !important;*/
+}
+.ui-dialog .ui-dialog-title {
+	/*margin: .1em 0 .1em .8em !important;*/
+}

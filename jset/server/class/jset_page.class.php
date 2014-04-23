@@ -10,11 +10,11 @@
 
 class jset_page
 {
-	public static function create($dir_pre, $lang = 'en', $dir_rel = '')
+	public static function create($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false)
 	{
 		session_start();
 		self::doctype();
-		self::head($dir_pre, $lang, $dir_rel);
+		self::head($dir_pre, $lang, $dir_rel, $rtl);
 	}
 	
 	public static function doctype()
@@ -25,9 +25,10 @@ class jset_page
 EOT;
 	}
 	
-	public static function head($dir_pre, $lang, $dir_rel){
+	public static function head($dir_pre, $lang, $dir_rel, $rtl){
 		$dir_pre = isset($dir_pre) ? $dir_pre : '';
 		$dir_rel = isset($dir_rel) ? $dir_rel : '';
+		$rtl_css = $rtl ? "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"{$dir_pre}jset/css/jset_rtl.css\" />" : '';
 		echo <<< EOT
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -107,6 +108,7 @@ EOT;
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/css/jset.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/template/panel/panel.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/template/pane/pane.css" />
+{$rtl_css}
 
 EOT;
 
