@@ -24,19 +24,22 @@
 					.hide();
 				$('span.panel-title', panel).html($('td.CaptionTD', e).html());
 				
-				var tr, name;
+				var tr, name, has_label;
 				$.each($('td.DataTD > *', e), function(j, a){
 					if((j % 3) == 0){
 						tr = $('<tr></tr>').appendTo($('div.panel-body > table > tbody', panel)).hide();
 						name = $(a).attr('name');
+						has_label = $(a).html() != '';
+						if(has_label)
+							$('<td></td>').appendTo($('div.panel-body > table > tbody > tr:last', panel))
+							.append(a);
 					}
 					if((j % 3) == 1 && $.jset.fn.get_column(grid, name) && ($.jset.fn.get_column(grid, name).hidden != 1 || $.jset.fn.get_column(grid, name).edithidden == 1)){
+						$('<td' + (has_label ? '' : ' colspan="2"') + '></td>').appendTo($('div.panel-body > table > tbody > tr:last', panel))
+						.append(a);
 						panel.show();
 						tr.show();
 					}
-					if((j % 3) != 2)
-						$('<td></td>').appendTo($('div.panel-body > table > tbody > tr:last', panel))
-						.append(a);
 				});
 				
 				if($('div.panel-header > span.panel-title', panel).html() == '')
@@ -55,7 +58,7 @@
 	    	for (var i=0; i<count; i++){
 	    		var current_tr = $(siblings.get(source_tr.index() + i));
 	    		$.each($('td',current_tr), function(){
-	    			source_last_td.append($(this).html());
+	    			source_last_td.append($(this).contents());
 	    		});
 	    		current_tr.remove();
 	    	}
@@ -69,7 +72,7 @@
 	    	
 	    	for (var i=0; i<count; i++){
 	    		var current_tr = $(siblings.get(source_tr.index() + i));
-	    		source_tr.append(current_tr.html());
+	    		source_tr.append(current_tr.contents());
 	    		current_tr.remove();
 	    	}
 	    }
