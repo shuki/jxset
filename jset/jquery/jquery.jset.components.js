@@ -303,20 +303,23 @@
 
 		editor_element: function(value, options){
 			var elem = $("<textarea size='10'/>");
-			$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
+			//$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
 			$(elem).val(value);
-			elem.attr('validate', options.validate);
+			//elem.attr('validate', options.validate);
 			return elem;
 		},
 		
 		editor_value: function(elem, action, value){
+			if($(elem).length == 0)
+				return '';
+				
 			if(action == 'get')
 				return $(elem).html();
 			else if(action == 'set'){
 				$(elem).html(value);
 				var editor_id = $(elem).attr('id');
-				if(typeof tinyMCE !== 'undefined' && typeof tinyMCE.get(editor_id) !== 'undefined')
-					tinyMCE.get(editor_id).undoManager.clear();
+				//if(typeof tinyMCE !== 'undefined' && typeof tinyMCE.get(editor_id) !== 'undefined')
+				//	tinyMCE.get(editor_id).undoManager.clear();
 			}
 		},
 
@@ -384,6 +387,7 @@
 				return '';
 			}
 			else if(action == 'set'){
+				console.log(elem);
 				var container = $.jset.fn.get_grid_container(elem);
 				var filter_name = elem.data('settings').filter[0].target;
 				var filter_field = container.find("#gs_" + filter_name);
@@ -834,6 +838,18 @@
 		
 		editor:{
 			directionality : 'ltr',
+		    setup: function (ed) {
+		        ed.on('init', function(args) {
+		            if(!$('link[href="'+ $.jset.defaults.dir_pre + 'jset/css/tinymce.css"]').length)
+						$('<link>')
+						  .appendTo($('head'))
+						  .attr({type : 'text/css', rel : 'stylesheet'})
+						  .attr('href', $.jset.defaults.dir_pre + 'jset/css/tinymce.css');
+		        });
+		    }
+		},
+		editor_old:{
+			directionality : 'ltr',
 			// Location of TinyMCE script
 			script_url : $.jset.defaults.dir_pre + 'jset/widget/tinymce/jscripts/tiny_mce/tiny_mce.js',
 			// General options
@@ -1277,6 +1293,30 @@
 				},
 				searchoptions:{
 					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
+				},
+				onInitializeForm: function(formid, id){
+					var grid = $(this);
+					var elem = $(formid).find('textarea#' + id);
+					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
+					//var tinye = $(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
+					//tinymce.init({
+					//	selector: 'textarea#' + id
+					//});
+					//console.log(elem, options, tinye);
+					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor/*, options*/)
+						/*{
+		                //selector: 'textarea',
+		                //plugins: ['autolink contextmenu image link table'],
+		                //menubar: '',
+		                //statusbar: false,
+		                //toolbar: false
+					}*/
+					);
+					//if(typeof tinymce === 'undefined')
+					//	tinymce.init({selector:'textarea#' + id});
+					//console.log(tinymce);
+					//tinymce.execCommand('mceAddEditor', false, 'textarea#' + id);
+					//$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
 				}
 			},
 			
@@ -1517,8 +1557,8 @@
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('input.jset-multicheckbox#' + id);
 					var grid = $(this);
-
-					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
+					console.log(elem);
+/*					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
 
 					if(elem.siblings().length == 0){
 						elem.hide();
@@ -1543,7 +1583,7 @@
 									.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
 							}						
 						}
-					}
+					}*/
 				}
 			},
 			multiselect:{

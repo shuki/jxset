@@ -88,7 +88,9 @@ EOT;
 </script>
 
 <script src="{$dir_pre}jset/jquery/jquery.jset.formatters.js" type="text/javascript"></script>
-<script src="{$dir_pre}jset/widget/tinymce/jscripts/tiny_mce/jquery.tinymce.js" type="text/javascript"></script>
+<!--script src="{$dir_pre}jset/widget/tinymce/jscripts/tiny_mce/jquery.tinymce.js" type="text/javascript"></script-->
+<script src="{$dir_pre}jset/widget/tinymce4/js/tinymce/tinymce.min.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/widget/tinymce4/js/tinymce/jquery.tinymce.min.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/widget/flowplayer/flowplayer-3.2.6.min.js" type="text/javascript"></script> 
 <script src="{$dir_pre}jset/js/htmlspecialchars.js" type="text/javascript"></script>
 

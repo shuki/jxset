@@ -503,6 +503,9 @@
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
 
+			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
+				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
+				
 			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
@@ -514,9 +517,6 @@
 			if(grid.data('settings').hide_submit_row) 
 				$(formid).parent().find('#TblGrid_' + grid.attr('id') + '_2').hide();
 			
-			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
-				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
-				
 			if($.isFunction(grid.data('settings').onInitializeForm))
 				grid.data('settings').onInitializeForm.call(grid, formid);
 		},
@@ -598,14 +598,13 @@
 				return [false, validation_error];
 			}
 			
-			var colModel = grid.data('settings').grid.colModel;
+			/*var colModel = grid.data('settings').grid.colModel;
 			$.each(colModel, function(i){
 				if(this.index != this.name){
 					postdata[this.index] = postdata[this.name];
 					delete postdata[this.name];
 				}
-			});
-			
+			});*/
 			var post = $.jset.fn.unformat_columns(this, postdata);
 			var hard_post = {};
 			
