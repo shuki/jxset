@@ -838,6 +838,7 @@
 		
 		editor:{
 			directionality : 'ltr',
+			statusbar: true,
 		    setup: function (ed) {
 		        ed.on('init', function(args) {
 		            if(!$('link[href="'+ $.jset.defaults.dir_pre + 'jset/css/tinymce.css"]').length)

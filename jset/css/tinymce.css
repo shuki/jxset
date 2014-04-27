@@ -9,3 +9,7 @@
 .mce-path {
     padding: 2px;
 }
+
+.mce-path-item {
+    display: none;
+}
