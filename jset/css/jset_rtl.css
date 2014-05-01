@@ -1,3 +1,10 @@
+.ui-tabs {
+	direction: rtl;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-state-default {float: right; }
+.ui-tabs .ui-tabs-nav li a { float: right; }
+
 .selectbox_plus-dialog {
 	direction:ltr;
 }

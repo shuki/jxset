@@ -17,7 +17,9 @@
 		nav: {
 			columnChooserTitle: 'Select Columns',
 			clearPersistTitle: 'Clear Personal Settings',
-			selectedCounter: "Selected: {0}"
+			selectedCounter: "Selected: {0}",
+			addCaption: "Add {0}",
+			editCaption: "Edit {0}"
 		}
 	};
 

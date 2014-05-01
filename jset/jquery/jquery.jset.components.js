@@ -318,8 +318,8 @@
 			else if(action == 'set'){
 				$(elem).html(value);
 				var editor_id = $(elem).attr('id');
-				//if(typeof tinyMCE !== 'undefined' && typeof tinyMCE.get(editor_id) !== 'undefined')
-				//	tinyMCE.get(editor_id).undoManager.clear();
+				if(typeof tinymce !== 'undefined' && typeof tinymce.get(editor_id) !== 'undefined')
+					tinymce.get(editor_id).undoManager.clear();
 			}
 		},
 
@@ -387,7 +387,6 @@
 				return '';
 			}
 			else if(action == 'set'){
-				console.log(elem);
 				var container = $.jset.fn.get_grid_container(elem);
 				var filter_name = elem.data('settings').filter[0].target;
 				var filter_field = container.find("#gs_" + filter_name);
@@ -1298,26 +1297,8 @@
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
 					var elem = $(formid).find('textarea#' + id);
-					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
-					//var tinye = $(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
-					//tinymce.init({
-					//	selector: 'textarea#' + id
-					//});
-					//console.log(elem, options, tinye);
-					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor/*, options*/)
-						/*{
-		                //selector: 'textarea',
-		                //plugins: ['autolink contextmenu image link table'],
-		                //menubar: '',
-		                //statusbar: false,
-		                //toolbar: false
-					}*/
-					);
-					//if(typeof tinymce === 'undefined')
-					//	tinymce.init({selector:'textarea#' + id});
-					//console.log(tinymce);
-					//tinymce.execCommand('mceAddEditor', false, 'textarea#' + id);
-					//$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
+					//var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
+					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor/*, options*/));
 				}
 			},
 			
@@ -1558,8 +1539,7 @@
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('input.jset-multicheckbox#' + id);
 					var grid = $(this);
-					console.log(elem);
-/*					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
+					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
 
 					if(elem.siblings().length == 0){
 						elem.hide();
@@ -1584,7 +1564,7 @@
 									.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
 							}						
 						}
-					}*/
+					}
 				}
 			},
 			multiselect:{

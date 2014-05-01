@@ -17,7 +17,9 @@
 		nav: {
 			columnChooserTitle: 'בחר עמודות',
 			clearPersistTitle: 'בטל התאמה אישית',		
-			selectedCounter: "מסומנים: {0}"
+			selectedCounter: "מסומנים: {0}",
+			addCaption: "הוסף {0}",
+			editCaption: "ערוך {0}"
 		}
 	};
 

@@ -1,5 +1,67 @@
+body {
+	margin:0px;
+	background-color: #F5F5EC;
+}
+
+.ui-tabs .ui-tabs-nav{
+	padding: 0;
+}
+
+.ui-tabs.ui-corner-all, .ui-tabs-nav.ui-corner-all{
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.ui-tabs-nav.ui-widget-header {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+    padding: 0.2em 0.5em;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected,
+	
+table.EditTable {
+	background-color: #F9F8F6
+}
+
+.FormGrid tr.FormData{
+	background-color: #00FFFF;
+}
+
+.ui-tabs {
+    padding: 0;
+}
+
+.ui-tabs .ui-tabs-panel {
+	padding: 2px;
+}
+
+.ui-jqdialog .ui-jqdialog .ui-jqdialog-titlebar{
+	padding: 0 0.2em;
+}
+
+.ui-jqdialog .ui-jqdialog-title {
+	font-size: 14px;
+	margin: 0;
+	padding: 0 0.2em;
+}
+
+div.ui-jqgrid {
+	padding-top:1px;
+}
+
 .ui-jqgrid .ui-jqgrid-btable{
 	border-collapse: separate;
+}
+
+.ui-jqdialog-content td.EditButton {
+	padding: 5px;
 }
 
 .ui-datepicker {
@@ -14,6 +76,10 @@
 .multiselect {
 	width: 460px;
 	height: 200px;
+}
+
+.ui-jqdialog {
+	padding: 0;
 }
 
 .ui-jqdialog-content .CaptionTD {

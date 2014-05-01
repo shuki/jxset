@@ -6,8 +6,36 @@
 	padding: 5px 7px;
 }
 
+.mce-menubtn.mce-fixed-width span {
+    width: 70px;
+}
+/*
+.mce-floatpanel{
+	width: 80px;
+}
+
+.mce-floatpanel .mce-stack-layout{
+	width:80px;
+}
+*/
 .mce-path {
     padding: 2px;
+}
+
+.mce-rtl .mce-listbox button{
+	padding-right: 2px;
+}
+
+.mce-rtl .mce-btn button {
+	padding: 5px 7px;
+}
+
+.mce-rtl .mce-path {
+    padding: 2px;
+}
+
+.mce-rtl .mce-listbox .mce-caret {
+    right: 10px;
 }
 
 .mce-path-item {

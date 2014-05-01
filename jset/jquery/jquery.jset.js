@@ -51,6 +51,7 @@
 			db_remote_definitions: true,
 			dir_pre: $.jset.dir_pre,
 			dir_rel: $.jset.dir_rel,
+			item_name: 'Record',
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
 			spacing: '20px',
@@ -1246,8 +1247,8 @@
 		create_navigator: function(grid, grid_container){
 			grid.jqGrid('navGrid', grid.data('settings').grid.pager,
 				grid.data('settings').navigation.options,
-				grid.data('settings').navigation.edit,
-				grid.data('settings').navigation.add,
+				$.extend(true, grid.data('settings').navigation.edit, $.jset.fn.navigation_edit(grid)),
+				$.extend(true, grid.data('settings').navigation.add, $.jset.fn.navigation_add(grid)),
 				grid.data('settings').navigation.del,
 				grid.data('settings').navigation.search,
 				grid.data('settings').navigation.view
@@ -1264,6 +1265,19 @@
 			$.jset.fn.navigator_columnChooser_button(grid, grid_container);
 			$.jset.fn.navigator_clearPersist_button(grid, grid_container);
 			$.jset.fn.filter_toolbar_init(grid, grid_container);
+		},
+		
+		navigation_add: function(grid){
+			return {
+				addCaption: $.jgrid.format($.jset.nav.addCaption, grid.data('settings').item_name)
+			};
+		},
+		
+		navigation_edit: function(grid){
+			return {
+				//top: -1,
+				editCaption: $.jgrid.format($.jset.nav.editCaption, grid.data('settings').item_name)
+			};
 		},
 		
 		navigator_refresh_button: function(grid, grid_container){
