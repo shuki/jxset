@@ -69,7 +69,7 @@ class jset_dispatch {
 		if(isset($request['PHPSESSID']))
 		  unset($request['PHPSESSID']);
 		
-		$php_auth_user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : (isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'] : '');
+		$php_auth_user = gen_utils::get_http_user(null);
 		if($php_auth_user)
 			$request['_PHP_AUTH_USER_'] = $php_auth_user;
 		

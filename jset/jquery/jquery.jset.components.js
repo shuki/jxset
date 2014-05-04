@@ -36,7 +36,9 @@
 		},
 
 		disabled: function(elem){
-			$(elem).attr('disabled', true);
+			$(':input', elem)
+				.attr('disabled', true)
+				.addClass('jset-field-readonly');
 		},
 		
 		default_sopt: function(){

@@ -36,8 +36,12 @@ class gen_utils
 		return $result;
 	}
 	
-	public function http_user($db){
-		return $_SERVER['PHP_AUTH_USER'];
+	public function get_http_user($db){
+		return (isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : (isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'] : (isset($_POST['_PHP_AUTH_USER_']) ? $_POST['_PHP_AUTH_USER_'] : null)));
+	}
+	
+	public function get_remote_address($db){
+		return (isset($_SERVER['HTTP_X_FORWARTDED_FOR']) ? $_SERVER['HTTP_X_FORWARTDED_FOR'] : (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null));
 	}
 	
 	public function header($name)

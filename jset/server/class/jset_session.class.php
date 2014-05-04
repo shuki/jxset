@@ -10,13 +10,15 @@
 
 include_once("autoload.php");
 
-class jset_atom {	
-	public function add($db){
-		$sql_class = sql::create($db);
-		$db->query($sql_class->GET_UUID);
-		$uuid = $db->fetch()->uuid;
-		$db->query($sql_class->ATOM_INSERT, array($uuid, 0, gen_utils::get_http_user($db), gen_utils::get_remote_address($db)));
-		return $uuid;
+class jset_session {
+	public function create(){
+		//$sql_class = sql::create($db);
+		//php >= 5.4.0 
+		//session_status() == PHP_SESSION_ACTIVE
+		if(session_id() == '')
+			session_start();
+		
+		$_SESSION['php_auth_user'] = gen_utils::get_http_user(null);;
 	}
 }
 
