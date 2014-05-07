@@ -34,11 +34,13 @@
 							$('<td></td>').appendTo($('div.panel-body > table > tbody > tr:last', panel))
 							.append(a);
 					}
-					if((j % 3) == 1 && $.jset.fn.get_column(grid, name) && ($.jset.fn.get_column(grid, name).hidden != 1 || $.jset.fn.get_column(grid, name).edithidden == 1)){
+					if((j % 3) == 1){
 						$('<td' + (has_label ? '' : ' colspan="2"') + '></td>').appendTo($('div.panel-body > table > tbody > tr:last', panel))
 						.append(a);
-						panel.show();
-						tr.show();
+						if($.jset.fn.get_column(grid, name) && ($.jset.fn.get_column(grid, name).hidden != 1 || $.jset.fn.get_column(grid, name).edithidden == 1)){
+							panel.show();
+							tr.show();
+						}
 					}
 				});
 				

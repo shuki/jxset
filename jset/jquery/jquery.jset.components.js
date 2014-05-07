@@ -1690,7 +1690,6 @@
 							s.dlg.children('img').hide();
 							s.dlg.children('div').show();
 							$('.ui-jqdialog-titlebar', $(formid).closest('.ui-jqdialog')).hide();
-							s.dlg.dialog('option', 'title', $('.ui-jqdialog-titlebar span.ui-jqdialog-title', $(formid).closest('.ui-jqdialog')).html() + ' - ' + s.dlg.dialog('option', 'title'));
 							$(formid).closest('.ui-jqdialog').offset({ top: -4, left: -3});
 
 							s.dlg.dialog('option', 'width', $(formid).closest('.ui-jqdialog').width()+1)
@@ -1707,6 +1706,7 @@
 						beforeShowForm: function(formid){
 							var grid = $(this);
 							var s = grid.data('selectbox_plus');
+							s.dlg.dialog('option', 'title', $('.ui-jqdialog-titlebar span.ui-jqdialog-title', $(formid).closest('.ui-jqdialog')).html() + ' ' + s.dlg.dialog('option', 'record_name'));
 							s.dlg.children('img').hide();
 							s.dlg.children('div').show();
 						},
@@ -1744,7 +1744,7 @@
 					elem.after(button);
 
 					dlg.dialog($.extend(true, {}, options.dialog, {
-						title: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
+						record_name: grid.data('settings').grid.colNames[grid.data('index')[elem.attr('name')]],
 						position: { 
 						    my: (grid.data('settings').grid.direction  == 'ltr') ? 'left' : 'right',
 						    at: (grid.data('settings').grid.direction  == 'ltr') ? 'right' : 'left',
@@ -1757,7 +1757,8 @@
 						dlg: dlg,
 						options: options,
 						target_grid_id: target_grid_id,
-						source_grid_id: grid.attr('id')
+						source_grid_id: grid.attr('id'),
+						formid: formid
 					});
 					
 					button.bind('click', function(){
@@ -1794,6 +1795,7 @@
 							$('table#' + s.target_grid_id, s.dlg).jqGrid('editGridRow', 'new', s.options);
 							$('.ui-jqdialog-titlebar-close', this_container).hide();
 							$('#cData', this_container).hide();
+							s.dlg.dialog('option', 'title', $.jgrid.format($.jset.nav.addCaption, s.dlg.dialog('option', 'record_name')));
 							s.dlg.dialog('open');
 							return;
 						}
