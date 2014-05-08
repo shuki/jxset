@@ -1299,8 +1299,8 @@
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
 					var elem = $(formid).find('textarea#' + id);
-					//var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
-					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor/*, options*/));
+					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
+					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
 				}
 			},
 			
