@@ -31,6 +31,8 @@ class db_base
 			//$this->dns = $this->server . ':host=' . $this->host . ';dbname=' . $this->db_name;
 			$this->dns();
 			$this->connect();
+			if(defined('config::dbtime_zone'))
+				$this->query('set time_zone = ?', array(config::dbtime_zone));
 	}
 	
 	protected function dns(){

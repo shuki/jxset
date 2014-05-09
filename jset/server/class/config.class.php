@@ -21,6 +21,7 @@ class config
 	const dbpassword = ''; 
 	const dbfetchStyle = PDO::FETCH_OBJ;
 	const dberrorMode = PDO::ERRMODE_EXCEPTION;
+	const dbtime_zone = 'SYSTEM'; // '+02:00'
 	const limit = 100;
 		
 	const permission_source_sql = true;
