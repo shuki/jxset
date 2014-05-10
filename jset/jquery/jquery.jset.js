@@ -641,7 +641,7 @@
 			return [true];
 		},
 	
-		afterSubmit: function(response, postdata){
+		afterSubmit: function(response, postdata, frmoper){
 			var grid = $(this);
 			if(grid.data('copy')){
 				grid.data('copy', false);
@@ -669,7 +669,7 @@
 			//grid.jqGrid('setGridParam', {scrollrows: true});
 			var return_value = [true];
 			if($.isFunction(grid.data('settings').afterSubmit))
-				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata);
+				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata, frmoper);
 				
 			if(return_value[0] && grid.data('form_action') ==  'add' && grid.data('settings').reopen_after_add)
 				grid.data('reopen_form', obj.id);
@@ -864,7 +864,6 @@
 					grid.data('settings').loadComplete.call(grid, data);
 					
 				if(grid.data('reopen_form')){
-					console.log(grid.data('reopen_form'));
 					var id = grid.data('reopen_form');
 					grid.data('reopen_form', false);
 					$.jset.fn.closeForm(grid);
