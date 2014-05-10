@@ -58,6 +58,7 @@
 			caption_class: 'CaptionField',
 			row_selection: true,
 			load_edit_record: false,
+			reopen_after_add: false,
 			pending_create: false,
 			hide_submit_row: false,
 			hide_horizontal_scrollbar: false,
@@ -507,11 +508,11 @@
 			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
 				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
 				
-			$.each(grid.data('columns'), function(){
+/*			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
-			});
-			
+			});*/
+			$.jset.fn.run_columns_event(grid, formid, 'onInitializeForm');
 			$.jset.fn.set_help_tips(grid, formid);
 			$('select,input', $(formid)).addClass('FormElement ui-widget-content ui-corner-all');
 
@@ -666,11 +667,14 @@
 
 			
 			//grid.jqGrid('setGridParam', {scrollrows: true});
-
+			var return_value = [true];
 			if($.isFunction(grid.data('settings').afterSubmit))
-				return grid.data('settings').afterSubmit.call(grid, response, postdata);
+				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata);
+				
+			if(return_value[0] && grid.data('form_action') ==  'add' && grid.data('settings').reopen_after_add)
+				grid.data('reopen_form', obj.id);
 			
-			return [true];
+			return return_value;
 		},
 		
 		onClose: function(formid){
@@ -858,6 +862,14 @@
 				
 				if($.isFunction(grid.data('settings').loadComplete))
 					grid.data('settings').loadComplete.call(grid, data);
+					
+				if(grid.data('reopen_form')){
+					console.log(grid.data('reopen_form'));
+					var id = grid.data('reopen_form');
+					grid.data('reopen_form', false);
+					$.jset.fn.closeForm(grid);
+					grid.data('settings').navigation.options.editfunc.call(grid, id, grid.data('settings').navigation.edit);
+				}
 			},
 			beforeSelectRow: function (rowid, e) {
 			    var grid = $(this);
@@ -1791,6 +1803,13 @@
 			$('#cData', grid_container).hide();
 		},
 		
+		run_columns_event: function(grid, formid, event_name){
+			$.each(grid.data('columns'), function(){
+				if($.isFunction($.jset.defaults.control[this.control][event_name]))
+					$.jset.defaults.control[this.control][event_name].call(grid, formid, this.index || this.Field);
+			});	
+		},
+		
 		set_help_tips: function(grid, formid){
 			if(!grid.data('settings').help.hide)
 				$.each(grid.data('columns'), function(){
@@ -1976,6 +1995,10 @@
 			
 			if(reset)
 				$.jset.fn.resetMultiselectedRows.call(grid);
+		},
+		
+		closeForm: function(grid){
+			$("a[id='cData']", $.jset.fn.get_grid_container(grid)).trigger('click');
 		},
 		
 		closeSubForms: function(formid, grid){
