@@ -28,6 +28,7 @@ class jset_event {
 			if(isset($res->error))
 				return $res;
 			
+			$list[] = $res;
 			//$result->res[] = $res;
 			if(isset($res->skip))
 				$result->skip = true;
@@ -35,6 +36,7 @@ class jset_event {
 				$result->id = $res->id;
 		}
 		
+		$result->list = $list;
 		return $result;
 	}
 

@@ -162,15 +162,15 @@ class jset_base
 
 	private function add()
 	{
-		$res = jset_event::exec($this->db, $this->event->before_insert, $this->pairs, $this->settings);
-		if(isset($res->error))
-			return $res;
+		$result_before = jset_event::exec($this->db, $this->event->before_insert, $this->pairs, $this->settings);
+		if(isset($result_before->error))
+			return $result_before;
 		
-		if(isset($res->skip))
+		if(isset($result_before->skip))
 		{
-			if(isset($res->id))
+			if(isset($result_before->id))
 			{
-				$id = $res->id;
+				$id = $result_before->id;
 				$this->pairs->values[$this->pairs->index[$this->columns->primary]] = $id;
 			} 
 			else
@@ -195,11 +195,13 @@ class jset_base
 		
 		$log = jset_log::add($this->db, $this->table->target, $this->columns->primary, $id);
 		
-		$res = jset_event::exec($this->db, $this->event->after_insert, $this->pairs, $this->settings);
-		if(isset($res->error))
-			return $res;
+		$result_after = jset_event::exec($this->db, $this->event->after_insert, $this->pairs, $this->settings);
+		if(isset($result_after->error))
+			return $result_after;
 		
 		$result->id = $id;
+		if(!is_null($result_before)) $result->result_before = $result_before;
+		if(!is_null($result_after)) $result->result_after = $result_after;
 		return $result;
 	}
 	
@@ -210,28 +212,28 @@ class jset_base
 		foreach(explode(',', $this->settings->_id_) as $id)
 		{
 			$settings->_id_ = $id;
-			$result = jset_event::exec($this->db, $this->event->before_delete, $this->pairs, $settings);
-			if(isset($result->error))
-				return $result;
-			if(!isset($result->skip)){
+			$result_before = jset_event::exec($this->db, $this->event->before_delete, $this->pairs, $settings);
+			if(isset($result_before->error))
+				return $result_before;
+			if(!isset($result_before->skip)){
 				$result = $this->db->execute($SQL, array($id));
 				if(isset($result->error))
 					return $result;
 			}
-			$result = jset_event::exec($this->db, $this->event->after_delete, $this->pairs, $settings);
-			if(isset($result->error))
-				return $result;
+			$result_after = jset_event::exec($this->db, $this->event->after_delete, $this->pairs, $settings);
+			if(isset($result_after->error))
+				return $result_after;
 		}
 		return isset($result) ? $result : true;
 	}
 	
 	private function edit()
 	{
-		$res = jset_event::exec($this->db, $this->event->before_update, $this->pairs, $this->settings);
-		if(isset($res->error))
-			return $res;
+		$result_before = jset_event::exec($this->db, $this->event->before_update, $this->pairs, $this->settings);
+		if(isset($result_before->error))
+			return $result_before;
 
-		if(!isset($res->skip))
+		if(!isset($result_before->skip))
 		{
 			$names_eq_question_marks = $this->names_eq_question_marks($this->pairs);
 			$SQL = "UPDATE " . $this->sql_class->LD . $this->table->target . $this->sql_class->RD . " set " . $names_eq_question_marks . " WHERE " . $this->sql_class->LD . $this->columns->primary . $this->sql_class->RD . " = ?";
@@ -244,11 +246,13 @@ class jset_base
 			
 		$id = $this->pairs->values[$this->pairs->index[$this->columns->primary]] ? $this->pairs->values[$this->pairs->index[$this->columns->primary]] : $this->settings->_id_;
 		$log = jset_log::add($this->db, $this->table->target, $this->columns->primary, $id);
-		$res = jset_event::exec($this->db, $this->event->after_update, $this->pairs, $this->settings);
-		if(isset($res->error))
-			return $res;
+		$result_after = jset_event::exec($this->db, $this->event->after_update, $this->pairs, $this->settings);
+		if(isset($result_after->error))
+			return $result_after;
 		
 		$result->id = $id;
+		if(!is_null($result_before)) $result->result_before = $result_before;
+		if(!is_null($result_after)) $result->result_after = $result_after;
 		return $result;
 	}
 
