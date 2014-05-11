@@ -32,6 +32,7 @@ $(function(){
 	  	source: 'demo', //name of table, view or the actual sql that you wish to display in the grid
 	  	//source: 'demo', //name of table, view or the actual sql that you wish to display in the grid
 		load_edit_record: true, //reload record before editting
+		//reopen_after_add: true,
 		//search_default: searchDefaults,
 	    grid: {
 			autowidth: true,

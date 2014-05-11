@@ -1362,7 +1362,7 @@
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
-					if(grid.data('form_action') == 'add')
+					if(grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy')
 						elem.closest('span.FormElement').hide();
 						
 					var settings = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].settings;
@@ -1372,7 +1372,7 @@
 					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
 
-					if(grid.data('form_action') == 'add')
+					if(grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy')
 						elem.closest('span.FormElement').hide();
 					else
 						elem.closest('span.FormElement').show();

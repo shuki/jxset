@@ -670,8 +670,8 @@
 			var return_value = [true];
 			if($.isFunction(grid.data('settings').afterSubmit))
 				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata, frmoper);
-				
-			if(return_value[0] && grid.data('form_action') ==  'add' && grid.data('settings').reopen_after_add)
+			
+			if(return_value[0] && (grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy') && grid.data('settings').reopen_after_add)
 				grid.data('reopen_form', obj.id);
 			
 			return return_value;
@@ -865,7 +865,7 @@
 					
 				if(grid.data('reopen_form')){
 					var id = grid.data('reopen_form');
-					grid.data('reopen_form', false);
+					grid.removeData('reopen_form');
 					$.jset.fn.closeForm(grid);
 					grid.data('settings').navigation.options.editfunc.call(grid, id, grid.data('settings').navigation.edit);
 				}
