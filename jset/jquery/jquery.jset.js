@@ -866,8 +866,7 @@
 				if(grid.data('reopen_form')){
 					var id = grid.data('reopen_form');
 					grid.removeData('reopen_form');
-					$.jset.fn.closeForm(grid);
-					grid.data('settings').navigation.options.editfunc.call(grid, id, grid.data('settings').navigation.edit);
+					grid.data('settings').navigation.options.editfunc.call(grid, id, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false}));
 				}
 			},
 			beforeSelectRow: function (rowid, e) {
