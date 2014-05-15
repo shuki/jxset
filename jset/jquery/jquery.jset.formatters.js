@@ -161,8 +161,9 @@
 			if(!cellvalue)
 				return '';
 				
-			var extension = cellvalue.split('.').pop().toLowerCase();							
-			var file_lable = (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png') ? options.colModel.formatoptions.picture_lable : options.colModel.formatoptions.file_lable;
+			var extension = cellvalue.split('.').pop().toLowerCase();
+			var colModel = options.formatoptions ? options : options.colModel;
+			var file_lable = (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png') ? colModel.formatoptions.picture_lable : colModel.formatoptions.file_lable;
 			return '<a target="_blank" href="' + cellvalue +'">' + file_lable + ' ' + extension + '</a>';
 		}
 	});

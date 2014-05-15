@@ -739,8 +739,11 @@
 			height: '140',
 			row_height: '80',
 			max_width: '1000',
-			browse_title: 'Upload Image',
-			delete_title: 'Delete Image',
+			browse_title: 'Upload File',
+			delete_title: 'Delete File',
+			show_image: true,
+			show_target: true,
+			show_link: true,
 			input_element: '<input type="text"/>',
 			target_element: '<input type="image" value=""/>',
 			target_selector: 'input[type="image"]',
@@ -761,7 +764,8 @@
 				  template: '<div class="qq-uploader">' +
 				              '<pre class="qq-upload-drop-area"><span>{dragZoneText}</span></pre>' +
 				              '<table><tr><td><div class="qq-upload-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-folder-open"></span></div></td>' +
-				              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-trash"></span></div></td>' +
+				              '<td><div><span class="file-link-target"></span></div></td>' +
+				              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-close"></span></div></td>' +
 				              '<td><div id="qq-progress-bar" class="qq-progress-bar"></div></td></tr></table>' +
 				              '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
 				              '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
@@ -791,28 +795,42 @@
 				
 				return element;
 			},
-			target_value: function(val)
-			{				
+			target_value: function(val, options)
+			{	
+				var target_element = $(this);
+				var target_link = $('.file-link-target', target_element.siblings('div'));
+				var trash = $('.qq-trash-button', target_element.siblings('div'));
+				
 				if(!val){
-					$(this).attr('src', '');
-					$(this).hide();
+					target_element.hide();
+					target_link.hide();
+					trash.hide();
 					return;
 				}
-
-				var extension = val.split('.').pop().toLowerCase();
-									
-				$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
-				if(extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png'){
-					$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
-					$(this).removeAttr('path');
-				}
+				
+				trash.show();
+				
+				if(options.editoptions.custom_options.show_link)	
+					target_link.html($.fn.fmatter.uploadFileFmatter(val, options))
+					.show();
 				else
-				{
-					$(this).attr('src', '../jxset/jset/img/file.jpg');
-					$(this).attr('path', val);
-					$(this).show();
-				}
-									
+					target_link.hide();
+				
+				if(options.editoptions.custom_options.show_target){
+					var extension = val.split('.').pop().toLowerCase();
+										
+					$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
+					if(options.editoptions.custom_options.show_image && (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png')){
+						$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
+						$(this).removeAttr('path');
+					}
+					else
+					{
+						$(this).attr('src', '../jxset/jset/img/file.jpg');
+						$(this).attr('path', val);
+						$(this).show();
+					}
+				}			
 			},
 			error_handler: function(event, id, fileName, reason) {
 		        alert("id: " + id + ", fileName: " + fileName + ", reason: " + reason);
@@ -1362,7 +1380,7 @@
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
-					if(grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy')
+					if(grid.data('form_action') == 'add' || grid.data('form_action') == 'copy')
 						elem.closest('span.FormElement').hide();
 						
 					var settings = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].settings;
@@ -1372,7 +1390,7 @@
 					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
 
-					if(grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy')
+					if(grid.data('form_action') == 'add' || grid.data('form_action') == 'copy')
 						elem.closest('span.FormElement').hide();
 					else
 						elem.closest('span.FormElement').show();
@@ -2170,7 +2188,8 @@
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
-					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
+					var options = grid.data('settings').grid.colModel[grid.data('index')[id]];							
+					var editoptions = options['editoptions'];							
 
 					$this.hide()
 					.bind('change', function(){
@@ -2181,7 +2200,7 @@
 					.insertBefore($this)
 					.append($this);
 					
-					var target_element = $(editoptions.custom_options.target_element);
+					var target_element = $(editoptions.custom_options.target_element).hide();
 					editoptions.custom_options.configure_target(target_element, editoptions);
 					target_element.insertAfter(div);
 											
@@ -2199,7 +2218,7 @@
 
 							var dir = response.dir.replace(/\\\//g, "/");
 							$this.val(dir + response.fileName);
-							editoptions.custom_options.target_value.call(target_element, $this.val());
+							editoptions.custom_options.target_value.call(target_element, $this.val(), options);
 				        })
 				        .on('progress', function (event, id, fileName, uploadedBytes, totalBytes) {
 							if (uploadedBytes < totalBytes) {
@@ -2220,15 +2239,16 @@
 						.attr('title', editoptions.custom_options.delete_title)
 						.bind('click', function(){
 							$this.val('');
-							editoptions.custom_options.target_value.call(target_element, '');
+							editoptions.custom_options.target_value.call(target_element, '', options);
 						});
 				},
 				beforeShowForm: function(formid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
-					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
+					var options = grid.data('settings').grid.colModel[grid.data('index')[id]];							
+					var editoptions = options['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					editoptions.custom_options.target_value.call(target_element, $this.val());
+					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
 				},
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
 					var grid = $(this);
