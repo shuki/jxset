@@ -655,6 +655,9 @@
 
 			var obj = $.parseJSON(response.responseText);
 			if(obj.error !== undefined){
+				if($.isFunction(grid.data('settings').afterSubmitError))
+					return grid.data('settings').afterSubmitError.call(grid, response, postdata, frmoper, obj);
+					
 				var message = obj.error.message;
 				return [false, message];
 			}

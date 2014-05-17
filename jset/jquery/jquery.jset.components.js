@@ -744,6 +744,7 @@
 			show_image: true,
 			show_target: true,
 			show_link: true,
+			show_icon: true,
 			input_element: '<input type="text"/>',
 			target_element: '<input type="image" value=""/>',
 			target_selector: 'input[type="image"]',
@@ -765,6 +766,7 @@
 				              '<pre class="qq-upload-drop-area"><span>{dragZoneText}</span></pre>' +
 				              '<table><tr><td><div class="qq-upload-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-folder-open"></span></div></td>' +
 				              '<td><div><span class="file-link-target"></span></div></td>' +
+				              '<td><div><span class="file-icon-target"></span></div></td>' +
 				              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-close"></span></div></td>' +
 				              '<td><div id="qq-progress-bar" class="qq-progress-bar"></div></td></tr></table>' +
 				              '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
@@ -799,11 +801,13 @@
 			{	
 				var target_element = $(this);
 				var target_link = $('.file-link-target', target_element.siblings('div'));
+				var target_icon = $('.file-icon-target', target_element.siblings('div'));
 				var trash = $('.qq-trash-button', target_element.siblings('div'));
 				
 				if(!val){
 					target_element.hide();
 					target_link.hide();
+					target_icon.hide();
 					trash.hide();
 					return;
 				}
@@ -815,6 +819,12 @@
 					.show();
 				else
 					target_link.hide();
+				
+				if(options.editoptions.custom_options.show_icon)	
+					target_icon.html($.fn.fmatter.uploadFileIconFmatter(val, options))
+					.show();
+				else
+					target_icon.hide();
 				
 				if(options.editoptions.custom_options.show_target){
 					var extension = val.split('.').pop().toLowerCase();
@@ -2188,7 +2198,7 @@
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
-					var options = grid.data('settings').grid.colModel[grid.data('index')[id]];							
+					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
 
 					$this.hide()
@@ -2245,7 +2255,7 @@
 				beforeShowForm: function(formid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
-					var options = grid.data('settings').grid.colModel[grid.data('index')[id]];							
+					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
 					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
@@ -2253,10 +2263,10 @@
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
-					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[id]]['editoptions'];							
+					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
+					var editoptions = options['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					//target_element.attr('src', $.jset.defaults.dir_pre + 'jset/img/loading.gif');
-					$('#' + id, formid).trigger('change', [true]);
+					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
 				},
 			},
 			upload_video:{

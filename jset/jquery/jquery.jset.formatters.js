@@ -165,6 +165,15 @@
 			var colModel = options.formatoptions ? options : options.colModel;
 			var file_lable = (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png') ? colModel.formatoptions.picture_lable : colModel.formatoptions.file_lable;
 			return '<a target="_blank" href="' + cellvalue +'">' + file_lable + ' ' + extension + '</a>';
+		},
+		uploadFileIconFmatter : function(cellvalue, options, rowdata, act){
+			if(!cellvalue)
+				return '';
+				
+			var extension = cellvalue.split('.').pop().toLowerCase();
+			var colModel = options.formatoptions ? options : options.colModel;
+			var file_lable = (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png') ? colModel.formatoptions.picture_lable : colModel.formatoptions.file_lable;
+			return '<a target="_blank" href="' + cellvalue +'"><img src="../jxset/jset/img/file.jpg" height="38" title="' + file_lable + ' ' + extension + '"/></a>';
 		}
 	});
 	
