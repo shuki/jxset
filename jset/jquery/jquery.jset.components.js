@@ -724,7 +724,6 @@
 				});
 	        },
             response: function(event, ui){
-            	console.log(this, event, ui);
             	if(ui.content.length == 0){
             		$(this).addClass('autocomplete-empty-list');
             		$(this).data('empty', true);
