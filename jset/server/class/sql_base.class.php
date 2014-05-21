@@ -129,6 +129,7 @@ class sql_base
 	
 	public $CURRENT_DATE = "SELECT current_date( ) AS result";
 	public $CURRENT_DATETIME = "SELECT now( ) AS result";
+	public $CURRENT_TIME = "SELECT current_time( ) AS result";
 	
 	public $GET_HOST_CREDENTIALS = "select * from #table# where name = ?";
 	

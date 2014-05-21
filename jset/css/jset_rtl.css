@@ -17,3 +17,12 @@
 	float: right;
 	margin: .1em 0 .1em .8em !important;
 }
+
+.ui-menu .ui-menu-item a {
+    direction:rtl;
+    text-align: right;
+}
+
+.ui-autocomplete {
+	padding-right: 0px;
+}

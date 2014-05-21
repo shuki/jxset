@@ -129,6 +129,10 @@ div.ui-jqgrid {
   font-size: 0.8em;
 }
 
+.autocomplete-empty-list {
+	border-color: red;
+}
+
 .error {
 	padding:0 5px 0 5px;
 	color: red;

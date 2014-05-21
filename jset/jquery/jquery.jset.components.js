@@ -685,35 +685,59 @@
 	        minLength: 2,
 	        autoFocus: true,
 	        source: function( request, response){
-	            $.ajax({
-	                type: 'GET',
-	                url: '../rpc/quicksearch_rpc.php',
-	                data: {
-	                    'quick_applicant':request.term,
-	                    'result_type': 'object',
-	                    'maxentries':10
-	                },
-	                contentType: "application/json; charset=utf-8",
-	                dataType: "json",
-	                success: function(data){
-						response(data.results);
-	                },
-	                error: function(message){
+				var d = new Date();
+				var nd = d.getTime();
+				$.ajax({
+					type: 'POST',
+					url: 'jset/server/jset.php',
+					data: {
+					_methods_: 'grid_rows',
+					_nd_: nd,
+					_order_by_:	'label',
+					_order_direction_: 'asc',
+					_page_:	1,
+					_rows_:	10,
+					_search_: true,
+					_source_: 'patient_list',
+					filters: '{"groupOp":"AND","rules":[{"field":"value","op":"bw","data":"' + request.term + '"}]}'			
+					},
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					success: function(data){
+						var rows = [];
+						if(data.records != 0){
+							$.each(data.rows, function(){
+								var obj = {};
+								obj.id = this.id;
+								obj.value = this.cell[1];
+								obj.label = this.cell[2];
+								obj.info = this.cell;
+								rows.push(obj);
+							});
+						}
+						response(rows);
+					},
+					error: function(message){
 						response([]);
 						alert(message);
-	                }
-	            });
+					}
+				});
 	        },
             response: function(event, ui){
-            	if(ui.content.length == 0)
+            	console.log(this, event, ui);
+            	if(ui.content.length == 0){
+            		$(this).addClass('autocomplete-empty-list');
             		$(this).data('empty', true);
+            	}
             	else
             	{
+            		$(this).removeClass('autocomplete-empty-list');
             		$(this).removeData('empty');
             		$(this).data('firstitem', ui.content[0]);
             	}
             },
             select: function(event, ui){
+            	$(this).removeClass('autocomplete-empty-list');
             	$(this).removeData('firstitem');
             }
 		},
@@ -1035,6 +1059,7 @@
         					$(this).siblings('input').val(ui.item.id);
         				})
         				.focusout(function(){
+        					$(this).removeClass('autocomplete-empty-list');
         					if($(this).val().length < $(this).autocomplete( "option", "minLength" ))
         					{
         						$(this).val('');

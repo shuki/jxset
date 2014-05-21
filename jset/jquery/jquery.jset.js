@@ -1023,7 +1023,8 @@
 		},
 		
 		get_form_field: function(formid, name){
-			return $(formid).find(':input[name=' + name + ']');
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $(formid).closest('form'));
+			return $(formid).find(':input[name=' + name + '],table[name=' + name + ']').not(exclude);
 		},
 		
 		get_form_field_label: function(formid, name){

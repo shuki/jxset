@@ -29,5 +29,11 @@ class db_utils
 		$db->query($sql_class->CURRENT_DATETIME);
 		return $db->fetch()->result;
 	}
+
+	public function current_time($db){
+		$sql_class = sql::create($db);
+		$db->query($sql_class->CURRENT_TIME);
+		return $db->fetch()->result;
+	}
 }
 

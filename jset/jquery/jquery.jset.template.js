@@ -69,9 +69,9 @@
 
 	    append_fields_td: function(formid, source, count){
 	    	var source_tr = $.jset.fn.get_form_field(formid, source).closest('tr');
-	    	var siblings = source_tr.siblings(); 
+	    	var siblings = source_tr.siblings();
 	    	count = count != undefined ? count : siblings.length - source_tr.index();
-	    	
+	    	console.log(formid, source, count,source_tr,siblings);
 	    	for (var i=0; i<count; i++){
 	    		var current_tr = $(siblings.get(source_tr.index() + i));
 	    		source_tr.append(current_tr.contents());
