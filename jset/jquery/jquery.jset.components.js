@@ -383,20 +383,14 @@
 		},
 		
 		jsetgrid_value: function(elem, action, value){
-			if($(elem).length == 0)
+			if(elem.length == 0 || action == 'get')
 				return '';
-			if(action == 'get'){
-				return '';
-			}
-			else if(action == 'set'){
-				var container = $.jset.fn.get_grid_container(elem);
-				var filter_name = elem.data('settings').filter[0].target;
-				var filter_field = container.find("#gs_" + filter_name);
-				if(filter_field.val() != value)
-				{
-					filter_field.val(value);
-					elem[0].triggerToolbar();
-				}
+				
+			var filter_field = $.jset.fn.get_filterToolbar_field($.jset.fn.get_grid_by_element(elem), elem.data('settings').filter[0].target);
+			if(filter_field.val() != value)
+			{
+				filter_field.val(value);
+				elem[0].triggerToolbar();
 			}
 		},
 		

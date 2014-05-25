@@ -1034,7 +1034,6 @@
 		get_filterToolbar_field: function(grid, field_name){
 			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $.jset.fn.get_grid_container(grid));
 			return $(':input[id=gs_' + field_name + ']', $.jset.fn.get_grid_container(grid)).not(exclude);
-			//return $('#gs_' + field_name, $.jset.fn.get_grid_container(grid));
 		},
 		
 		show_field: function(formid, name){

@@ -377,11 +377,7 @@ CREATE TABLE IF NOT EXISTS `jset_host` (
 -- Dumping data for table jxset.jset_host: ~5 rows (approximately)
 /*!40000 ALTER TABLE `jset_host` DISABLE KEYS */;
 REPLACE INTO `jset_host` (`id`, `active`, `name`, `host`, `port`, `server`, `db_name`, `user`, `password`) VALUES
-	(23, 1, 'jxset', 'localhost', '3306', 'mysql', 'jxset', 'root', 'earth12'),
-	(24, 0, 'nisha_jxset', 'localhost', '3306', 'mysql', 'nisha_jxset', 'root', 'earth12'),
-	(25, 0, 'safe_communtiy', 'localhost', '3306', 'mysql', 'safe_community', 'root', 'earth12'),
-	(26, 0, 'paamonim', 'localhost', '3306', 'mysql', 'paamonim', 'root', 'earth12'),
-	(27, 0, 'paamonim at jxset.net', 'paamonim.db.10717439.hostedresource.com', '3306', 'mysql', 'paamonim', 'paamonim', 'Tali#19590720');
+	(23, 1, 'jxset', 'localhost', '3306', 'mysql', 'jxset', 'root', '');
 /*!40000 ALTER TABLE `jset_host` ENABLE KEYS */;
 
 
