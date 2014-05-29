@@ -91,6 +91,10 @@
 	    	return "$$"+cellvalue;
 		},
 		
+	    percentageFmatter : function(cellvalue, options, rowdata) {
+	    	return cellvalue + '%';
+		},
+		
 	    emailFmatter : function(cellvalue, options, rowdata, act) {
 	    	return '<a href="mailto:' + cellvalue + '">' + cellvalue + '</a>';
 		},
@@ -297,6 +301,12 @@
 	$.extend($.fn.fmatter.uploadFileFmatter , {
 	    unformat : function(cellval,options,pos,cnt) {
 	    	return cellval ? $('a', pos).attr('href') : '';
+		}
+	});
+	
+	$.extend($.fn.fmatter.percentageFmatter , {
+	    unformat : function(cellval,options,pos,cnt) {
+	    	return cellval ? cellval.replace('%', '') : '';
 		}
 	});
 	
