@@ -16,7 +16,6 @@ class jset_permission
 	
 	public static function get_user_id($db, $settings)
 	{
-		//$sql_class = sql::create($db);
 		if(!isset($settings->_session_php_auth_user_))
 			return '';
 		

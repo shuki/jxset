@@ -1222,7 +1222,10 @@
 					size: $.jset.fn.colsize,
 					defaultValue: function(col){
 						return col.default_value;
-					}
+					},
+					dataInit: function(col){
+						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
+					},
 				},
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
@@ -1337,7 +1340,10 @@
 					},
 					defaultValue: function(col){
 						return col.default_value;
-					}
+					},
+					dataInit: function(col){
+						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
+					},
 				},
 				searchoptions:{
 					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
