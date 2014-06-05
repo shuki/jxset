@@ -60,7 +60,7 @@ class jset_dispatch {
 	
 	public static function get(&$request, $target='jxset'){
 		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 
-		(jset_autoload::get_header('Referer') ? jset_autoload::get_header('Referer') : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+		(jset_autoload::get_header('Referer') ? jset_autoload::get_header('Referer') : (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
 		if(!$referer)
 			die('no referer set');
 		
@@ -95,7 +95,7 @@ class jset_dispatch {
 		);
 		
 		$context  = stream_context_create($opts);
-		return file_get_contents('http://' . $_SERVER['HTTP_HOST'] . '/' . $target . '/jset/server/jset.php', false, $context);
+		return file_get_contents((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $target . '/jset/server/jset.php', false, $context);
 	}	
 
 	public static function get_real_POST_GET() {
