@@ -108,7 +108,8 @@
 			}
 			else if($(source).parent('span[class="FormElement"]').length > 0){
 				var container = $(source).closest('form');
-				var target = $('select[name="' + target_name + '"]', container);
+				var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, .ui-search-input .FormElement", container);
+				var target = $('select[name="' + target_name + '"]', container).not(exclude);
 				return target;
 			}
 			
@@ -532,6 +533,7 @@
 		},
 
 		selectbox_element: function(value, options){
+			//console.log(options);
 			var grid = $(this);
 			var elem = $('<select />');
 			$.jset.fn.set_select_options(elem, grid, options.value, value, false, options.name);
