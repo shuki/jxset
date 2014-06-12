@@ -10,11 +10,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping database structure for jxset
-CREATE DATABASE IF NOT EXISTS `jxset` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `jxset`;
-
-
 -- Dumping structure for table jxset.demo
 DROP TABLE IF EXISTS `demo`;
 CREATE TABLE IF NOT EXISTS `demo` (
@@ -60,106 +55,6 @@ REPLACE INTO `demo` (`id`, `char`, `text`, `date`, `image`, `video`, `integer`, 
 	(19, 'זסב', 'סזב', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'קרארקא', NULL),
 	(20, 'asdasd', 'asdasd', '2013-06-25', NULL, NULL, 222, NULL, 0, 1, NULL, NULL, 'qwqw', '<div>&nbsp;</div>');
 /*!40000 ALTER TABLE `demo` ENABLE KEYS */;
-
-
--- Dumping structure for function jxset.f_date_unformat
-DROP FUNCTION IF EXISTS `f_date_unformat`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_date_unformat`(vvalue varchar(20)) RETURNS date
-BEGIN
-  declare dpos, dpos_next tinyint;
-  declare dyeari smallint;
-  declare dday, dmonth, dyear char(4);
-
-  if vvalue is null then
-    return null;
-  end if;
-
-  set dpos = (SELECT LOCATE('/', vvalue));
-  set dday = substr(vvalue, 1, dpos -1);
-  set dpos_next = dpos + 1;
-  set dpos = (SELECT LOCATE('/', vvalue, dpos_next));
-  set dmonth = substr(vvalue, dpos_next, dpos - dpos_next);
-  set dpos_next = dpos + 1;
-  set dyear = substr(vvalue, dpos_next);
-  if length(dyear) = 2 then
-    set dyeari = cast(dyear as unsigned) + 2000;
-    if dyeari > 2030 then
-      set dyeari = dyeari - 100;
-    end if;
-    set dyear = cast(dyeari as char(4));
-  end if;
-
-  return cast(concat(dyear, '-', dmonth, '-', dday) as date);
-
-END//
-DELIMITER ;
-
-
--- Dumping structure for function jxset.f_insert_jset_atom
-DROP FUNCTION IF EXISTS `f_insert_jset_atom`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_insert_jset_atom`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
-BEGIN
-  DECLARE did BIGINT DEFAULT UUID_SHORT();
-
-  INSERT INTO jset_atom (id, stamp, user, kind, web_user, ip)
-    VALUES (did, NOW(), USER(), vkind, vweb_user, vip);
-
-  RETURN did;
-END//
-DELIMITER ;
-
-
--- Dumping structure for function jxset.f_insert_jset_atom_no_uuid
-DROP FUNCTION IF EXISTS `f_insert_jset_atom_no_uuid`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_insert_jset_atom_no_uuid`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
-BEGIN
-  INSERT INTO jset_atom (id, stamp, user, kind, web_user, ip)
-    VALUES (null, NOW(), USER(), vkind, vweb_user, vip);
-
-  RETURN (SELECT LAST_INSERT_ID());
-END//
-DELIMITER ;
-
-
--- Dumping structure for function jxset.f_numeric_only
-DROP FUNCTION IF EXISTS `f_numeric_only`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_numeric_only`(`str` VARCHAR(1000)) RETURNS varchar(1000) CHARSET utf8
-    DETERMINISTIC
-BEGIN
-  DECLARE counter INT DEFAULT 0;
-  DECLARE strLength INT DEFAULT 0;
-  DECLARE strChar VARCHAR(1000) DEFAULT '' ;
-  DECLARE retVal VARCHAR(1000) DEFAULT '';
-
-  SET strLength = LENGTH(str);
-
-  WHILE strLength > 0 DO
-    SET counter = counter+1;
-    SET strChar = SUBSTRING(str,counter,1);
-    IF strChar REGEXP('[0-9]+') = 1
-      THEN SET retVal = CONCAT(retVal,strChar);
-    END IF;
-    SET strLength = strLength -1;
-    SET strChar = NULL;
-  END WHILE;
-RETURN if(retVal = '', null, retVal) ;
-END//
-DELIMITER ;
-
-
--- Dumping structure for function jxset.f_sql
-DROP FUNCTION IF EXISTS `f_sql`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_sql`() RETURNS varchar(8000) CHARSET utf8
-BEGIN
-return 'select * from test';
-
-END//
-DELIMITER ;
 
 
 -- Dumping structure for table jxset.jset_atom
@@ -212,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `jset_column` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent` (`parent`,`name`),
   CONSTRAINT `FK_jset_table_parent` FOREIGN KEY (`parent`) REFERENCES `jset_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=577 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=583 DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_column: ~75 rows (approximately)
 /*!40000 ALTER TABLE `jset_column` DISABLE KEYS */;
@@ -348,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `jset_event` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent` (`parent`) USING BTREE,
   CONSTRAINT `FK_jset_event_parent` FOREIGN KEY (`parent`) REFERENCES `jset_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Dumping data for table jxset.jset_event: ~3 rows (approximately)
 /*!40000 ALTER TABLE `jset_event` DISABLE KEYS */;
@@ -372,12 +267,12 @@ CREATE TABLE IF NOT EXISTS `jset_host` (
   `user` varchar(40) DEFAULT NULL,
   `password` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_host: ~5 rows (approximately)
+-- Dumping data for table jxset.jset_host: ~1 rows (approximately)
 /*!40000 ALTER TABLE `jset_host` DISABLE KEYS */;
 REPLACE INTO `jset_host` (`id`, `active`, `name`, `host`, `port`, `server`, `db_name`, `user`, `password`) VALUES
-	(23, 1, 'jxset', 'localhost', '3306', 'mysql', 'jxset', 'root', '');
+	(1, 1, 'jxset', 'localhost', '3306', 'mysql', 'jxset', 'root', 'earth12');
 /*!40000 ALTER TABLE `jset_host` ENABLE KEYS */;
 
 
@@ -412,6 +307,23 @@ CREATE TABLE IF NOT EXISTS `jset_list` (
 -- Dumping data for table jxset.jset_list: ~0 rows (approximately)
 /*!40000 ALTER TABLE `jset_list` DISABLE KEYS */;
 /*!40000 ALTER TABLE `jset_list` ENABLE KEYS */;
+
+
+-- Dumping structure for table jxset.jset_login
+DROP TABLE IF EXISTS `jset_login`;
+CREATE TABLE IF NOT EXISTS `jset_login` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `user` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `password` varbinary(150) DEFAULT NULL,
+  `success` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- Dumping data for table jxset.jset_login: ~0 rows (approximately)
+/*!40000 ALTER TABLE `jset_login` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jset_login` ENABLE KEYS */;
 
 
 -- Dumping structure for table jxset.jset_semaphore
@@ -458,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `jset_table` (
   `system` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name` (`name`,`section`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_table: ~6 rows (approximately)
 /*!40000 ALTER TABLE `jset_table` DISABLE KEYS */;
@@ -488,68 +400,34 @@ CREATE TABLE IF NOT EXISTS `jset_upload` (
 /*!40000 ALTER TABLE `jset_upload` ENABLE KEYS */;
 
 
--- Dumping structure for procedure jxset.p_copy_jset_columns
-DROP PROCEDURE IF EXISTS `p_copy_jset_columns`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_copy_jset_columns`(vsource varchar(45), vtarget varchar(45))
-BEGIN
-  declare did int;
+-- Dumping structure for table jxset.jset_user
+DROP TABLE IF EXISTS `jset_user`;
+CREATE TABLE IF NOT EXISTS `jset_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `login` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `password` varbinary(150) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-  insert into jset_table (name, source, target) values(vtarget, vtarget, vtarget);
-  set did = (select LAST_INSERT_ID());
-
-  insert into jset_column (`parent`, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`)
-  select did, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`
-  from jset_column where parent = (select id from jset_table where name = vsource);
-
-  select did as id;
-END//
-DELIMITER ;
+-- Dumping data for table jxset.jset_user: ~1 rows (approximately)
+/*!40000 ALTER TABLE `jset_user` DISABLE KEYS */;
+REPLACE INTO `jset_user` (`id`, `login`, `password`) VALUES
+	(1, 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A);
+/*!40000 ALTER TABLE `jset_user` ENABLE KEYS */;
 
 
--- Dumping structure for procedure jxset.p_execute
-DROP PROCEDURE IF EXISTS `p_execute`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_execute`(vsql varchar(8000))
-BEGIN
-SET @s = vsql;
-PREPARE s from @s;
-EXECUTE s;
-DEALLOCATE PREPARE s;
+-- Dumping structure for table jxset.note
+DROP TABLE IF EXISTS `note`;
+CREATE TABLE IF NOT EXISTS `note` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `text` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-END//
-DELIMITER ;
-
-
--- Dumping structure for procedure jxset.p_set_jset_semaphore
-DROP PROCEDURE IF EXISTS `p_set_jset_semaphore`;
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_set_jset_semaphore`(vname varchar(45), vvalue tinyint)
-BEGIN
-declare dfalg tinyint;
-declare did int;
-declare dend timestamp;
-
-select id, `stamp_end` into did, dend from jset_semaphore where `name` = vname order by id desc limit 1;
-
-IF vvalue = 1 THEN
-  if dend is not null or did is null then
-    insert into jset_semaphore (`name`) values (vname);
-    select 1 as result;
-  else
-    select 0 as result;
-  end if;
-ELSE
-  if did is not null and dend is null then
-    update jset_semaphore set `stamp_end` = now() where id = did;
-    select 1 as result;
-  else
-    select 0 as result;
-  end if;
-end if;
-
-END//
-DELIMITER ;
+-- Dumping data for table jxset.note: ~0 rows (approximately)
+/*!40000 ALTER TABLE `note` DISABLE KEYS */;
+/*!40000 ALTER TABLE `note` ENABLE KEYS */;
 
 
 -- Dumping structure for view jxset.v_databases
@@ -653,24 +531,6 @@ CREATE TABLE `v_target` (
 ) ENGINE=MyISAM;
 
 
--- Dumping structure for view jxset.v_xmonth
-DROP VIEW IF EXISTS `v_xmonth`;
--- Creating temporary table to overcome VIEW dependency errors
-CREATE TABLE `v_xmonth` (
-	`id` INT(10) UNSIGNED NOT NULL,
-	`name` VARCHAR(45) NOT NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
-
--- Dumping structure for view jxset.v_xyear
-DROP VIEW IF EXISTS `v_xyear`;
--- Creating temporary table to overcome VIEW dependency errors
-CREATE TABLE `v_xyear` (
-	`id` INT(10) UNSIGNED NOT NULL,
-	`name` VARCHAR(45) NOT NULL COLLATE 'utf8_general_ci'
-) ENGINE=MyISAM;
-
-
 -- Dumping structure for view jxset.v_databases
 DROP VIEW IF EXISTS `v_databases`;
 -- Removing temporary table and create final VIEW structure
@@ -732,20 +592,6 @@ DROP VIEW IF EXISTS `v_target`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_target`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_target` AS select `tables`.`TABLE_NAME` AS `id`,`tables`.`TABLE_NAME` AS `name` from `information_schema`.`tables` where ((`tables`.`TABLE_SCHEMA` = database()) and (`tables`.`TABLE_TYPE` = 'BASE TABLE')) ;
-
-
--- Dumping structure for view jxset.v_xmonth
-DROP VIEW IF EXISTS `v_xmonth`;
--- Removing temporary table and create final VIEW structure
-DROP TABLE IF EXISTS `v_xmonth`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_xmonth` AS select `jset_list`.`tid` AS `id`,`jset_list`.`name` AS `name` from `jset_list` where (`jset_list`.`type` = _utf8'xmonth') order by `jset_list`.`tid` ;
-
-
--- Dumping structure for view jxset.v_xyear
-DROP VIEW IF EXISTS `v_xyear`;
--- Removing temporary table and create final VIEW structure
-DROP TABLE IF EXISTS `v_xyear`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_xyear` AS select `jset_list`.`tid` AS `id`,`jset_list`.`name` AS `name` from `jset_list` where (`jset_list`.`type` = _utf8'xyear') order by `jset_list`.`tid` ;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
