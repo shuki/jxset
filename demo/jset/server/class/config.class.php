@@ -26,7 +26,7 @@ class config
 	const upload_directory = 'uploads/';
 	const hosts_table = 'jset_host';
 
-	const login = true;
+	const login = false;
 	const login_page = 'login.php';
 	const start_page = 'index.php';
 	const user_table = 'jset_user';
