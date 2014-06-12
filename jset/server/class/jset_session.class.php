@@ -17,8 +17,10 @@ class jset_session {
 		//session_status() == PHP_SESSION_ACTIVE
 		if(session_id() == '')
 			session_start();
-		
-		$_SESSION['php_auth_user'] = gen_utils::get_http_user(null);;
+		//if(!isset($_COOKIE['session_id']))
+        //    setcookie('session_id', session_id(), 0, '/', '.localhost');
+		if($php_auth_user = gen_utils::get_http_user())
+			$_SESSION['php_auth_user'] = $php_auth_user;
 	}
 }
 

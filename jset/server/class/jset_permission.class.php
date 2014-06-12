@@ -12,14 +12,13 @@ include_once("autoload.php");
 
 class jset_permission
 {
-	const GET_USER_ID = "SELECT id FROM worker WHERE login = ? LIMIT 1";
-	
 	public static function get_user_id($db, $settings)
 	{
 		if(!isset($settings->_session_php_auth_user_))
 			return '';
 		
-		$db->query(self::GET_USER_ID, array($settings->_session_php_auth_user_));
+		$sql_class = sql::create($db);
+		$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($settings->_session_php_auth_user_));
 		return $db->fetch()->id;
 	}
 }

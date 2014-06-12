@@ -533,7 +533,6 @@
 		},
 
 		selectbox_element: function(value, options){
-			//console.log(options);
 			var grid = $(this);
 			var elem = $('<select />');
 			$.jset.fn.set_select_options(elem, grid, options.value, value, false, options.name);

@@ -140,4 +140,8 @@ class sql_base
 		WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?";
 	
 	public $INSERT_JSET_EVENT = "insert ignore into jset_event (parent) values(?)";
+	
+	public $CHECK_LOGIN = "select count(*) as result from #table# where login = ? and password = AES_ENCRYPT(?,?)";
+	public $INSERT_LOGIN = "insert into jset_login (ip, user, success, password) values (?,?,?,AES_ENCRYPT(?,?))";
+	public $GET_USER_RECORD = "select * from #table# where login = ? LIMIT 1";
 }

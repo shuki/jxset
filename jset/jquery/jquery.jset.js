@@ -227,6 +227,7 @@
 					closeOnEscape: false,
 					closeAfterEdit: false,
 					closeAfterAdd: false,
+					reloadAfterSubmit: false,
 					drag: false,
 					resize: false,
 					viewPagerButtons: false,

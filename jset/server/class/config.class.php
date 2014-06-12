@@ -30,10 +30,15 @@ class config
 	const upload_directory = 'uploads/';
 	const hosts_table = 'jset_host';
 	
+	const login = true;
+	const login_page = 'login.php';
+	const start_page = 'index.php';
+	const user_table = 'jset_user';
+	const encrypt_salt = 'abba';
+	
 	const mysqldump_prefix = '';
 	const errorLogFile = 'log/error_log_file.txt';
-	//const export_dir = 'temp/';
-	//const export_charset = 'hebrew';
+	
 	const export_limit = 150;
 	const no_export_limit = 1000000;
 	const export_charset_windows = 'Windows-1255';
