@@ -13,7 +13,6 @@ class jset_page
 	public static function create($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false)
 	{
 		jset_login::verify();
-		session_start();
 		self::doctype();
 		self::head($dir_pre, $lang, $dir_rel, $rtl);
 	}
