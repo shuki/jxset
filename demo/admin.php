@@ -7,7 +7,6 @@
  * http://www.gnu.org/licenses/gpl.html
  */
  include_once("autoload.php");
- jset_login::validate();
  jset_page::create(config::jxset);
 ?>
 

@@ -19,7 +19,7 @@ class jset_login {
 		return $success;
 	}
 
-	public function validate(){
+	public function verify(){
 		if(!config::login)
 			return;
 		
