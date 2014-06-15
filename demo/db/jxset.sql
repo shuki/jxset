@@ -57,6 +57,106 @@ REPLACE INTO `demo` (`id`, `char`, `text`, `date`, `image`, `video`, `integer`, 
 /*!40000 ALTER TABLE `demo` ENABLE KEYS */;
 
 
+-- Dumping structure for function jxset.f_date_unformat
+DROP FUNCTION IF EXISTS `f_date_unformat`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_date_unformat`(vvalue varchar(20)) RETURNS date
+BEGIN
+  declare dpos, dpos_next tinyint;
+  declare dyeari smallint;
+  declare dday, dmonth, dyear char(4);
+
+  if vvalue is null then
+    return null;
+  end if;
+
+  set dpos = (SELECT LOCATE('/', vvalue));
+  set dday = substr(vvalue, 1, dpos -1);
+  set dpos_next = dpos + 1;
+  set dpos = (SELECT LOCATE('/', vvalue, dpos_next));
+  set dmonth = substr(vvalue, dpos_next, dpos - dpos_next);
+  set dpos_next = dpos + 1;
+  set dyear = substr(vvalue, dpos_next);
+  if length(dyear) = 2 then
+    set dyeari = cast(dyear as unsigned) + 2000;
+    if dyeari > 2030 then
+      set dyeari = dyeari - 100;
+    end if;
+    set dyear = cast(dyeari as char(4));
+  end if;
+
+  return cast(concat(dyear, '-', dmonth, '-', dday) as date);
+
+END//
+DELIMITER ;
+
+
+-- Dumping structure for function jxset.f_insert_jset_atom
+DROP FUNCTION IF EXISTS `f_insert_jset_atom`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_insert_jset_atom`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
+BEGIN
+  DECLARE did BIGINT DEFAULT UUID_SHORT();
+
+  INSERT INTO jset_atom (id, stamp, user, kind, web_user, ip)
+    VALUES (did, NOW(), USER(), vkind, vweb_user, vip);
+
+  RETURN did;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for function jxset.f_insert_jset_atom_no_uuid
+DROP FUNCTION IF EXISTS `f_insert_jset_atom_no_uuid`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_insert_jset_atom_no_uuid`(vkind tinyint, vweb_user varchar(45), vip varchar(45)) RETURNS bigint(20)
+BEGIN
+  INSERT INTO jset_atom (id, stamp, user, kind, web_user, ip)
+    VALUES (null, NOW(), USER(), vkind, vweb_user, vip);
+
+  RETURN (SELECT LAST_INSERT_ID());
+END//
+DELIMITER ;
+
+
+-- Dumping structure for function jxset.f_numeric_only
+DROP FUNCTION IF EXISTS `f_numeric_only`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_numeric_only`(`str` VARCHAR(1000)) RETURNS varchar(1000) CHARSET utf8
+    DETERMINISTIC
+BEGIN
+  DECLARE counter INT DEFAULT 0;
+  DECLARE strLength INT DEFAULT 0;
+  DECLARE strChar VARCHAR(1000) DEFAULT '' ;
+  DECLARE retVal VARCHAR(1000) DEFAULT '';
+
+  SET strLength = LENGTH(str);
+
+  WHILE strLength > 0 DO
+    SET counter = counter+1;
+    SET strChar = SUBSTRING(str,counter,1);
+    IF strChar REGEXP('[0-9]+') = 1
+      THEN SET retVal = CONCAT(retVal,strChar);
+    END IF;
+    SET strLength = strLength -1;
+    SET strChar = NULL;
+  END WHILE;
+RETURN if(retVal = '', null, retVal) ;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for function jxset.f_sql
+DROP FUNCTION IF EXISTS `f_sql`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_sql`() RETURNS varchar(8000) CHARSET utf8
+BEGIN
+return 'select * from test';
+
+END//
+DELIMITER ;
+
+
 -- Dumping structure for table jxset.jset_atom
 DROP TABLE IF EXISTS `jset_atom`;
 CREATE TABLE IF NOT EXISTS `jset_atom` (
@@ -276,6 +376,49 @@ REPLACE INTO `jset_host` (`id`, `active`, `name`, `host`, `port`, `server`, `db_
 /*!40000 ALTER TABLE `jset_host` ENABLE KEYS */;
 
 
+-- Dumping structure for table jxset.jset_lang
+DROP TABLE IF EXISTS `jset_lang`;
+CREATE TABLE IF NOT EXISTS `jset_lang` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `lang` varchar(3) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- Dumping data for table jxset.jset_lang: ~2 rows (approximately)
+/*!40000 ALTER TABLE `jset_lang` DISABLE KEYS */;
+REPLACE INTO `jset_lang` (`id`, `name`, `lang`) VALUES
+	(1, 'login', 'en'),
+	(2, 'login', 'he');
+/*!40000 ALTER TABLE `jset_lang` ENABLE KEYS */;
+
+
+-- Dumping structure for table jxset.jset_lang_item
+DROP TABLE IF EXISTS `jset_lang_item`;
+CREATE TABLE IF NOT EXISTS `jset_lang_item` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parent` int(10) unsigned NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `value` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+-- Dumping data for table jxset.jset_lang_item: ~10 rows (approximately)
+/*!40000 ALTER TABLE `jset_lang_item` DISABLE KEYS */;
+REPLACE INTO `jset_lang_item` (`id`, `parent`, `name`, `value`) VALUES
+	(1, 1, 'title', 'Login'),
+	(2, 1, 'user', 'User'),
+	(3, 1, 'password', 'Password'),
+	(4, 1, 'submit', 'Login'),
+	(5, 2, 'title', 'התחברות'),
+	(6, 2, 'user', 'שם'),
+	(7, 2, 'password', 'סיסמה'),
+	(8, 2, 'submit', 'התחבר'),
+	(12, 1, 'not_valid', 'Not Valid'),
+	(13, 2, 'not_valid', 'משתמש או סיסמה שגויים');
+/*!40000 ALTER TABLE `jset_lang_item` ENABLE KEYS */;
+
+
 -- Dumping structure for table jxset.jset_layout
 DROP TABLE IF EXISTS `jset_layout`;
 CREATE TABLE IF NOT EXISTS `jset_layout` (
@@ -319,10 +462,26 @@ CREATE TABLE IF NOT EXISTS `jset_login` (
   `password` varbinary(150) DEFAULT NULL,
   `success` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table jxset.jset_login: ~0 rows (approximately)
+-- Dumping data for table jxset.jset_login: ~15 rows (approximately)
 /*!40000 ALTER TABLE `jset_login` DISABLE KEYS */;
+REPLACE INTO `jset_login` (`id`, `stamp`, `ip`, `user`, `password`, `success`) VALUES
+	(1, '2014-06-12 22:14:42', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(2, '2014-06-12 22:14:49', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(3, '2014-06-13 08:28:07', '::1', NULL, NULL, 0),
+	(4, '2014-06-13 08:28:17', '::1', NULL, NULL, 0),
+	(5, '2014-06-13 08:28:20', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(6, '2014-06-14 01:12:50', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(7, '2014-06-14 02:05:21', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(8, '2014-06-14 02:15:18', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(9, '2014-06-14 02:15:20', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(10, '2014-06-14 02:15:21', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(11, '2014-06-14 02:15:22', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(12, '2014-06-14 02:15:23', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(13, '2014-06-14 02:18:54', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(14, '2014-06-14 02:18:56', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(15, '2014-06-14 15:36:16', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0);
 /*!40000 ALTER TABLE `jset_login` ENABLE KEYS */;
 
 
@@ -404,15 +563,18 @@ CREATE TABLE IF NOT EXISTS `jset_upload` (
 DROP TABLE IF EXISTS `jset_user`;
 CREATE TABLE IF NOT EXISTS `jset_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
   `login` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `password` varbinary(150) DEFAULT NULL,
+  `group` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Dumping data for table jxset.jset_user: ~1 rows (approximately)
 /*!40000 ALTER TABLE `jset_user` DISABLE KEYS */;
-REPLACE INTO `jset_user` (`id`, `login`, `password`) VALUES
-	(1, 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A);
+REPLACE INTO `jset_user` (`id`, `start_date`, `end_date`, `login`, `password`, `group`) VALUES
+	(1, NULL, NULL, 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, NULL);
 /*!40000 ALTER TABLE `jset_user` ENABLE KEYS */;
 
 
@@ -428,6 +590,70 @@ CREATE TABLE IF NOT EXISTS `note` (
 -- Dumping data for table jxset.note: ~0 rows (approximately)
 /*!40000 ALTER TABLE `note` DISABLE KEYS */;
 /*!40000 ALTER TABLE `note` ENABLE KEYS */;
+
+
+-- Dumping structure for procedure jxset.p_copy_jset_columns
+DROP PROCEDURE IF EXISTS `p_copy_jset_columns`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p_copy_jset_columns`(IN `vsource` varchar(45), IN `vtarget` varchar(45))
+BEGIN
+  declare did int;
+
+  insert into jset_table (name, source, target) values(vtarget, vtarget, vtarget);
+  set did = (select LAST_INSERT_ID());
+
+  insert into jset_column (`parent`, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `unsortable`, `export`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`, `help`, `validation`, `aggregate`, `object`)
+  select did, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `unsortable`, `export`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`, `help`, `validation`, `aggregate`, `object`
+  from jset_column where parent = (select id from jset_table where name = vsource);
+
+  select did as id;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure jxset.p_execute
+DROP PROCEDURE IF EXISTS `p_execute`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p_execute`(vsql varchar(8000))
+BEGIN
+SET @s = vsql;
+PREPARE s from @s;
+EXECUTE s;
+DEALLOCATE PREPARE s;
+
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure jxset.p_set_jset_semaphore
+DROP PROCEDURE IF EXISTS `p_set_jset_semaphore`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p_set_jset_semaphore`(vname varchar(45), vvalue tinyint)
+BEGIN
+declare dfalg tinyint;
+declare did int;
+declare dend timestamp;
+
+select id, `stamp_end` into did, dend from jset_semaphore where `name` = vname order by id desc limit 1;
+
+IF vvalue = 1 THEN
+  if dend is not null or did is null then
+    insert into jset_semaphore (`name`) values (vname);
+    select 1 as result;
+  else
+    select 0 as result;
+  end if;
+ELSE
+  if did is not null and dend is null then
+    update jset_semaphore set `stamp_end` = now() where id = did;
+    select 1 as result;
+  else
+    select 0 as result;
+  end if;
+end if;
+
+END//
+DELIMITER ;
 
 
 -- Dumping structure for view jxset.v_databases

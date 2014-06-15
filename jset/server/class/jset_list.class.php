@@ -11,13 +11,17 @@
 include_once("autoload.php");
 
 class jset_list {
-	public function values($db, $source)
+	public function values($db, $source, $settings)
 	{
 		$result = new stdClass;
 		if($result->is_sql = self::is_sql($source))
 		{
+			if(eval("\$source = \"$source\";") === FALSE)
+				die("unable to eval source: {$source}");
+			
 			$result->master_fields = self::get_master_fields($source);
 			$sqls = explode('|-|', $source);
+					
 			$result->values = self::run_sql($db, $sqls[0]);
 			$result->sql = $sqls[0];
 			if(count($sqls) > 1)

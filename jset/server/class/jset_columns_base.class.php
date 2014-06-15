@@ -252,7 +252,7 @@ class jset_columns_base {
 		foreach($cols as $row)
 			if($row->list)
 			{
-				$lists = jset_list::values($db, $row->list);
+				$lists = jset_list::values($db, $row->list, $this->settings);
 				$row->values = $lists->values;
 				if($lists->master_fields)
 					$row->master_fields = $lists->master_fields;

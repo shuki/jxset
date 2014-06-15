@@ -14,11 +14,11 @@ class jset_permission
 {
 	public static function get_user_id($db, $settings)
 	{
-		if(!isset($settings->_session_php_auth_user_))
+		if(!$login = isset($settings->_session_jset_user_login_) ? $settings->_session_jset_user_login_ : (isset($settings->_session_php_auth_user_) ? $settings->_session_php_auth_user_ : ''))
 			return '';
 		
 		$sql_class = sql::create($db);
-		$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($settings->_session_php_auth_user_));
+		$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($login));
 		return $db->fetch()->id;
 	}
 }

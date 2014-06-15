@@ -17,6 +17,13 @@ class jset_page
 		self::head($dir_pre, $lang, $dir_rel, $rtl);
 	}
 	
+	public static function min($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false)
+	{
+		jset_login::verify();
+		self::doctype();
+		self::head_min($dir_pre, $lang, $dir_rel, $rtl);
+	}
+	
 	public static function doctype()
 	{
 		echo <<< EOT
@@ -117,5 +124,19 @@ EOT;
 include("{$dir_pre}jset/template/panel/panel_template.html");
 include("{$dir_pre}jset/template/pane/pane_template.html");
 //echo '</head>';
+	}
+
+	public static function head_min($dir_pre, $lang, $dir_rel, $rtl){
+		$dir_pre = isset($dir_pre) ? $dir_pre : '';
+		$dir_rel = isset($dir_rel) ? $dir_rel : '';
+		$rtl_css = $rtl ? "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"{$dir_pre}jset/css/min_rtl.css\" />" : '';
+		echo <<< EOT
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="{$dir_pre}jset/img/smile.gif" type="image/x-icon" />
+<script src="{$dir_pre}jset/jquery/jquery-1.8.2.min.js" type="text/javascript"></script>
+{$rtl_css}
+
+EOT;
 	}
 }

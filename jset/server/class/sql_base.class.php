@@ -141,7 +141,9 @@ class sql_base
 	
 	public $INSERT_JSET_EVENT = "insert ignore into jset_event (parent) values(?)";
 	
-	public $CHECK_LOGIN = "select count(*) as result from #table# where login = ? and password = AES_ENCRYPT(?,?)";
+	public $CHECK_LOGIN = "select count(*) as result from #table# where (end_date is null or end_date >= current_date()) and login = ? and password = AES_ENCRYPT(?,?)";
 	public $INSERT_LOGIN = "insert into jset_login (ip, user, success, password) values (?,?,?,AES_ENCRYPT(?,?))";
 	public $GET_USER_RECORD = "select * from #table# where login = ? LIMIT 1";
+	
+	public $GET_JSET_LANG_RECORDS = "select name, value from jset_lang_item where parent = (SELECT id FROM jset_lang WHERE name = ? AND lang = ?)";
 }

@@ -1,57 +1,60 @@
-<?php
+<?php 
 /*
- * jset  1.0 - jset
- * Copyright (c) 2010, Shuki Shukrun (shukrun.shuki at gmail.com).
+ * jxset
+ * Copyright (c) 2010 - 2013, Shuki Shukrun (shukrun.shuki at gmail.com).
  * Dual licensed under the MIT and GPL licenses
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
- * Date: 2010-01-01
  */
+ 
+$name = 'login';
+$language = 'en';
+$rtl = false;
 
 include_once("autoload.php");
-if(session_id() == '')
-	session_start();
+if(isset($_GET['signout']))
+	jset_login::signout();
 
-if(isset($_POST['user']))
+jset_login::verify();
+
+if(isset($_POST['user'])){
 	$user = $_POST['user'];
-	$db = db::create();
-	$sql_class = sql::create($db);
-	if(jset_login::check($db, $user, $_POST['password'])){
-		$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($user));
-		//session_set_cookie_params(0, '/', '.lvho.st', false, false);
-		foreach($db->fetch() as $key => $value)
-			if($key != 'password')
-				$_SESSION['jset_user_' . $key] = $value;
-		
-		header('Location: '. config::start_page);
-	}	
-?>
+	$success = jset_login::signin($_POST['user'], $_POST['password']);
+}
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="shortcut icon" href="../jset/img/smile.gif" type="image/x-icon" />
-	<title>Login</title>
+
+$dir_pre = config::jxset;
+jset_session::create();
+$lang = jset_lang::get($name, $language);
+jset_page::min(config::jxset, $language, '', $rtl);
+?>
+<link rel="stylesheet" type="text/css" media="screen" href="css/login.css" />
+<script src="<?php echo $dir_pre ?>jset/i18n/jset.locale-he.js" type="text/javascript"></script>
+<title><?php echo $lang['title'] ?></title>
+<script src="js/login.js" type="text/javascript"></script>
 </head>
 <body>
 
 	<div style="width:100%; margin-top:10px">
-		<div style="width:10%; margin: 0 auto;">
+		<div style="width:20%; margin: 0 auto;">
 			<div class="panel-body">
-				<form action="" method="post" target="_self"> 
+				<form action="login.php" method="post" target="_self"> 
 				<table>
 					<tbody>
 					<tr style="display: table-row;">
-						<td><label for="user" name="user">user: </label></td>
-						<td><input type="text" size="20" maxlength="100" name="user" role="textbox" value="<?php echo $user; ?>"></td>
+						<td><label for="user" name="user"><?php echo $lang['user'] ?>: </label></td>
+						<td><input type="text" size="12" maxlength="100" name="user" role="textbox" value="<?php echo $user; ?>"></td>
 					</tr>
 					<tr style="display: table-row;">
-						<td><label for="password" name="password">password: </label></td>
-						<td><input type="password" size="20" maxlength="50" id="password" name="password" role="textbox"></td>
+						<td><label for="password" name="password"><?php echo $lang['password'] ?>: </label></td>
+						<td><input type="password" size="12" maxlength="50" id="password" name="password" role="textbox"></td>
 					</tr>
 					<tr style="display: table-row;">
-						<td><input type="submit" value="Submit"></td>
+						<td></td>
+						<td><input type="submit" value="<?php echo $lang['submit'] ?>" ></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align:center; color:red;"><?php echo ($success === false ? $lang['not_valid'] : ''); ?></td>
 					</tr>
 					</tbody>
 				</table>
@@ -60,3 +63,4 @@ if(isset($_POST['user']))
 		</div>
 	</div>
 </body>
+</html>

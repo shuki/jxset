@@ -19,15 +19,51 @@ class jset_login {
 		return $success;
 	}
 
+	public function signin($user, $password){
+		$db = db::create();
+		$sql_class = sql::create($db);
+		if(self::check($db, $user, $password)){
+			$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($user));
+			if(session_id() == '')
+				session_start();
+			foreach($db->fetch() as $key => $value)
+				if($key != 'password')
+					$_SESSION['jset_user_' . $key] = $value;
+			
+			header('Location: '. config::start_page);
+		}
+		else 
+			return false;	
+	}
+
+	public function signout(){
+		if(session_id() == '')
+			session_start();
+		
+		$_SESSION = array();
+		
+		if (ini_get("session.use_cookies")) {
+		    $params = session_get_cookie_params();
+		    setcookie(session_name(), '', time() - 42000,
+		        $params["path"], $params["domain"],
+		        $params["secure"], $params["httponly"]
+		    );
+		}
+	}
+
 	public function verify(){
 		if(!config::login)
 			return;
 		
 		if(session_id() == '')
 			session_start();
-		if(!isset($_SESSION['jset_user_id']))
+		
+		if(isset($_SESSION['jset_user_id'])){
+			if(strstr($_SERVER['REQUEST_URI'], config::login_page))
+				header('Location: '. config::start_page);
+		}
+		else if(!strstr($_SERVER['REQUEST_URI'], config::login_page))
 			header('Location: '. config::login_page);
 	}
-
 }
 
