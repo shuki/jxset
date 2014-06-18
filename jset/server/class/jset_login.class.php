@@ -11,7 +11,7 @@
 include_once("autoload.php");
 
 class jset_login {	
-	public function check($db, $user, $password){
+	public static function check($db, $user, $password){
 		$sql_class = sql::create($db);
 		$db->query(str_replace('#table#', config::user_table, $sql_class->CHECK_LOGIN), array($user, $password, config::encrypt_salt));
 		$success = $db->fetch()->result;
@@ -19,7 +19,7 @@ class jset_login {
 		return $success;
 	}
 
-	public function signin($user, $password){
+	public static function signin($user, $password){
 		$db = db::create();
 		$sql_class = sql::create($db);
 		if(self::check($db, $user, $password)){
@@ -36,7 +36,7 @@ class jset_login {
 			return false;	
 	}
 
-	public function signout(){
+	public static function signout(){
 		if(session_id() == '')
 			session_start();
 		
@@ -51,7 +51,7 @@ class jset_login {
 		}
 	}
 
-	public function verify(){
+	public static function verify(){
 		if(!config::login)
 			return;
 		
