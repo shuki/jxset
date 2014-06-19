@@ -21,4 +21,13 @@ class jset_permission
 		$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($login));
 		return $db->fetch()->id;
 	}
+	
+	public static function get_user_attributes_js()
+	{
+		return "var user_attributes = {};
+		user_attributes.id = '" . $_SESSION['jset_user_id'] . "';
+		user_attributes.login = '" . $_SESSION['jset_user_login'] . "';
+		user_attributes.group = '" . $_SESSION['jset_user_group'] . "';
+		";
+	}
 }

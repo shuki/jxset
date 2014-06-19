@@ -540,6 +540,8 @@
 					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
 			});
 			
+			$.jset.fn.readonlySet(grid, formid, $.jset.fn.readonlyCheck(grid));
+			
 			if($.isFunction(grid.data('settings').beforeShowForm))
 				grid.data('settings').beforeShowForm.call(grid, formid);			
 		},
@@ -861,9 +863,15 @@
 				
 				$.jset.fn.selectMultiselectedRows.call(grid);
 
-				var nav_buttons = $('#edit_' + grid.attr('id') + ', #view_' + grid.attr('id') + ', #del_' + grid.attr('id') + ', #export_' + grid.attr('id') + ', #copy_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
+				var nav_buttons = $('#edit_' + grid.attr('id') + ', #view_' + grid.attr('id') + ', #export_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
 				grid.getGridParam("reccount") == 0 ? nav_buttons.addClass('ui-state-disabled') : nav_buttons.removeClass('ui-state-disabled');
-				
+	
+				var del_copy_buttons = $('#del_' + grid.attr('id') + ', #copy_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
+				grid.getGridParam("reccount") != 0 && !$.jset.fn.readonlyCheck(grid) ? del_copy_buttons.removeClass('ui-state-disabled') : del_copy_buttons.addClass('ui-state-disabled');
+
+				var add_button = $('#add_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
+				!$.jset.fn.readonlyCheck(grid) ? add_button.removeClass('ui-state-disabled') : add_button.addClass('ui-state-disabled');
+
 				if($.isFunction(grid.data('settings').loadComplete))
 					grid.data('settings').loadComplete.call(grid, data);
 					
@@ -1079,9 +1087,9 @@
 			var grid = $.jset.fn.get_grid_by_formid(formid);
 			$.each(grid.data('settings').grid.colModel, function(i, col){
 				if(col.editoptions.custom_options && $.isFunction(col.editoptions.custom_options.disable))
-					col.editoptions.custom_options.disable(formid, col.name);
+					col.editoptions.custom_options.disable(formid, col.index);
 				else
-					$.jset.fn.disable_field(formid, col.name);
+					$.jset.fn.disable_field(formid, col.index);
 			});
 		},
 		
@@ -1089,9 +1097,9 @@
 			var grid = $.jset.fn.get_grid_by_formid(formid);
 			$.each(grid.data('settings').grid.colModel, function(i, col){
 				if(col.editoptions.custom_options && $.isFunction(col.editoptions.custom_options.readonly))
-					col.editoptions.custom_options.readonly.call(grid, formid, col.name);
+					col.editoptions.custom_options.readonly.call(grid, formid, col.index);
 				else
-					$.jset.fn.readonly_field(formid, col.name);
+					$.jset.fn.readonly_field(formid, col.index);
 			});
 		},
 		
@@ -1100,10 +1108,28 @@
 			$.each(grid.data('settings').grid.colModel, function(i, col){
 				if(!col.editoptions.readonly)
 					if(col.editoptions.custom_options && $.isFunction(col.editoptions.custom_options.enable))
-						col.editoptions.custom_options.enable.call(grid, formid, col.name);
+						col.editoptions.custom_options.enable.call(grid, formid, col.index);
 					else
-						$.jset.fn.enable_field(formid, col.name);
+						$.jset.fn.enable_field(formid, col.index);
 			});
+		},
+		
+		readonlyCheck: function(grid){
+			return $('a[id=sData]', grid.closest('form').siblings('table.EditTable')).length && 				
+				!$('a[id=sData]', grid.closest('form').siblings('table.EditTable')).is(':visible');
+		},
+		
+		readonlySet: function(grid, formid, flag){
+			if(flag)
+			{
+				$.jset.fn.readonly_fields(formid);
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).hide();
+			}
+			else
+			{	
+				$.jset.fn.enable_fields(formid);
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();				
+			}
 		},
 		
 		block: function(elem, options){
