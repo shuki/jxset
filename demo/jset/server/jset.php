@@ -3,7 +3,7 @@ include('autoload.php');
 
 $request = jset_dispatch::get_real_POST_GET();
 
-session_start();
+jset_session::create();
 if(count($_SESSION))
 	foreach($_SESSION as $key => $value)
 		$request['_session_' . $key . '_'] = $value;

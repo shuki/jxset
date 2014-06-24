@@ -1,4 +1,3 @@
-goog = 87;
 $(function(){
 	const grid_width = 980;
 	const grid_height = 150;

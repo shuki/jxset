@@ -24,8 +24,7 @@ class jset_login {
 		$sql_class = sql::create($db);
 		if(self::check($db, $user, $password)){
 			$db->query(str_replace('#table#', config::user_table, $sql_class->GET_USER_RECORD), array($user));
-			if(session_id() == '')
-				session_start();
+			jset_session::create();
 			foreach($db->fetch() as $key => $value)
 				if($key != 'password')
 					$_SESSION['jset_user_' . $key] = $value;
@@ -37,9 +36,7 @@ class jset_login {
 	}
 
 	public static function signout(){
-		if(session_id() == '')
-			session_start();
-		
+		jset_session::create();
 		$_SESSION = array();
 		
 		if (ini_get("session.use_cookies")) {
@@ -55,15 +52,27 @@ class jset_login {
 		if(!config::login)
 			return;
 		
-		if(session_id() == '')
-			session_start();
-		
+		jset_session::create();		
 		if(isset($_SESSION['jset_user_id'])){
 			if(strstr($_SERVER['REQUEST_URI'], config::login_page))
 				header('Location: '. config::start_page);
+			else if(strstr($_SERVER['REQUEST_URI'], config::password_page))
+				return;
 		}
 		else if(!strstr($_SERVER['REQUEST_URI'], config::login_page))
 			header('Location: '. config::login_page);
+	}
+	
+	public static function change_password($current, $new){
+		jset_session::create();
+		$db = db::create();
+		if(self::check($db, $_SESSION['jset_user_login'], $current)){
+			$sql_class = sql::create($db);
+			$db->query(str_replace('#table#', config::user_table, $sql_class->UPDATE_USER_PASSWORD), array($new, config::encrypt_salt, $_SESSION['jset_user_login']));
+			return true;
+		}
+		else 
+			return false;	
 	}
 }
 

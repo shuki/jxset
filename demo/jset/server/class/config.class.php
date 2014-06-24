@@ -26,11 +26,14 @@ class config
 	const upload_directory = 'uploads/';
 	const hosts_table = 'jset_host';
 
-	const login = false;
+	const login = true;
+	const session = 'demo';
 	const login_page = 'login.php';
 	const start_page = 'index.php';
+	const password_page = 'password.php';
 	const user_table = 'jset_user';
 	const encrypt_salt = 'abba';
+	const password_reset = '1234';
 	
 	const mysqldump_prefix = '';
 	const errorLogFile = 'log/error_log_file.txt';

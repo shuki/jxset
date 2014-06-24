@@ -17,7 +17,7 @@ if(isset($_GET['signout']))
 
 jset_login::verify();
 
-if(isset($_POST['user'])){
+if(isset($_POST['user']) && $_POST['user']){
 	$user = $_POST['user'];
 	$success = jset_login::signin($_POST['user'], $_POST['password']);
 }
@@ -34,16 +34,14 @@ jset_page::min(config::jxset, $language, '', $rtl);
 <script src="js/login.js" type="text/javascript"></script>
 </head>
 <body>
-
 	<div style="width:100%; margin-top:10px">
 		<div style="width:20%; margin: 0 auto;">
-			<div class="panel-body">
-				<form action="login.php" method="post" target="_self"> 
+			<form action="<?php echo config::login_page; ?>" method="post" target="_self"> 
 				<table>
 					<tbody>
 					<tr style="display: table-row;">
 						<td><label for="user" name="user"><?php echo $lang['user'] ?>: </label></td>
-						<td><input type="text" size="12" maxlength="100" name="user" role="textbox" value="<?php echo $user; ?>"></td>
+						<td><input type="text" size="12" maxlength="100" id="user" name="user" role="textbox" value="<?php echo $user; ?>"></td>
 					</tr>
 					<tr style="display: table-row;">
 						<td><label for="password" name="password"><?php echo $lang['password'] ?>: </label></td>
@@ -51,15 +49,14 @@ jset_page::min(config::jxset, $language, '', $rtl);
 					</tr>
 					<tr style="display: table-row;">
 						<td></td>
-						<td><input type="submit" value="<?php echo $lang['submit'] ?>" ></td>
+						<td><input type="submit" value="<?php echo $lang['submit'] ?>"  disabled="disabled"></td>
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align:center; color:red;"><?php echo ($success === false ? $lang['not_valid'] : ''); ?></td>
 					</tr>
 					</tbody>
 				</table>
-				</form>
-			</div>
+			</form>
 		</div>
 	</div>
 </body>

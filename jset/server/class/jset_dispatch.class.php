@@ -72,11 +72,7 @@ class jset_dispatch {
 		if($php_auth_user = gen_utils::get_http_user())
 			$request['_PHP_AUTH_USER_'] = $php_auth_user;
 		
-		//php >= 5.4.0 
-		//session_status() == PHP_SESSION_ACTIVE
-		if(session_id() == '')
-			session_start();
-		
+		jset_session::create();		
 		if(count($_SESSION))
 			foreach($_SESSION as $key => $value)
 				$request['_session_' . $key . '_'] = $value;

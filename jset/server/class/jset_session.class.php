@@ -15,10 +15,10 @@ class jset_session {
 		//$sql_class = sql::create($db);
 		//php >= 5.4.0 
 		//session_status() == PHP_SESSION_ACTIVE
-		if(session_id() == '')
+		if(session_id() == ''){
+			session_name(config::session);
 			session_start();
-		//if(!isset($_COOKIE['session_id']))
-        //    setcookie('session_id', session_id(), 0, '/', '.localhost');
+		}
 		if($php_auth_user = gen_utils::get_http_user())
 			$_SESSION['php_auth_user'] = $php_auth_user;
 	}

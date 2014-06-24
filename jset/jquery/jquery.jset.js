@@ -1193,6 +1193,10 @@
 
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
+		
+		hub: function(url, params, callback){
+			$.post(url, params, callback, 'json');
+		},
 
 		store_grid: function(source, data){
 			var obj = {};

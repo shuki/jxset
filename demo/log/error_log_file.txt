@@ -1,0 +1,6 @@
+[22-Jun-2014 09:20:35] PHP Fatal error:  Call to undefined method jset_login::change_password() in C:\xampp\htdocs\jxset\demo\password.php on line 19
+[22-Jun-2014 09:20:35] PHP Stack trace:
+[22-Jun-2014 09:20:35] PHP   1. {main}() C:\xampp\htdocs\jxset\demo\password.php:0
+[22-Jun-2014 09:21:49] PHP Fatal error:  Call to undefined method jset_login::change_password() in C:\xampp\htdocs\jxset\demo\password.php on line 19
+[22-Jun-2014 09:21:49] PHP Stack trace:
+[22-Jun-2014 09:21:49] PHP   1. {main}() C:\xampp\htdocs\jxset\demo\password.php:0

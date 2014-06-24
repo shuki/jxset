@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `jset_column` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent` (`parent`,`name`),
   CONSTRAINT `FK_jset_table_parent` FOREIGN KEY (`parent`) REFERENCES `jset_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=583 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=577 DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_column: ~75 rows (approximately)
 /*!40000 ALTER TABLE `jset_column` DISABLE KEYS */;
@@ -343,7 +343,7 @@ CREATE TABLE IF NOT EXISTS `jset_event` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent` (`parent`) USING BTREE,
   CONSTRAINT `FK_jset_event_parent` FOREIGN KEY (`parent`) REFERENCES `jset_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Dumping data for table jxset.jset_event: ~3 rows (approximately)
 /*!40000 ALTER TABLE `jset_event` DISABLE KEYS */;
@@ -383,13 +383,15 @@ CREATE TABLE IF NOT EXISTS `jset_lang` (
   `name` varchar(100) NOT NULL,
   `lang` varchar(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_lang: ~2 rows (approximately)
+-- Dumping data for table jxset.jset_lang: ~4 rows (approximately)
 /*!40000 ALTER TABLE `jset_lang` DISABLE KEYS */;
 REPLACE INTO `jset_lang` (`id`, `name`, `lang`) VALUES
 	(1, 'login', 'en'),
-	(2, 'login', 'he');
+	(2, 'login', 'he'),
+	(3, 'password', 'en'),
+	(4, 'password', 'he');
 /*!40000 ALTER TABLE `jset_lang` ENABLE KEYS */;
 
 
@@ -401,9 +403,9 @@ CREATE TABLE IF NOT EXISTS `jset_lang_item` (
   `name` varchar(100) DEFAULT NULL,
   `value` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_lang_item: ~10 rows (approximately)
+-- Dumping data for table jxset.jset_lang_item: ~24 rows (approximately)
 /*!40000 ALTER TABLE `jset_lang_item` DISABLE KEYS */;
 REPLACE INTO `jset_lang_item` (`id`, `parent`, `name`, `value`) VALUES
 	(1, 1, 'title', 'Login'),
@@ -414,8 +416,28 @@ REPLACE INTO `jset_lang_item` (`id`, `parent`, `name`, `value`) VALUES
 	(6, 2, 'user', 'שם'),
 	(7, 2, 'password', 'סיסמה'),
 	(8, 2, 'submit', 'התחבר'),
-	(12, 1, 'not_valid', 'Not Valid'),
-	(13, 2, 'not_valid', 'משתמש או סיסמה שגויים');
+	(9, 1, 'not_valid', 'Not Valid'),
+	(10, 2, 'not_valid', 'משתמש או סיסמה שגויים'),
+	(11, 3, 'title', 'Change Password'),
+	(12, 3, 'current_password', 'Current Password'),
+	(13, 3, 'new_password', 'New Password'),
+	(14, 3, 'submit', 'Change Password'),
+	(15, 4, 'title', 'שינוי סיסמה'),
+	(16, 4, 'current_password', 'סיסמה נוכחית'),
+	(17, 4, 'new_password', 'סיסמה חדשה'),
+	(18, 4, 'submit', 'שינוי סיסמה'),
+	(19, 3, 'retype_password', 'Retype Password'),
+	(20, 4, 'retype_password', 'הקלד סיסמה חדשה שוב'),
+	(21, 4, 'valid', 'סיסמה הוחלפה בהצלחה'),
+	(22, 3, 'not_valid', 'Current password not valid - Password was not changed'),
+	(23, 3, 'valid', 'Password changed successfuly'),
+	(24, 4, 'not_valid', 'סיסמה נוכתית שגוייה - סיסמה לא הוחלפה'),
+	(25, 3, 'logout', 'Logout'),
+	(26, 3, 'hi', 'Hi'),
+	(27, 4, 'logout', 'צא'),
+	(28, 4, 'hi', 'שלום'),
+	(29, 3, 'back', 'Back'),
+	(30, 4, 'back', 'חזור');
 /*!40000 ALTER TABLE `jset_lang_item` ENABLE KEYS */;
 
 
@@ -462,9 +484,9 @@ CREATE TABLE IF NOT EXISTS `jset_login` (
   `password` varbinary(150) DEFAULT NULL,
   `success` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table jxset.jset_login: ~15 rows (approximately)
+-- Dumping data for table jxset.jset_login: ~76 rows (approximately)
 /*!40000 ALTER TABLE `jset_login` DISABLE KEYS */;
 REPLACE INTO `jset_login` (`id`, `stamp`, `ip`, `user`, `password`, `success`) VALUES
 	(1, '2014-06-12 22:14:42', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
@@ -481,7 +503,68 @@ REPLACE INTO `jset_login` (`id`, `stamp`, `ip`, `user`, `password`, `success`) V
 	(12, '2014-06-14 02:15:23', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
 	(13, '2014-06-14 02:18:54', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
 	(14, '2014-06-14 02:18:56', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(15, '2014-06-14 15:36:16', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0);
+	(15, '2014-06-14 15:36:16', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(16, '2014-06-21 18:58:27', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(17, '2014-06-21 21:41:30', '::1', 'user', _binary 0xF71102AD6BB53C7F8E164709003094B7, 0),
+	(18, '2014-06-21 21:41:49', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(19, '2014-06-21 21:48:33', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(20, '2014-06-21 21:52:58', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(21, '2014-06-21 22:04:01', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(22, '2014-06-21 22:32:35', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(23, '2014-06-21 22:44:52', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(24, '2014-06-21 22:45:50', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(25, '2014-06-22 09:43:41', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(26, '2014-06-23 08:06:56', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(27, '2014-06-23 08:08:26', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(28, '2014-06-23 08:08:36', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(29, '2014-06-23 08:09:16', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(30, '2014-06-23 08:11:34', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(31, '2014-06-23 08:11:47', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(32, '2014-06-23 08:12:19', '::1', 'user', _binary 0x381B52979607C761F5E15649BCA97E0F, 0),
+	(33, '2014-06-23 08:13:25', '::1', 'user', _binary 0x381B52979607C761F5E15649BCA97E0F, 0),
+	(34, '2014-06-23 08:13:40', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(35, '2014-06-23 08:14:14', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(36, '2014-06-23 08:14:48', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(37, '2014-06-23 08:15:54', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
+	(38, '2014-06-23 08:16:16', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(39, '2014-06-23 08:17:42', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 0),
+	(40, '2014-06-23 08:17:48', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(41, '2014-06-23 10:34:31', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(42, '2014-06-23 10:41:25', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(43, '2014-06-23 10:41:57', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 1),
+	(44, '2014-06-23 10:54:34', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 1),
+	(45, '2014-06-23 10:59:31', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 0),
+	(46, '2014-06-23 10:59:36', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 1),
+	(47, '2014-06-23 11:51:56', '::1', 'user', _binary 0x18F41D8F6D2C4F1B778596B81652E6F9, 0),
+	(48, '2014-06-23 11:52:10', '::1', 'user', _binary 0x18F41D8F6D2C4F1B778596B81652E6F9, 0),
+	(49, '2014-06-23 11:56:43', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(50, '2014-06-23 11:57:02', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(51, '2014-06-23 12:05:17', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(52, '2014-06-23 12:05:31', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
+	(53, '2014-06-23 12:06:53', '::1', 'user', _binary 0x0EF7C64E1AEB0A3FA7E9BAFFFCE34AA1, 0),
+	(54, '2014-06-23 12:08:50', '::1', 'user', _binary 0x0EF7C64E1AEB0A3FA7E9BAFFFCE34AA1, 0),
+	(55, '2014-06-23 12:09:55', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
+	(56, '2014-06-23 12:10:18', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 0),
+	(57, '2014-06-23 12:10:24', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 0),
+	(58, '2014-06-23 12:10:31', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(59, '2014-06-23 12:14:33', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
+	(60, '2014-06-23 12:14:41', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
+	(61, '2014-06-23 12:27:43', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(62, '2014-06-23 12:29:12', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
+	(63, '2014-06-23 12:29:32', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
+	(64, '2014-06-23 12:29:43', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
+	(65, '2014-06-23 12:32:07', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(66, '2014-06-23 12:33:11', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
+	(67, '2014-06-23 12:33:17', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
+	(68, '2014-06-23 12:33:54', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(69, '2014-06-23 12:34:20', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
+	(70, '2014-06-23 12:50:45', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
+	(71, '2014-06-23 13:01:06', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
+	(72, '2014-06-23 13:01:15', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(73, '2014-06-23 13:01:43', '::1', 'user', _binary 0xE63D84D6853740C6E92C6518ACAC4653, 0),
+	(74, '2014-06-23 13:01:59', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
+	(75, '2014-06-23 13:02:14', '::1', 'user', _binary 0xBE06EC7BB96A009A49C213DFEA47B4CC, 1),
+	(76, '2014-06-23 13:03:43', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1);
 /*!40000 ALTER TABLE `jset_login` ENABLE KEYS */;
 
 
@@ -529,7 +612,7 @@ CREATE TABLE IF NOT EXISTS `jset_table` (
   `system` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name` (`name`,`section`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- Dumping data for table jxset.jset_table: ~6 rows (approximately)
 /*!40000 ALTER TABLE `jset_table` DISABLE KEYS */;

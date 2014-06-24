@@ -7,6 +7,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
  include_once("autoload.php");
+ $dir_pre = config::jxset;
  jset_page::create(config::jxset);
 ?>
 
@@ -18,6 +19,7 @@
 </head>
 
 <body>
+	<div><a href="login.php?signout"><img src="<?php echo $dir_pre ?>jset/img/out.png" title="צא"></a> <a href="<?php echo config::password_page; ?>"><?php echo $_SESSION['jset_user_login']; ?></a> שלום</div>
 	<table id="grid"></table>
 </body>
 </html>

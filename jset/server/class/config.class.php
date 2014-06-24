@@ -31,8 +31,10 @@ class config
 	const hosts_table = 'jset_host';
 	
 	const login = false;
+	const session = 'jxset';
 	const login_page = 'login.php';
 	const start_page = 'index.php';
+	const password_page = 'password.php';
 	const user_table = 'jset_user';
 	const encrypt_salt = 'abba';
 	
