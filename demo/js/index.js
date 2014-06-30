@@ -42,10 +42,14 @@ $(function(){
 	  	},
 	  	navigation:{
 			options : {
+				//checkOnUpdate:true
 			},
 			edit:{
+				//checkOnSubmit:true,
+				checkOnUpdate:true
 			},
 			add:{
+				//checkOnUpdate:true
 			},
 			del:{
 			},
