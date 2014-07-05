@@ -180,7 +180,7 @@
 				options: {
 					caption: '',
 					//title: 'Choose Columns',
-					title: $.jset.nav.columnChooserCaption,
+					title: $.jset.nav.columnChooserTitle,
 					buttonicon: 'ui-icon-calculator',
 					position: 'last'
 				},
