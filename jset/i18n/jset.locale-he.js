@@ -15,7 +15,7 @@
 			filterToolbar_operandTitle: "הקלק כדי לבחור פעולת סינון"
 		},
 		nav: {
-			columnChooserTitle: 'בחר עמודות',
+			columnChooserTitle: 'התאמה אישית',
 			clearPersistTitle: 'בטל התאמה אישית',		
 			selectedCounter: "מסומנים: {0}",
 			addCaption: "הוסף {0}",
