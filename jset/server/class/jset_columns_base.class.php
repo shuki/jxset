@@ -39,7 +39,7 @@ class jset_columns_base {
 //-----------------    internal functions ------------------------
 	protected function columns($db, $table, &$index, &$aggregate){
 		$sql_class = sql::create($db);
-		return $table->sql ? $this->columns_sql($db, $table, $index) :
+		return $table->sql ? $this->columns_sql($db, $table, $index, $aggregate) :
 		(db_utils::table_exists($db, $sql_class->TABLE_COLUMN) ?
 			$this->columns_all($db, $table, $index, $aggregate) :
 			$this->columns_base($db, $table->name, $index));
@@ -65,9 +65,9 @@ class jset_columns_base {
 		return $this->lists($db, $cols);
 	}
 	
-	protected function columns_sql($db, $table, &$index){  
+	protected function columns_sql($db, $table, &$index, &$aggregate){  
 		$cols = $this->columns_meta($db, $table->source, $index);
-		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols);
+		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols, $aggregate);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
@@ -144,7 +144,7 @@ class jset_columns_base {
 		return $cols;
 	}
 
-	protected function columns_extension($db, $name, $section, $index, $cols){
+	protected function columns_extension($db, $name, $section, $index, $cols, &$aggregate){
 		$sql_class = sql::create($db);
 		if(!db_utils::table_exists($db, $sql_class->TABLE_COLUMN))
 			return $cols;
@@ -159,6 +159,9 @@ class jset_columns_base {
 			if(!$cols[$index[$row->Field]]->control)
 				$cols[$index[$row->Field]]->control = $cols[$index[$row->Field]]->type;
 			}
+			
+			if($row->aggregate)
+				$aggregate[$row->Field] = $row->aggregate;
 		}
 
 		return $cols;

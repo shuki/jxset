@@ -112,6 +112,7 @@ class sql_base
 		#LD#src#RD# as #LD#src#RD#,
 		#LD#help#RD# as #LD#help#RD#,
 		#LD#validation#RD# as #LD#validation#RD#,
+		#LD#aggregate#RD# as #LD#aggregate#RD#,
 		#LD#object#RD# as #LD#object#RD#
 		FROM jset_column
 		WHERE parent = (SELECT id FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1)

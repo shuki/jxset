@@ -1026,6 +1026,10 @@
 			return $('div#gbox_' + grid.attr('id'));
 		},
 		
+		get_grid_from_container: function(container){
+			return container.find('table.jset_table[id="' + container.attr('id').replace('gbox_', '') +'"]');
+		},
+		
 		get_grid: function(id){
 			return $('div#gview_' + id).find('.jset_table');
 		},
