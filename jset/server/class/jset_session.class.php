@@ -16,7 +16,8 @@ class jset_session {
 		//php >= 5.4.0 
 		//session_status() == PHP_SESSION_ACTIVE
 		if(session_id() == ''){
-			session_name(config::session);
+			if(config::session)
+				session_name(config::session);
 			session_start();
 		}
 		if($php_auth_user = gen_utils::get_http_user())
