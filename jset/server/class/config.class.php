@@ -10,6 +10,7 @@
 
 class config
 {
+	const version = '1.0.0';
 	const jxset = '';
 	const rel_path = '../../';
 	const dbhost = 'localhost';
