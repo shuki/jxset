@@ -37,6 +37,7 @@
 	$.jset = $.extend(true, $.jset, {
 		defaults: {
 			prmNames:{
+				version: '_version_',
 				source: '_source_',
 				target: '_target_',
 				db_name: '_db_name_',
@@ -405,6 +406,8 @@
 		$.jset.fn.set_source_param(t.p);
 		
 		$.jset.fn.get_grid_definitions(t.p, function(data){
+			$.jset.fn.version_check(data);
+
 			if(!$.jset.fn.fetch_grid(t.p.source))
 				$.jset.fn.store_grid(t.p.source, data);
 
@@ -627,7 +630,10 @@
 				hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name);
 			if(grid.data('settings').db_name_target)
 				hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name_target);
-	
+				
+			if($.jset.version)
+				hard_post[grid.data('settings').prmNames.version] = $.jset.version;
+
 			if(grid.data('copy')){
 				var obj = $.extend(true, {}, grid.jqGrid('getGridParam', 'prmNames'), {
 					editoper: 'add'
@@ -663,7 +669,12 @@
 				if($.isFunction(grid.data('settings').afterSubmitError))
 					return grid.data('settings').afterSubmitError.call(grid, response, postdata, frmoper, obj);
 					
-				var message = obj.error.message;
+				if(obj.error.type !== undefined && obj.error.type == 'version'){
+					setTimeout(function(){$.jset.fn.version_check(obj);}, 0);
+					var message = $.jset.messages.versionUpdated;
+				}
+				else
+					var message = obj.error.message;
 				return [false, message];
 			}
 			
@@ -714,6 +725,8 @@
 				if(grid.data('settings').db_name) post_columns[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name);
 				if(grid.data('settings').host) post_columns[grid.data('settings').prmNames.host] = $.jset.fn.get_value(grid.data('settings').host);
 				if(!grid.data('settings').db_remote_definitions) post_columns[grid.data('settings').prmNames.db_remote_definitions] = grid.data('settings').db_remote_definitions;
+				if($.jset.version)
+					post_columns[grid.data('settings').prmNames.version] = $.jset.version;
 		
 				if (grid.data('init')) {
 					grid.data('init', false);
@@ -787,6 +800,7 @@
 			},
 		
 			loadComplete: function(data){
+				$.jset.fn.version_check(data);
 				var grid = $(this);
 				var container = $.jset.fn.get_grid_container(grid);
 
@@ -977,7 +991,12 @@
 					var grid = $(this);
 					var obj = $.parseJSON(response.responseText);
 					if(obj.error !== undefined){
-						var message = obj.error.message + '<br />' + obj.error.dump + '<br />' + obj.error.info[0] + '<br />' + obj.error.info[1] + '<br />' + obj.error.info[2];
+						if(obj.error.type !== undefined && obj.error.type == 'version'){
+							var message = $.jset.messages.versionUpdated;
+							setTimeout(function(){$.jset.fn.version_check(obj);}, 0);
+						}
+						else
+							var message = obj.error.message + '<br />' + (obj.error.dump !== undefined ? obj.error.dump : '') + '<br />' + (obj.error.info !== undefined ? (obj.error.info[0] + '<br />' + obj.error.info[1] + '<br />' + obj.error.info[2]) : '');
 						return [false, message];
 					}
 					
@@ -1002,6 +1021,8 @@
 						post[settings.prmNames.db_name] = $.jset.fn.get_value(settings.db_name);
 					if(settings.db_name_target)
 						post[settings.prmNames.db_name] = $.jset.fn.get_value(settings.db_name_target);
+					if($.jset.version)
+						post[settings.prmNames.version] = $.jset.version;
 					return post;
 				},
 
@@ -1203,6 +1224,8 @@
 				params[grid.data('settings').prmNames.host] = grid.data('settings').host;
 			if (grid.data('settings').db_name) 
 				params[grid.data('settings').prmNames.db_name] = grid.data('settings').db_name;
+			if($.jset.version)
+				params[grid.data('settings').prmNames.version] = $.jset.version;
 
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
@@ -1237,6 +1260,9 @@
 			jsetParams[settings.prmNames.source] = settings.source;
 			if(settings.db_name && settings.db_remote_definitions) jsetParams[settings.prmNames.db_name] = settings.db_name;
 			if(settings.host && settings.db_remote_definitions) jsetParams[settings.prmNames.host] = settings.host;
+			if($.jset.version)
+				jsetParams[settings.prmNames.version] = $.jset.version;
+				
 			if(settings.params)
 				$.each(settings.params, function(key, value){
 					jsetParams[settings.prmNames.param + key] = value;
@@ -1250,6 +1276,9 @@
 			if(settings.db_name) obj[settings.prmNames.db_name] = settings.db_name;
 			if(settings.host) obj[settings.prmNames.host] = settings.host;
 			if(!settings.db_remote_definitions) obj[settings.prmNames.db_remote_definitions] = settings.db_remote_definitions;
+			if($.jset.version)
+				obj[settings.prmNames.version] = $.jset.version;
+				
 			settings.navigation.edit.editData = obj;
 			settings.navigation.add.editData = obj;
 			if(settings.target){
@@ -1547,6 +1576,8 @@
 			jsetParams['_editing_state_'] = grid.jqGrid('getCell', jsetParams[settings.grid.prmNames.id], 'editing_state');
 			if(settings.db_name && settings.db_remote_definitions) jsetParams[settings.prmNames.db_name] = settings.db_name;
 			if(settings.host && settings.db_remote_definitions) jsetParams[settings.prmNames.host] = settings.host;		
+			if($.jset.version)
+				jsetParams[settings.prmNames.version] = $.jset.version;
 			$.post(settings.dir_rel + settings.url, jsetParams, callback, 'json');
 		},
 		
@@ -1922,6 +1953,8 @@
 					params[grid.data('settings').prmNames.host] = grid.data('settings').host;
 				if (grid.data('settings').db_name) 
 					params[grid.data('settings').prmNames.db_name] = grid.data('settings').db_name;
+				if($.jset.version)
+					params[grid.data('settings').prmNames.version] = $.jset.version;
 
 				$.post(grid.data('settings').grid.url, params, function(data){
 					if (data != null && typeof data.rows != 'undefined') {
@@ -2051,6 +2084,20 @@
 		
 		closeSubForms: function(formid, grid){
 			return $("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
+		},
+		
+		version_check: function(data){
+			if(data.error && data.error.type == 'version'){
+				if($('div#version_check').length == 0)
+					$('body').append('<div id="version_check" style="display:none;direction:' + $.jset.direction + ';">' + $.jset.messages.versionUpdated + '</div>');
+
+				setTimeout("location.reload(false)", 2000);
+			    $("#version_check").dialog({
+			    	title: $.jset.messages.warning,
+			        modal: true
+			    });
+				//alert($.jset.messages.versionUpdated);
+			}
 		}
 	});
 })(jQuery);

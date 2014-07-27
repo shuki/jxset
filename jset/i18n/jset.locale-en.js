@@ -11,8 +11,12 @@
 	// variable settings
 	var jset = {
 		messages: {
+			warning: 'Warning',
 			selectboxItemNotFound: "missing value in select box for field: '{0}', missing value: '{1}'",
-			filterToolbar_operandTitle: "Click to select search operation"
+			filterToolbar_operandTitle: "Click to select search operation",
+			versionUpdated: "There was a system upgrade - the current version will be loaded shortly.",
+			timoutWarning: 'Since the system has not been used for awhile, the system will disconnect in',
+			timoutWarning1: 'seconds.'
 		},
 		nav: {
 			columnChooserTitle: 'Select Columns',

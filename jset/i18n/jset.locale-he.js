@@ -11,8 +11,12 @@
 	// variable settings
 	var jset = {
 		messages: {
+			warning: 'אזהרה',
 			selectboxItemNotFound: "חסר ערך ברשימה לשדה : '{0}', הערך החסר : '{1}'",
-			filterToolbar_operandTitle: "הקלק כדי לבחור פעולת סינון"
+			filterToolbar_operandTitle: "הקלק כדי לבחור פעולת סינון",
+			versionUpdated: "המערכת שודרגה - הגירסה החדשה תעלה מייד.",
+			timoutWarning: 'מפאת חוסר פעילות, המערכת תתנתק בעוד',
+			timoutWarning1: 'שניות.'
 		},
 		nav: {
 			columnChooserTitle: 'התאמה אישית',

@@ -15,6 +15,11 @@
 	            return JSON.parse(window.localStorage.getItem(storageItemName));
 	        }
 	    },
+	    clearLocalStorage: function () {
+	        if (typeof window.localStorage !== 'undefined') {
+	            window.localStorage.clear();
+	        }
+	    },
 	    
 	    myColumnStateName: function (grid) {
 	        return window.location.pathname + '#' + grid[0].id;

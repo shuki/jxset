@@ -36,6 +36,8 @@ EOT;
 		$dir_pre = isset($dir_pre) ? $dir_pre : '';
 		$dir_rel = isset($dir_rel) ? $dir_rel : '';
 		$rtl_css = $rtl ? "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"{$dir_pre}jset/css/jset_rtl.css\" />" : '';
+		$direction = $rtl ? 'rtl' : 'ltr';
+		$version = config::version;
 		echo <<< EOT
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -55,9 +57,12 @@ EOT;
 <script src="{$dir_pre}jset/i18n/jquery.ui.datepicker-he.js" type="text/javascript"></script>
 <script type="text/javascript">
 		$.jset = {dir_pre: '{$dir_pre}', dir_rel: '{$dir_rel}'};
+		$.jset.version = '{$version}';
+		$.jset.direction = '{$direction}';
 </script>
 <script src="{$dir_pre}jset/i18n/jset.locale-{$lang}.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/jquery/jquery.jset.session.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.state.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.url.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.dialog.js" type="text/javascript"></script>
