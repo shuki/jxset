@@ -37,7 +37,7 @@ EOT;
 		$dir_rel = isset($dir_rel) ? $dir_rel : '';
 		$rtl_css = $rtl ? "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"{$dir_pre}jset/css/jset_rtl.css\" />" : '';
 		$direction = $rtl ? 'rtl' : 'ltr';
-		$version = config::version;
+		$version = defined('config::version') ? config::version : '';
 		echo <<< EOT
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
