@@ -291,3 +291,8 @@ input[type='checkbox'].jset-multicheckbox{
     vertical-align: bottom;
     padding: 0 0.2em;
 }
+
+.ui-jqdialog .ui-jqconfirm {
+	height: auto;
+	width: auto;
+}

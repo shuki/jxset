@@ -54,7 +54,7 @@ EOT;
 
 <!--script src="{$dir_pre}jset/jquery/jquery-1.9.1.js" type="text/javascript"></script-->
 <script src="{$dir_pre}jset/jquery-ui/js/jquery-ui-1.9.1.custom.min.js" type="text/javascript"></script>
-<script src="{$dir_pre}jset/i18n/jquery.ui.datepicker-he.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/i18n/jquery.ui.datepicker-{$lang}.js" type="text/javascript"></script>
 <script type="text/javascript">
 		$.jset = {dir_pre: '{$dir_pre}', dir_rel: '{$dir_rel}'};
 		$.jset.version = '{$version}';
