@@ -10,11 +10,11 @@
 
 class jset_page
 {
-	public static function create($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false)
+	public static function create($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false, $theme = 'redmond')
 	{
 		jset_login::verify();
 		self::doctype();
-		self::head($dir_pre, $lang, $dir_rel, $rtl);
+		self::head($dir_pre, $lang, $dir_rel, $rtl, $theme);
 	}
 	
 	public static function min($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false)
@@ -32,7 +32,7 @@ class jset_page
 EOT;
 	}
 	
-	public static function head($dir_pre, $lang, $dir_rel, $rtl){
+	public static function head($dir_pre, $lang, $dir_rel, $rtl, $theme){
 		$dir_pre = isset($dir_pre) ? $dir_pre : '';
 		$dir_rel = isset($dir_rel) ? $dir_rel : '';
 		$rtl_css = $rtl ? "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"{$dir_pre}jset/css/jset_rtl.css\" />" : '';
@@ -42,9 +42,7 @@ EOT;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="{$dir_pre}jset/img/smile.gif" type="image/x-icon" />
-<!-- jsetnote: to switch theme -->
-<!--link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jquery-ui/css/smoothness/jquery-ui-1.9.1.custom.css" /-->
-<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jquery-ui/css/redmond/jquery-ui-1.9.1.custom.min.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jquery-ui/css/{$theme}/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jqGrid/css/ui.jqgrid.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jqGrid/plugins/ui.multiselect.css">
 
