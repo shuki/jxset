@@ -39,9 +39,8 @@
 		    clearTimeout($.jset.session.vars.timeoutTimer);
 		    clearTimeout($.jset.session.vars.timeoutCountdownTimer);
 		    $.jset.fn.sessionStartTimers();
-			if ($("#timeout").hasClass('ui-dialog-content')) {
+			if($("#timeout").hasClass('ui-dialog-content'))
 			     $("#timeout").dialog('close');
-			}
 		},
 		
 		sessionIdleWarning: function() {
