@@ -1059,6 +1059,10 @@
 			return $('table#' + $(formid).attr('id').substr(8));
 		},
 		
+		get_formid_by_grid: function(grid){
+			return $('form#FrmGrid_' + $(grid).attr('id'));
+		},
+		
 		get_grid_by_element: function(elem){
 			var container_div_id = $(elem).parents('div[id^="gbox_"]:first').attr('id');
 			var grid_id = container_div_id.substr(5);
