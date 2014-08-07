@@ -598,7 +598,7 @@
 		beforeSubmit: function(postdata, formid){
 			var grid = $(this);
 			if(!$(formid).valid())
-				return [false];
+				return [false, ''];
 			
 			var validation_error = '';
 			eval(grid.data('table').validation);
