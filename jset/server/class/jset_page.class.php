@@ -137,6 +137,7 @@ include("{$dir_pre}jset/template/pane/pane_template.html");
 		echo <<< EOT
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />
 <link rel="shortcut icon" href="{$dir_pre}jset/img/smile.gif" type="image/x-icon" />
 <script src="{$dir_pre}jset/jquery/jquery-1.8.2.min.js" type="text/javascript"></script>
 {$rtl_css}
