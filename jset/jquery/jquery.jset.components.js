@@ -51,7 +51,7 @@
 		},
 		
 		dataInit_checkbox: function(elem){
-			//$.jset.fn.set_search_refresh(elem);
+			$(elem).css('padding', '0');
 			return $.jset.fn.prepend_empty_select_option(elem);
 			
 		},
