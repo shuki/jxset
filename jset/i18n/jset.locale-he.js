@@ -16,7 +16,12 @@
 			filterToolbar_operandTitle: "הקלק כדי לבחור פעולת סינון",
 			versionUpdated: "המערכת שודרגה - הגירסה החדשה תעלה מייד.",
 			timoutWarning: 'מפאת חוסר פעילות, המערכת תתנתק בעוד',
-			timoutWarning1: 'שניות.'
+			timoutWarning1: 'שניות.',
+			changePasswordTitle: 'איפוס סיסמה',
+			changePasswordConfirm: 'האם ברצונך לאפס את הסיסמה?',
+			changePasswordSuccess: 'סיסמה אופסה בהצלחה.',
+			changePasswordFailure: 'סיסמה לא אופסה.',
+			userExists: 'שם משתמש זה קיים כבר במערכת.'
 		},
 		nav: {
 			columnChooserTitle: 'התאמה אישית',

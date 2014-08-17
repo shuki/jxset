@@ -16,7 +16,12 @@
 			filterToolbar_operandTitle: "Click to select search operation",
 			versionUpdated: "There was a system upgrade - the current version will be loaded shortly.",
 			timoutWarning: 'Since the system has not been used for awhile, the system will disconnect in',
-			timoutWarning1: 'seconds.'
+			timoutWarning1: 'seconds.',
+			changePasswordTitle: 'Reset Password',
+			changePasswordConfirm: 'Are you sure you want to reset the password?',
+			changePasswordSuccess: 'Password was reset successfully.',
+			changePasswordFailure: 'Password was not reset.',
+			userExists: 'This user name already exists.'
 		},
 		nav: {
 			columnChooserTitle: 'Select Columns',
