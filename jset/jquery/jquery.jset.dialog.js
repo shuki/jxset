@@ -9,15 +9,15 @@
  */
 	$.extend($.jset.fn, {
 		alert: function(title, message){
+			var buttons = {};
+			buttons[$.jgrid.edit.bClose] = function(){
+	            $(this).dialog('close');
+			};
 			$(document.createElement('div'))
 	        .attr({title: title, 'class': 'alert'})
 	        .html(message)
 	        .dialog({
-	            buttons: {
-	            	אישור: function(){
-	            		$(this).dialog('close');
-					}
-	            },
+	            buttons: buttons,
 	            close: function(){$(this).remove();},
 	            draggable: true,
 	            modal: true,
@@ -27,19 +27,20 @@
 		},
 		
 		confirm: function(title, message, action){
+			var buttons = {};
+			buttons[$.jgrid.edit.bCancel] = function(){
+	            $(this).dialog('close');
+			};
+			buttons[$.jgrid.edit.bSubmit] = function(){
+        		action();
+        		$(this).dialog('close');
+			};
+			
 			$(document.createElement('div'))
 	        .attr({title: title, 'class': 'alert'})
 	        .html(message)
 	        .dialog({
-	            buttons: {
-	            	בטל: function(){
-	            		$(this).dialog('close');
-					},
-	            	כן: function(){
-	            		action();
-	            		$(this).dialog('close');
-					},
-	            },
+	            buttons: buttons,
 	            close: function(){$(this).remove();},
 	            draggable: true,
 	            modal: true,
