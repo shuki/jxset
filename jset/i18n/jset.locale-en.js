@@ -21,7 +21,8 @@
 			changePasswordConfirm: 'Are you sure you want to reset the password?',
 			changePasswordSuccess: 'Password was reset successfully.',
 			changePasswordFailure: 'Password was not reset.',
-			userExists: 'This user name already exists.'
+			userExists: 'This user name already exists.',
+			recordsAdded: 'records added.'
 		},
 		nav: {
 			columnChooserTitle: 'Select Columns',

@@ -28,7 +28,8 @@ class config
 	const permission_source_sql = true;
 	const permission_source_table = true;
 	
-	const upload_directory = 'uploads/';
+	const upload_directory = '../../uploads/';
+	const mysql_rel_path = '';
 	const hosts_table = 'jset_host';
 	
 	const login = false;

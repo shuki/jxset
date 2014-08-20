@@ -35,7 +35,6 @@ function process($files, $post){
 	$result->fileName = $file_name;
 	$upload_dir = config::rel_path . config::upload_directory;
 	$upload_path = $upload_dir .  $file_name;
-	
 	if (!is_dir($upload_dir))
 		if(!mkdir($upload_dir))
 		{

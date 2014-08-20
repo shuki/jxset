@@ -21,7 +21,8 @@
 			changePasswordConfirm: 'האם ברצונך לאפס את הסיסמה?',
 			changePasswordSuccess: 'סיסמה אופסה בהצלחה.',
 			changePasswordFailure: 'סיסמה לא אופסה.',
-			userExists: 'שם משתמש זה קיים כבר במערכת.'
+			userExists: 'שם משתמש זה קיים כבר במערכת.',
+			recordsAdded: 'רשומות נוספו.'
 		},
 		nav: {
 			columnChooserTitle: 'התאמה אישית',

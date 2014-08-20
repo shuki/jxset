@@ -148,4 +148,12 @@ class sql_base
 	public $UPDATE_USER_PASSWORD = "update #table# set password = AES_ENCRYPT(?,?) where login = ?";
 	
 	public $GET_JSET_LANG_RECORDS = "select name, value from jset_lang_item where parent = (SELECT id FROM jset_lang WHERE name = ? AND lang = ?)";
+	public $IMPORT = "LOAD DATA INFILE '#filename#'
+			IGNORE INTO TABLE #table# 
+			CHARACTER SET utf8
+			FIELDS TERMINATED BY ',' ENCLOSED BY '\"'
+			LINES TERMINATED BY '\n'
+			IGNORE 1 LINES
+			(#var_list#)
+			SET #field_list#";
 }

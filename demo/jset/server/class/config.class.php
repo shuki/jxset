@@ -24,7 +24,12 @@ class config
 	const dberrorMode = PDO::ERRMODE_EXCEPTION;
 	const dbtime_zone = 'SYSTEM'; // '+02:00'
 	const limit = 100;
+
+	const permission_source_sql = true;
+	const permission_source_table = true;
+
 	const upload_directory = 'uploads/';
+	const mysql_rel_path = '';
 	const hosts_table = 'jset_host';
 
 	const login = false;

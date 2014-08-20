@@ -176,6 +176,85 @@
 				},
 				associative:'both'
 			},
+			'import':{
+				navButtonAdd: true,
+				options: {
+					caption: '',
+					title: 'Import Data',
+					buttonicon: 'ui-icon-arrowthickstop-1-n',
+					position: 'last'
+				},
+				fineUploader: {
+					options: {
+				        debug: false,
+				        request: {
+				            endpoint: $.jset.dir_pre + 'jset/server/jset_upload.php',
+				            inputName: "userfile",
+				            paramsInBody: true,
+				            params: {
+				            	//dir: "files/",
+				            	max: "10000000"
+				            }
+				        },
+						  text: {
+						    uploadButton: ''
+						  },
+						  template: '<div class="qq-uploader">' +
+						              '<pre class="qq-upload-drop-area"><span>{dragZoneText}</span></pre>' +
+						              '<table><tr><td><div class="qq-upload-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-folder-open"></span></div></td>' +
+						              '<td><div><span class="file-link-target"></span></div></td>' +
+						              '<td><div><span class="file-icon-target"></span></div></td>' +
+						              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-close"></span></div></td>' +
+						              '<td><div id="qq-progress-bar" class="qq-progress-bar"></div></td></tr></table>' +
+						              '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
+						              '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
+						            '</div>',
+						  classes: {
+						    success: 'alert alert-success',
+						    fail: 'alert alert-error'
+						  },
+						  validation: {
+						  	acceptFiles: 'csv',
+						  	allowedExtensions: ['csv']
+						  }
+					},
+					events: {
+						error: function(event, id, fileName, reason) {
+							alert("Error - id: " + id + ", fileName: " + fileName + ", reason: " + reason);
+						},
+						complete: function(event, id, filename, response){
+							var grid = $.jset.fn.get_grid_by_element(this);
+							if(response.error !== undefined){
+								alert(response.error);
+								return;
+							}
+					
+							$.jset.fn.import(grid, response.fileName, function(data){
+								if(data.error !== undefined){
+									alert(data.error);
+									return;
+								}
+								
+								if(data > 0)
+									grid[0].triggerToolbar();
+								alert(data + ' ' + $.jset.messages.recordsAdded);
+							});
+					   },
+					   progress: function (event, id, fileName, uploadedBytes, totalBytes) {
+							if (uploadedBytes < totalBytes) {
+								var progress = Math.round(uploadedBytes / totalBytes * 100);
+								
+								$('div.qq-progress-bar', this).show()
+								.css('width', (progress > 20 ? progress : '20') + 'px')
+								.html(progress + '%');
+							}
+							else {
+								$('div.qq-progress-bar', this).hide();
+							}
+						}
+					}
+				}
+			},
 			columnChooser:{
 				navButtonAdd: true,
 				options: {
@@ -1234,6 +1313,24 @@
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
 		
+		'import': function(grid, filename, callback){
+			var params = {
+				_methods_: 'import',
+				_source_: grid.data('settings').source,
+				_filename_: filename,
+				//_no_init_: true,
+				async: false
+			};
+			if (grid.data('settings').host) 
+				params[grid.data('settings').prmNames.host] = grid.data('settings').host;
+			if (grid.data('settings').db_name) 
+				params[grid.data('settings').prmNames.db_name] = grid.data('settings').db_name;
+			if($.jset.version)
+				params[grid.data('settings').prmNames.version] = $.jset.version;
+
+			$.post(grid.data('settings').grid.url, params, callback, 'json');
+		},
+		
 		hub: function(url, params, callback){
 			$.post(url, params, callback, 'json');
 		},
@@ -1350,6 +1447,7 @@
 			$.jset.fn.navigator_clear_filter_toolbar_button(grid, grid_container);
 			$.jset.fn.navigator_refresh_button(grid, grid_container);
 			$.jset.fn.navigator_export_button(grid, grid_container);
+			$.jset.fn.navigator_import_button(grid, grid_container);
 			$.jset.fn.navigator_filter_button(grid, grid_container);
 			$.jset.fn.navigator_copy_button(grid, grid_container);
 			$.jset.fn.navigator_help_button(grid, grid_container);
@@ -1414,6 +1512,26 @@
 					});
 				
 				grid.jqGrid('navButtonAdd', grid.data('settings').grid.pager, options);
+				if (grid.data('settings').navigation.options.cloneToTop)
+					grid.jqGrid('navButtonAdd', grid.attr('id') + '_toppager', options);
+			}
+		},
+		
+		navigator_import_button: function(grid, grid_container){
+			if (grid.data('settings').import.navButtonAdd){
+				var options = $.extend(true, {}, grid.data('settings').import.options,
+					{onClickButton: function(){
+						$('input[type="file"]', $(grid.data('settings').grid.pager)).trigger('click');
+					}
+				});
+				
+				grid.jqGrid('navButtonAdd', grid.data('settings').grid.pager, options);
+				$('<div class="upload-file-div" style="display:none;"></div>').appendTo($(grid.data('settings').grid.pager))
+					.fineUploader(grid.data('settings').import.fineUploader.options)
+					.on('error', grid.data('settings').import.fineUploader.events.error)
+					.on('complete', grid.data('settings').import.fineUploader.events.complete)
+					.on('progress', grid.data('settings').import.fineUploader.events.progress);
+
 				if (grid.data('settings').navigation.options.cloneToTop)
 					grid.jqGrid('navButtonAdd', grid.attr('id') + '_toppager', options);
 			}

@@ -139,6 +139,75 @@ class jset_base
 		return $this->db->fetchAll();
 	}
 
+	private function import()
+	{
+		$upload_dir = config::rel_path . config::upload_directory;
+		$filename = $upload_dir .  $this->settings->_filename_;
+		$file = file_get_contents($filename);
+		if($file === false){
+		    $result->error = 'unable to read file: ' . $filename;
+			return $result;
+		}
+		
+		$file_encoded = iconv(config::export_charset_windows, 'UTF-8', $file);
+		$filename = $filename . 'x';
+		if(file_put_contents($filename, $file_encoded) === false){
+		    $result->error = 'unable to save file: ' . $filename;
+			return $result;
+		}
+
+		$handle = fopen($filename, "r");
+		if($handle)
+		    $fields_line = fgets($handle);
+		else {
+		    $result->error = 'unable to open file: ' . $filename;
+			return $result;
+		} 
+		fclose($handle);
+		
+		$fields_titles = explode(',', trim($fields_line));
+		foreach($fields_titles as $title){
+			$found = false;
+			foreach($this->columns->source->cols as $col){
+				if($title == $col->Field || $title == $col->title){
+					foreach($this->columns->target->cols as $tcol){
+						if($col->Field == $tcol->Field){
+							$field = new stdClass;
+							$field->name = $this->sql_class->LD . $tcol->Field . $this->sql_class->RD;
+							$field->type = $tcol->type;
+							$field_list[] = $field;
+							$found = true;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			if(!$found){
+				$field = new stdClass;
+				$field->skip = true;
+				$field_list[] = $field;
+			}
+		}
+
+		for ($i=0; $i < count($field_list); $i++) {
+			$var = '@var' . $i;
+			$vars .= $var . ',';
+			if(!$field_list[$i]->skip)
+				$fields .= $field_list[$i]->name . '=' . ($field_list[$i]->type == 'date' ? " if(locate('/',$var), STR_TO_DATE($var,'%d/%m/%Y'), $var)" : $var) . ',';
+		} 		
+
+		$vars = substr($vars, 0, -1);
+		$fields = substr($fields, 0, -1);
+
+		$upload_dir = config::mysql_rel_path . config::upload_directory;
+		$filename = $upload_dir .  $this->settings->_filename_ . 'x';
+		$sql = str_replace(array('#filename#', '#table#', '#var_list#', '#field_list#'), 
+			array($filename, $this->table->target, $vars, $fields), $this->sql_class->IMPORT);
+
+		return $this->db->exec($sql);
+	}
+
 	private function grid_empty()
 	{
 	  	$result->rows = array();
@@ -321,7 +390,8 @@ private function export()
 		$output .= substr($line, 0, -1) . "\n";
 		$line = '';
 	}
-
+	$output .= substr($output, 0, -1);
+	
 	echo str_replace(",", ",", $field_names) . "\n";
 	echo $output;
 	return '';
