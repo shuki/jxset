@@ -87,7 +87,7 @@
 				navButtonAdd: true,
 				options: {
 					caption: '',
-					title: 'Clear Filter Toolbar',
+					title: $.jset.nav.clearFilterToolbar,
 					buttonicon: 'ui-icon-cancel',
 					position: 'last'
 				}
@@ -97,13 +97,13 @@
 				navButtonAdd: true,
 				dialog: {
 					autoOpen: false,
-					title: 'Help',
+					title: $.jset.nav.help,
 					width: 600,
 					position: 'top'
 				},
 				options: {
 					caption:'',
-					title:'Help', 
+					title: $.jset.nav.help, 
 					buttonicon :'ui-icon-lightbulb', 
 					position: 'last'
 				}
@@ -112,7 +112,7 @@
 				navButtonAdd: false,
 				dialog: {
 					autoOpen: false,
-					title: 'SQL Dump',
+					title: $.jset.nav.dump,
 					width: 1000,
 					position: 'top'
 				}
@@ -122,14 +122,14 @@
 				showFormInit: null,
 				properties: {
 					closeAfterAdd: true,
-					editCaption: 'Copy Record',
+					editCaption: $.jset.nav.copyCaption,
 					viewPagerButtons: false,
 					onclickSubmit: $.jset.fn.onclickSubmit
 				},
 				clear_id: true,
 				options: {
 					caption: '',
-					title: 'Copy selected row',
+					title: $.jset.nav.copy,
 					buttonicon: 'ui-icon-copy',
 					position: 'last'
 				}
@@ -138,7 +138,7 @@
 				navButtonAdd: false,
 				options: {
 					caption:'',
-					title:'Setup Grid', 
+					title: $.jset.nav.setup, 
 					buttonicon :'ui-icon-wrench'
 				},
 				settings: {
@@ -161,7 +161,7 @@
 				},
 				dialog: {
 					autoOpen: false,
-					title: 'Setup Grid',
+					title: $.jset.nav.setup,
 					width: 880,
 					position: ['left', 'top']
 				}
@@ -170,17 +170,17 @@
 				navButtonAdd: true,
 				options: {
 					caption: '',
-					title: 'Export Data',
+					title: $.jset.nav.export,
 					buttonicon: 'ui-icon-star',
 					position: 'last'
 				},
 				associative:'both'
 			},
 			'import':{
-				navButtonAdd: true,
+				navButtonAdd: false,
 				options: {
 					caption: '',
-					title: 'Import Data',
+					title: $.jset.nav.import,
 					buttonicon: 'ui-icon-arrowthickstop-1-n',
 					position: 'last'
 				},
@@ -266,9 +266,9 @@
 				},
 				multiselect:{
 				    locale: {
-				        addAll: 'Make all visible',
-				        removeAll: 'Hidde All',
-				        itemsCount: 'Avlialble Columns'
+				        addAll: $.jset.nav.addAll,
+				        removeAll: $.jset.nav.removeAll,
+				        itemsCount: $.jset.nav.itemsCount
 				    }
 				},
 				col:{
@@ -311,8 +311,8 @@
 					drag: false,
 					resize: false,
 					viewPagerButtons: false,
-					editCaption: 'Edit',
-					addCaption: 'Add'
+					editCaption: $.jset.nav.editCaption,
+					addCaption: $.jset.nav.addCaption
 				}
 			},
 			search_default: [],

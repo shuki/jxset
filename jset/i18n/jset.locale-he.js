@@ -29,7 +29,18 @@
 			clearPersistTitle: 'בטל התאמה אישית',		
 			selectedCounter: "מסומנים: {0}",
 			addCaption: "הוסף {0}",
-			editCaption: "ערוך {0}"
+			editCaption: "ערוך {0}",
+			copyCaption: 'העתק רשומה',
+			clearFilterToolbar: 'נקה שדות סינון',
+			help: 'עזרה',
+			dump: 'ייצוא ל SQL',
+			copy: 'העתק',
+			setup: 'הגדר גריד',
+			'export': 'ייצא לאקסל',
+			'import': 'ייבא מאקסל',
+	        addAll: 'הצג את כל העמודות',
+	        removeAll: 'הסתר את כל העמודות',
+	        itemsCount: 'עמודות מוצגות',
 		}
 	};
 

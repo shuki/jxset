@@ -27,9 +27,20 @@
 		nav: {
 			columnChooserTitle: 'Select Columns',
 			clearPersistTitle: 'Clear Personal Settings',
-			selectedCounter: "Selected: {0}",
-			addCaption: "Add {0}",
-			editCaption: "Edit {0}"
+			selectedCounter: 'Selected: {0}',
+			addCaption: 'Add {0}',
+			editCaption: 'Edit {0}',
+			copyCaption: 'Copy Record',
+			clearFilterToolbar: 'Clear Filter Toolbar',
+			help: 'Help',
+			dump: 'SQL Dump',
+			copy: 'Copy selected row',
+			setup: 'Setup Grid',
+			'export': 'Export Data',
+			'import': 'Import Data',
+			addAll: 'Make all visible',
+			removeAll: 'Hidde All',
+			itemsCount: 'Avlialble Columns'
 		}
 	};
 
