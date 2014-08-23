@@ -189,7 +189,7 @@ class jset_base
 				$field_list[] = $field;
 			}
 		}
-
+		
 		for ($i=0; $i < count($field_list); $i++) {
 			$var = '@var' . $i;
 			$vars .= $var . ',';
@@ -197,7 +197,17 @@ class jset_base
 				$fields .= $field_list[$i]->name . '=' . ($field_list[$i]->type == 'date' ? " if(locate('/',$var), STR_TO_DATE($var,'%d/%m/%Y'), $var)" : $var) . ',';
 		} 		
 
+		if(!isset($fields)){
+		    $result->error = 'nothing to import';
+			return $result;
+		}
+
 		$vars = substr($vars, 0, -1);
+		
+		if(count($fields_array = json_decode($this->settings->_fields_, true)))
+			foreach($fields_array as $key => $val)
+				$fields .= $val['name'] . ' = ' . $this->db->con->quote($val['value']) . ',';
+
 		$fields = substr($fields, 0, -1);
 
 		$upload_dir = config::mysql_rel_path . config::upload_directory;

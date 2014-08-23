@@ -1318,7 +1318,7 @@
 				_methods_: 'import',
 				_source_: grid.data('settings').source,
 				_filename_: filename,
-				//_no_init_: true,
+				_fields_: [],
 				async: false
 			};
 			if (grid.data('settings').host) 
@@ -1328,6 +1328,15 @@
 			if($.jset.version)
 				params[grid.data('settings').prmNames.version] = $.jset.version;
 
+			if(grid.data('settings').filter.length > 0)
+				$.each(grid.data('settings').filter, function(){
+					params['_fields_'].push({name: this.target, value: $.jset.fn.get_filterToolbar_field(grid, this.target).val()});
+				});
+				
+			if($.isFunction(grid.data('settings').beforeImport))
+				grid.data('settings').beforeImport.call(grid, params);
+
+			params['_fields_'] = JSON.stringify(params['_fields_']);			
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
 		

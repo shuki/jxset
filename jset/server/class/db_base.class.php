@@ -12,6 +12,7 @@ include_once("autoload.php");
 
 class db_base
 {
+  	public $con;
 	protected $host = config::dbhost;
 	protected $port = config::dbport;
 	protected $server = config::dbserver;
@@ -22,7 +23,6 @@ class db_base
 	protected $fetchStyle = config::dbfetchStyle;
 	protected $errorMode = config::dberrorMode;
 	protected $dns;
-  	protected $con;
 	protected $query;
 	protected $driver_options;
 	

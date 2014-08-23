@@ -1,4 +1,5 @@
 $(function(){
+	$('input[name="user"]').focus();
 	$(':input').on('keyup paste',function(e){
 		setTimeout(function () { 
 			if($('#user').val() != '')
