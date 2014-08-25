@@ -767,7 +767,7 @@
 			//grid.jqGrid('setGridParam', {scrollrows: true});
 			var return_value = [true];
 			if($.isFunction(grid.data('settings').afterSubmit))
-				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata, frmoper);
+				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata, frmoper, obj);
 			
 			if(return_value[0] && (grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy') && grid.data('settings').reopen_after_add)
 				grid.data('reopen_form', obj.id);

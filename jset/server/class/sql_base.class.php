@@ -152,7 +152,7 @@ class sql_base
 			IGNORE INTO TABLE #table# 
 			CHARACTER SET utf8
 			FIELDS TERMINATED BY ',' ENCLOSED BY '\"'
-			LINES TERMINATED BY '\n'
+			LINES TERMINATED BY '\\r\\n'
 			IGNORE 1 LINES
 			(#var_list#)
 			SET #field_list#";

@@ -48,19 +48,19 @@ class jset_login {
 		}
 	}
 
-	public static function verify(){
+	public static function verify($pre = ''){
 		if(!config::login)
 			return;
 		
 		jset_session::create();		
 		if(isset($_SESSION['jset_user_id'])){
 			if(strstr($_SERVER['REQUEST_URI'], config::login_page))
-				header('Location: '. config::start_page);
+				header('Location: '. $pre . config::start_page);
 			else if(strstr($_SERVER['REQUEST_URI'], config::password_page))
 				return;
 		}
 		else if(!strstr($_SERVER['REQUEST_URI'], config::login_page))
-			header('Location: '. config::login_page);
+			header('Location: '. $pre . config::login_page);
 	}
 	
 	public static function change_password($current, $new){

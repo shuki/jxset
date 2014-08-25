@@ -194,7 +194,7 @@ class jset_base
 			$var = '@var' . $i;
 			$vars .= $var . ',';
 			if(!$field_list[$i]->skip)
-				$fields .= $field_list[$i]->name . '=' . ($field_list[$i]->type == 'date' ? " if(locate('/',$var), STR_TO_DATE($var,'%d/%m/%Y'), $var)" : $var) . ',';
+				$fields .= $field_list[$i]->name . "= if(trim($var) = '', null, " . ($field_list[$i]->type == 'date' ? " if(locate('/',$var), STR_TO_DATE($var,'%d/%m/%Y'), $var)" : $var) . '),';
 		} 		
 
 		if(!isset($fields)){
