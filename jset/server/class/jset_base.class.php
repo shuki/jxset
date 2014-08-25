@@ -210,7 +210,8 @@ class jset_base
 
 		$fields = substr($fields, 0, -1);
 
-		$upload_dir = config::mysql_rel_path . config::upload_directory;
+		//$upload_dir = config::mysql_rel_path . config::upload_directory;
+		$upload_dir = config::mysql_rel_path;
 		$filename = $upload_dir .  $this->settings->_filename_ . 'x';
 		$sql = str_replace(array('#filename#', '#table#', '#var_list#', '#field_list#'), 
 			array($filename, $this->table->target, $vars, $fields), $this->sql_class->IMPORT);
