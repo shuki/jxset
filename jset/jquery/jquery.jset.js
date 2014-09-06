@@ -790,6 +790,12 @@
 				if($.isFunction($.jset.defaults.control[this.control].onClose))
 					$.jset.defaults.control[this.control].onClose.call(grid, formid, this.index || this.Field);
 			});			
+
+			var return_value = true;
+			if($.isFunction(grid.data('settings').onClose))
+				return_value = grid.data('settings').onClose.call(grid, formid);
+			
+			return return_value;
 		}
 	};
 	
@@ -1155,6 +1161,30 @@
 		
 		get_form_field_label: function(formid, name){
 			return $(formid).find('label[for=' + name + ']');
+		},
+		
+		get_form_field_value: function(formid, name){
+			var field = $.jset.fn.get_form_field(formid, name);
+			var grid = $.jset.fn.get_grid_by_formid(formid);
+			var colModel = grid.jqGrid('getGridParam', 'colModel');
+			$.each(colModel, function(){
+				if(this.index == name && this.editoptions && $.isFunction(this.editoptions.custom_value))
+					return this.editoptions.custom_value.call(grid, field, 'get');
+			});
+			
+			return field.val();
+		},
+		
+		set_form_field_value: function(formid, name, value){
+			var field = $.jset.fn.get_form_field(formid, name);
+			var grid = $.jset.fn.get_grid_by_formid(formid);
+			var colModel = grid.jqGrid('getGridParam', 'colModel');
+			$.each(colModel, function(){
+				if(this.index == name && this.editoptions && $.isFunction(this.editoptions.custom_value))
+					return this.editoptions.custom_value.call(grid, field, 'set', value);
+			});
+			
+			return field.val(value);
 		},
 		
 		get_filterToolbar_field: function(grid, field_name){
