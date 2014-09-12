@@ -53,7 +53,7 @@
 			dir_pre: $.jset.dir_pre,
 			dir_rel: $.jset.dir_rel,
 			item_name: 'Record',
-			searchall: true,
+			searchall: false,
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
 			spacing: '20px',
