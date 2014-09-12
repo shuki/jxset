@@ -41,6 +41,9 @@
 	        addAll: 'הצג את כל העמודות',
 	        removeAll: 'הסתר את כל העמודות',
 	        itemsCount: 'עמודות מוצגות'
+		},
+		captions:{
+			searchall: 'חיפוש'
 		}
 	};
 

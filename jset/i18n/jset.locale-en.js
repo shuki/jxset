@@ -41,6 +41,9 @@
 			addAll: 'Make all visible',
 			removeAll: 'Hidde All',
 			itemsCount: 'Avlialble Columns'
+		},
+		captions:{
+			searchall: 'Search'
 		}
 	};
 

@@ -885,6 +885,7 @@
 		
 		editor:{
 			directionality : 'ltr',
+			height:10,
 			statusbar: true,
 		    setup: function (ed) {
 		        ed.on('init', function(args) {
@@ -894,7 +895,11 @@
 						  .attr({type : 'text/css', rel : 'stylesheet'})
 						  .attr('href', $.jset.defaults.dir_pre + 'jset/css/tinymce.css');
 		        });
-		    }
+		    },
+			forced_root_block : 'p',
+			//resize: 'both',
+			//theme_advanced_resizing: true,
+    		//theme_advanced_resizing_use_cookie : false
 		},
 		editor_old:{
 			directionality : 'ltr',
@@ -1353,6 +1358,7 @@
 					var grid = $(this);
 					var elem = $(formid).find('textarea#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
+					//console.log($.extend(true, {}, $.jset.defaults.editor, options));
 					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
 				}
 			},

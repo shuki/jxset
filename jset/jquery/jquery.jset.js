@@ -53,6 +53,7 @@
 			dir_pre: $.jset.dir_pre,
 			dir_rel: $.jset.dir_rel,
 			item_name: 'Record',
+			searchall: true,
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
 			spacing: '20px',
@@ -836,6 +837,11 @@
 				} else
 					delete post._order_by_;
 					
+				if(grid.data('settings').searchall && grid.data('searchall') && grid.data('searchall').elem.val())
+					post._searchall_ = grid.data('searchall').elem.val();
+				else
+					delete post._searchall_;
+					
 				if(grid.data('export') === true){
 					grid.data('export', false);
 
@@ -904,7 +910,25 @@
 					        this.p.multiselect = oldmultiselect; // restore multiselect
 					        return result;
 					    });
-					}					
+					}
+					
+					if(grid.data('settings').searchall === true){
+						grid.data('searchall', {
+							phrase: '', 
+							elem: $('div.jset-grid-searchall input', container.parent())
+						});
+						
+						grid.data('searchall').elem.removeAttr('disabled').focus()
+						.on('keyup', function(e, l){
+							if(grid.data('searchall').timer)
+								clearTimeout(grid.data('searchall').timer);
+								
+							grid.data('searchall').timer = setTimeout(
+								function(){
+									$.jset.fn.searchall_action(grid);
+								}, e.keyCode == '13' ? 0 : 500);
+						});	
+					}			
 
 					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
 						
@@ -1446,7 +1470,16 @@
 
 			$.jset.fn.set_master_details(grid);
 			$.jset.fn.create_pager_div(grid, i);
-			grid.addClass('jset_table');	
+			grid.addClass('jset_table');
+			if(grid.data('settings').searchall === true){
+				var div = $('<div></div>')
+					.insertBefore(grid)
+					.append('<div class="jset-grid-searchall ui-widget-header ui-state-default"><label>' + $.jset.captions.searchall +
+					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" size="40" /></div>')
+					.append(grid)
+					.css('direction', grid.data('settings').grid.direction);
+			}
+				
 			var grid_settings = {};
 			if(grid.data('settings').persist){
 				$.extend(true, grid_settings, t.p.grid);
@@ -2258,6 +2291,14 @@
 			        modal: true
 			    });
 				//alert($.jset.messages.versionUpdated);
+			}
+		},
+		
+		searchall_action: function(grid){
+			grid.data('searchall').timer = null;
+			if(grid.data('searchall').phrase != grid.data('searchall').elem.val()){
+				grid.data('searchall').phrase = grid.data('searchall').elem.val();
+				grid[0].triggerToolbar();
 			}
 		}
 	});

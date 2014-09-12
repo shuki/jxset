@@ -504,6 +504,10 @@ private function export()
 				if($f = $this->getStringForGroup(json_decode($this->strip($this->settings->_filters_),true)))
 					$filters .=  $filters ? ' AND ' . $f : $f;
 				
+			if(isset($this->settings->_searchall_))
+				if($f = $this->get_searchall($this->strip($this->settings->_searchall_)))
+					$filters .=  $filters ? ' AND ' . $f : $f;
+				
 			for($i=0; $i < $this->pairs->count; $i++)
 			{
 					switch($this->col($this->pairs->names[$i])->control)
@@ -670,6 +674,14 @@ private function export()
 			return $s;
 	}
 
+	private function get_searchall($value){
+		foreach($this->columns->source->cols as $col)
+			if(!$col->hidden || $col->edithidden)
+				$sql .= $this->sql_class->LD . $col->Field . $this->sql_class->RD . " LIKE '%" . stripslashes($value) . "%' OR ";
+				
+		return $sql ? '(' . substr($sql, 0, -4) . ')' : false;
+	}
+	
 	private function array_is_associative ($array)
 	{
 	    if ( is_array($array) && ! empty($array) )
