@@ -3,7 +3,8 @@ body {
 	background-color: #F5F5EC;
 }
 
-div.jset-grid-search{
+.jset-grid-searchall {
+	font-size: 13px;
 	padding: 2px 0 2px 10px;
 }
 

@@ -1472,7 +1472,7 @@
 			$.jset.fn.create_pager_div(grid, i);
 			grid.addClass('jset_table');
 			if(grid.data('settings').searchall === true){
-				var div = $('<div></div>')
+				var div = $('<div class="ui-widget"></div>')
 					.insertBefore(grid)
 					.append('<div class="jset-grid-searchall ui-widget-header ui-state-default"><label>' + $.jset.captions.searchall +
 					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" size="40" /></div>')
