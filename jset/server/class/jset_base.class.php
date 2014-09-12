@@ -675,11 +675,17 @@ private function export()
 	}
 
 	private function get_searchall($value){
-		foreach($this->columns->source->cols as $col)
-			if(!$col->hidden || $col->edithidden)
-				$sql .= $this->sql_class->LD . $col->Field . $this->sql_class->RD . " LIKE '%" . stripslashes($value) . "%' OR ";
-				
-		return $sql ? '(' . substr($sql, 0, -4) . ')' : false;
+		$values = array_unique(explode(' ', $value));
+		foreach($values as $val){
+			$q = '';
+			if($val)
+				foreach($this->columns->source->cols as $col)
+					if(!$col->hidden || $col->edithidden)
+						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE '%" . stripslashes($val) . "%' OR ";
+
+			$sql .= ($q ? '(' . substr($q, 0, -4) . ') AND ' : '');
+		}
+		return $sql ? '(' . substr($sql, 0, -5) . ')' : false;
 	}
 	
 	private function array_is_associative ($array)
