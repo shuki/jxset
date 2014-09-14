@@ -710,7 +710,6 @@
 				hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name);
 			if(grid.data('settings').db_name_target)
 				hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name_target);
-				
 			if($.jset.version)
 				hard_post[grid.data('settings').prmNames.version] = $.jset.version;
 
@@ -2117,16 +2116,16 @@
 		
 		editfunc: function(grid, id, options){
 			if ($.isFunction(grid.data('settings').editfunc)) 
-				grid.data('settings').editfunc.call(grid, id, options);
+				grid.data('settings').editfunc.call(grid, id, $.extend(true, {}, grid.data('settings').navigation.edit, options));
 			else 
-				grid.jqGrid('editGridRow', id, options);
+				grid.jqGrid('editGridRow', id, $.extend(true, {}, grid.data('settings').navigation.edit, options));
 		},
 		
 		addfunc: function(grid, options){
 			if($.isFunction(grid.data('settings').addfunc))
-				grid.data('settings').addfunc.call(grid, options);
+				grid.data('settings').addfunc.call(grid, $.extend(true, {}, grid.data('settings').navigation.add, options));
 			else
-				grid.jqGrid('editGridRow', 'new', options);
+				grid.jqGrid('editGridRow', 'new', $.extend(true, {}, grid.data('settings').navigation.add, options));
 		},
 		
 		load_edit_record: function(grid, id, options){

@@ -1851,7 +1851,7 @@
 						var filter_field = this_container.find("#gs_" + s.options.settings.search_default[0].name);
 						if(value == ''){
 							filter_field.val(-1);
-							$('table#' + s.target_grid_id, s.dlg).jqGrid('editGridRow', 'new', s.options);
+							$.jset.fn.addfunc($('table#' + s.target_grid_id, s.dlg));
 							$('.ui-jqdialog-titlebar-close', this_container).hide();
 							$('#cData', this_container).hide();
 							s.dlg.dialog('option', 'title', $.jgrid.format($.jset.nav.addCaption, s.dlg.dialog('option', 'record_name')));
