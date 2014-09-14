@@ -132,7 +132,7 @@
 					caption: '',
 					title: $.jset.nav.copy,
 					buttonicon: 'ui-icon-copy',
-					position: 'last'
+					position: 'first'
 				}
 			},
 			setup:{
@@ -177,7 +177,7 @@
 				},
 				associative:'both'
 			},
-			'import':{
+			'import': {
 				navButtonAdd: false,
 				options: {
 					caption: '',
@@ -917,6 +917,7 @@
 							elem: $('div.jset-grid-searchall input', container.parent())
 						});
 						
+						grid.data('searchall').elem.parent().width(container.width());
 						grid.data('searchall').elem.removeAttr('disabled').focus()
 						.on('keyup', function(e, l){
 							if(grid.data('searchall').timer)
@@ -1471,10 +1472,10 @@
 			$.jset.fn.create_pager_div(grid, i);
 			grid.addClass('jset_table');
 			if(grid.data('settings').searchall === true){
-				var div = $('<div class="ui-widget"></div>')
+				var div = $('<div class="jset-grid-container"></div>')
 					.insertBefore(grid)
-					.append('<div class="jset-grid-searchall ui-widget-header ui-state-default"><label>' + $.jset.captions.searchall +
-					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" size="40" /></div>')
+					.append('<div class="jset-grid-searchall ui-widget-header ui-corner-all ui-state-default"><label class="jset-grid-searchall">' + $.jset.captions.searchall +
+					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" size="60" /></div>')
 					.append(grid)
 					.css('direction', grid.data('settings').grid.direction);
 			}

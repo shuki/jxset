@@ -161,6 +161,18 @@
 			return url;
 		},
 		
+		linkFmatterPlain : function(cellvalue, options, rowdata, act){
+			if(!cellvalue)
+				return '';
+				
+			var grid = $(this);
+			var url = options.colModel.formatoptions.url;
+			var idname = options.colModel.formatoptions.idname;
+			url = url.replace(/#value#/g, cellvalue);
+			url = url.replace(/#idname#/g, rowdata[grid.data('index')[idname]]);
+			return url;
+		},
+		
 		uploadFileFmatter : function(cellvalue, options, rowdata, act){
 			if(!cellvalue)
 				return '';
@@ -295,6 +307,12 @@
 	$.extend($.fn.fmatter.linkFmatter , {
 	    unformat : function(cellvalue, options) {
 			return cellvalue;
+		}
+	});
+	
+	$.extend($.fn.fmatter.linkFmatterPlain , {
+	    unformat : function(cellvalue, options, pos, cnt) {
+	    	return cellvalue ? $('a', pos).attr('href') : '';
 		}
 	});
 	

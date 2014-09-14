@@ -680,9 +680,19 @@ private function export()
 			$q = '';
 			if($val)
 				foreach($this->columns->source->cols as $col)
-					if(!$col->hidden || $col->edithidden)
+					if(!$col->hidden || $col->edithidden){
 						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE '%" . stripslashes($val) . "%' OR ";
-
+						$date_array = explode('/', stripslashes($val), 3);
+						if(count($date_array) > 1){
+							$rdate_array = array_reverse($date_array);
+							foreach($rdate_array as $ditem)
+								if($ditem)
+									$dval_array[]= str_pad($ditem, 2, '0', STR_PAD_LEFT);
+							
+							$dval = implode('-', $dval_array);							
+							$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE '%" . $dval . "%' OR ";
+						}
+					}
 			$sql .= ($q ? '(' . substr($q, 0, -4) . ') AND ' : '');
 		}
 		return $sql ? '(' . substr($sql, 0, -5) . ')' : false;

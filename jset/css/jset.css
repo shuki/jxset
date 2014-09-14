@@ -3,9 +3,17 @@ body {
 	background-color: #F5F5EC;
 }
 
+.jset-grid-container {
+	padding: 5px;
+}
+
+label.jset-grid-searchall{
+	padding: 0px 3px 0px 2px;
+}
+
 .jset-grid-searchall {
 	font-size: 13px;
-	padding: 2px 0 2px 10px;
+	padding: 2px 0 2px 0px;
 }
 
 .ui-tabs .ui-tabs-nav{
