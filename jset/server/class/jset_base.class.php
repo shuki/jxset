@@ -680,7 +680,7 @@ private function export()
 			$q = '';
 			if($val)
 				foreach($this->columns->source->cols as $col)
-					if(!$col->hidden || $col->edithidden){
+					if(!$col->hidden || $col->edithidden || (isset($this->columns->index[substr($col->Field, 0, -5)]) && strrpos ($col->Field , '_name'))){
 						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE '%" . stripslashes($val) . "%' OR ";
 						$date_array = explode('/', stripslashes($val), 3);
 						if(count($date_array) > 1){
