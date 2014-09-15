@@ -401,7 +401,7 @@ private function export()
 		$output .= substr($line, 0, -1) . "\n";
 		$line = '';
 	}
-	$output .= substr($output, 0, -1);
+	$output = substr($output, 0, -1);
 	
 	echo str_replace(",", ",", $field_names) . "\n";
 	echo $output;
