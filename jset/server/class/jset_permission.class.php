@@ -22,6 +22,12 @@ class jset_permission
 		return $db->fetch()->id;
 	}
 	
+	public static function reset_user_password($db, $id)
+	{	
+		$sql_class = sql::create($db);
+		return $db->exec(str_replace('#table#', config::user_table, $sql_class->RESET_USER_PASSWORD), array(config::password_reset, config::encrypt_salt, $id));
+	}
+	
 	public static function get_user_attributes_js()
 	{
 		return "var user_attributes = {};
