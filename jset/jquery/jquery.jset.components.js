@@ -847,7 +847,7 @@
 				if(options.editoptions.custom_options.show_target){
 					var extension = val.split('.').pop().toLowerCase();
 										
-					$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
+					//$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
 					if(options.editoptions.custom_options.show_image && (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png')){
 						$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
 						$(this).removeAttr('path');
