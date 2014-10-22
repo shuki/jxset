@@ -2392,6 +2392,38 @@
 				},
 				empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg'
 			},
+			blob:{
+				align:'left',
+				edittype:'text',
+				editoptions:{
+					size: $.jset.fn.colsize,
+					maxlength: function(col){
+						return col.size;
+					},
+					defaultValue: function(col){
+						return col.default_value;
+					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
+				}
+			},
+			longblob:{
+				align:'left',
+				edittype:'text',
+				editoptions:{
+					size: $.jset.fn.colsize,
+					maxlength: function(col){
+						return col.size;
+					},
+					defaultValue: function(col){
+						return col.default_value;
+					}
+				},
+				searchoptions:{
+					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
+				}
+			},
 			binary:{
 				align:'left',
 				edittype:'text',
