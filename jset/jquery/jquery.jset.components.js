@@ -1515,21 +1515,19 @@
 			},
 			longtext:{
 				align:'left',
-				edittype:'textarea',
+				edittype:'text',
 				editoptions:{
-					cols: $.jset.fn.colsize,
+					autocomplete: 'off',
+					size: $.jset.fn.colsize,
 					maxlength: function(col){
 						return col.size;
-					},
-					rows: function(col){
-						return col.height ? col.height : 2;
 					},
 					defaultValue: function(col){
 						return col.default_value;
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
+					sopt:['eq','bw','bn','cn','nc','ew','en','nu','nn']
 				}
 			},
 			mediumint:{
@@ -1558,6 +1556,7 @@
 				align:'left',
 				edittype:'text',
 				editoptions:{
+					autocomplete: 'off',
 					size: $.jset.fn.colsize,
 					maxlength: function(col){
 						return col.size;
@@ -1567,7 +1566,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
+					sopt:['eq','bw','bn','cn','nc','ew','en','nu','nn']
 				}
 			},
 			multicheckbox:{
@@ -1584,7 +1583,8 @@
 						return col.default_value;
 					},
 					custom_options: {
-						columns: 2
+						columns: 2,
+						layout: 'simple'
 					}
 				},
 				searchoptions:{
@@ -1615,14 +1615,26 @@
 						for(var i = 1; i < editoptions.custom_options.columns; i++)
 							td.clone().appendTo($('tr', table));
 					
-						value = elem.val();
+						var value = elem.val();
 						var v = value.split(',');
 						
 						if($.isArray(editoptions.value)){
 							for (var i = 0; i < editoptions.value.length; i++) {	
 								var option = editoptions.value[i];
-								$('<label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label><br />')
-									.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
+								switch(editoptions.custom_options.layout){
+									case 'table':
+										var current_td = $('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table);
+										if($(current_td).children('table').length == 0)
+											$(current_td).append('<table></table>');
+											
+										$('<tr><td><label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label></td></tr>')
+											.appendTo($(current_td).children('table'));
+										break;
+									case 'simple':
+									default:
+										$('<label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label><br />')
+											.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
+								}
 							}						
 						}
 					}
@@ -1942,14 +1954,12 @@
 			},
 			text:{
 				align:'left',
-				edittype:'textarea',
+				edittype:'text',
 				editoptions:{
-					cols: $.jset.fn.colsize,
+					autocomplete: 'off',
+					size: $.jset.fn.colsize,
 					maxlength: function(col){
 						return col.size;
-					},
-					rows: function(col){
-						return col.height ? col.height : 2;
 					},
 					defaultValue: function(col){
 						return col.default_value;
@@ -2174,6 +2184,7 @@
 				align:'left',
 				edittype:'text',
 				editoptions:{
+					autocomplete: 'off',
 					size: $.jset.fn.colsize,
 					maxlength: function(col){
 						return col.size;
@@ -2183,7 +2194,7 @@
 					}
 				},
 				searchoptions:{
-					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
+					sopt:['eq','bw','bn','cn','nc','ew','en','nu','nn']
 				}
 			},
 			real:{
