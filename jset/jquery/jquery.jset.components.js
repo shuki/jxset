@@ -1966,7 +1966,7 @@
 					}
 				},
 				searchoptions:{
-					sopt:['eq','bw','bn','cn','nc','ew','en','nu','nn']
+					sopt:['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','nu','nn']
 				}
 			},
 			plain:{
