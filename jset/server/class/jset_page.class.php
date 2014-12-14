@@ -126,9 +126,8 @@ EOT;
 
 EOT;
 
-include("{$dir_pre}jset/template/panel/panel_template.html");
-include("{$dir_pre}jset/template/pane/pane_template.html");
-//echo '</head>';
+echo self::load_template($dir_pre, "jset/template/panel/panel_template.html");
+echo self::load_template($dir_pre, "jset/template/pane/pane_template.html");
 	}
 
 	public static function head_min($dir_pre, $lang, $dir_rel, $rtl){
@@ -144,5 +143,9 @@ include("{$dir_pre}jset/template/pane/pane_template.html");
 {$rtl_css}
 
 EOT;
+	}
+
+	public static function load_template($dir_pre, $template){
+		echo str_replace('{$dir_pre}', $dir_pre, file_get_contents("{$dir_pre}{$template}"));
 	}
 }
