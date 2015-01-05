@@ -120,6 +120,20 @@ class jset_base
 		return $result;
 	}
 
+	private function row_number($id)
+	{
+		$order = $this->order();
+		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
+		
+		$sql = $this->table->sql ? $this->sql_class->GET_ROW_NUMBER_SQL_SOURCE : $this->sql_class->GET_ROW_NUMBER;
+		$sql = str_replace(array('#source#', '#where#', '#order#', '#direction#', '#LD#', '#RD#'), 
+					array($this->table->source, $this->where, $order, $direction, $this->sql_class->LD, $this->sql_class->RD), $sql);
+	    $this->db->query($sql, array($id));
+		//echo 'id: ' . $id;
+		//var_dump($sql);
+		return ($row = $this->db->fetch()) ? $row->row_number : 0;
+	}
+
 	private function pure_rows($fields = null)
 	{
 		$limit = $this->settings->_rows_ ? $this->settings->_rows_ : $this->settings->_limit_;
@@ -333,6 +347,7 @@ class jset_base
 		$result->id = $id;
 		if(!is_null($result_before)) $result->result_before = $result_before;
 		if(!is_null($result_after)) $result->result_after = $result_after;
+		$result->row_number = $this->row_number($id);
 		return $result;
 	}
 
@@ -508,7 +523,7 @@ private function export()
 				if($f = $this->get_searchall($this->strip($this->settings->_searchall_)))
 					$filters .=  $filters ? ' AND ' . $f : $f;
 				
-			for($i=0; $i < $this->pairs->count; $i++)
+/*			for($i=0; $i < $this->pairs->count; $i++)
 			{
 					switch($this->col($this->pairs->names[$i])->control)
 					{
@@ -536,9 +551,11 @@ private function export()
 							$result .= $this->sql_class->LD . $this->pairs->names[$i] . $this->sql_class->RD . " LIKE '%" . stripslashes($this->pairs->values[$i]) . "%' AND ";			
 					}
 			}
-			$result = ($result == '') ? '1=1' : substr($result, 0, -5);
-			return $filters == '' ? $result : $filters . ' AND ' . $result;
-//		}else
+			$result = ($result == '') ? '1=1' : substr($result, 0, -5);*/
+			
+			//return $filters == '' ? $result : $filters . ' AND ' . $result;
+			return $filters == '' ? '1=1' : $filters;
+			//		}else
 //			return '1=1';
 	}
 	

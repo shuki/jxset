@@ -15,14 +15,14 @@ class sql_base
 	public $RD = "`"; // database object right delimiter
 	public $GET_GRID_ROWS = "SELECT #field_list# FROM #LD##source##RD# WHERE #where# ORDER BY #order# #direction# LIMIT #start#, #limit#";
 	public $GET_GRID_AGGREGATE = "SELECT #field_list# FROM #LD##source##RD# WHERE #where#";
-	public $GET_GRID_ROWS_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where# ORDER BY #order# #direction# LIMIT #start#, #limit#";
-	public $GET_GRID_AGGREGATE_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where#";
+	public $GET_GRID_ROWS_SQL_SOURCE = "SELECT #field_list# FROM (#source#) zzyxw WHERE #where# ORDER BY #order# #direction# LIMIT #start#, #limit#";
+	public $GET_GRID_AGGREGATE_SQL_SOURCE = "SELECT #field_list# FROM (#source#) zzyxw WHERE #where#";
 	public $GET_COUNT = "SELECT COUNT(*) AS count FROM #LD##source##RD# WHERE #where#";
-	public $GET_COUNT_SQL_SOURCE = "SELECT COUNT(*) AS count FROM (#source#) a WHERE #where#";
+	public $GET_COUNT_SQL_SOURCE = "SELECT COUNT(*) AS count FROM (#source#) zzyxw WHERE #where#";
 	public $EXPORT = "SELECT #field_list# FROM #LD##source##RD# WHERE #where# ORDER BY #order# #direction# INTO OUTFILE '#outfile#' CHARACTER SET #charset# FIELDS TERMINATED BY ',' ESCAPED BY '\\\\' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'";
-	public $EXPORT_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where# ORDER BY #order# #direction# INTO OUTFILE '#outfile#' CHARACTER SET #charset# FIELDS TERMINATED BY ',' ESCAPED BY '\\\\' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'";
+	public $EXPORT_SQL_SOURCE = "SELECT #field_list# FROM (#source#) zzyxw WHERE #where# ORDER BY #order# #direction# INTO OUTFILE '#outfile#' CHARACTER SET #charset# FIELDS TERMINATED BY ',' ESCAPED BY '\\\\' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'";
 	public $EXPORT_GRID_ROWS = "SELECT #field_list# FROM #LD##source##RD# WHERE #where# ORDER BY #order# #direction# LIMIT #limit#";
-	public $EXPORT_GRID_ROWS_SQL_SOURCE = "SELECT #field_list# FROM (#source#) a WHERE #where# ORDER BY #order# #direction# LIMIT #limit#";
+	public $EXPORT_GRID_ROWS_SQL_SOURCE = "SELECT #field_list# FROM (#source#) zzyxw WHERE #where# ORDER BY #order# #direction# LIMIT #limit#";
 	
 	public $TABLE_TABLE = "jset_table";
 	public $LOG_TABLE_PREFIX = 'jset_log_';
@@ -45,7 +45,7 @@ class sql_base
 	public $TABLE_EVENT = "jset_event";
 	public $GET_EVENTS = "SELECT * FROM jset_event WHERE parent = ? LIMIT 1";
 	
-	public $GET_ONE_RECORD = "select * from (#table#) a limit 1";
+	public $GET_ONE_RECORD = "select * from (#table#) zzyxw limit 1";
 	public $GET_COLUMNS_BASE = "SHOW FULL COLUMNS FROM #LD##table##RD#";
 	public $TABLE_COLUMN = 'jset_column';
 	public $GET_COLUMNS_ALL = "SELECT
@@ -157,4 +157,7 @@ class sql_base
 			IGNORE 1 LINES
 			(#var_list#)
 			SET #field_list#";
+			
+	public $GET_ROW_NUMBER = "SELECT * FROM (SELECT @rownum:=@rownum+1 as `row_number`, id FROM (SELECT @rownum:=0) r, #LD##source##RD# WHERE #where# ORDER BY #order# #direction#) zzyxw WHERE id = ?";
+	public $GET_ROW_NUMBER_SQL_SOURCE = "SELECT * FROM (SELECT @rownum:=@rownum+1 as `row_number`, id FROM (SELECT @rownum:=0) r, (#source#) zzyxx WHERE #where# ORDER BY #order# #direction#) zzyxw WHERE id = ?";
 }

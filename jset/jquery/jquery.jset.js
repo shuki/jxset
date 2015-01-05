@@ -403,6 +403,7 @@
 					refresh: true,
 					view: false,
 					cloneToTop: false,
+					refreshstate: 'current',
 					editfunc: function(id, options){
 						var grid = $(this);
 						grid.data('form_action', 'edit');
@@ -519,6 +520,8 @@
 				});
 			}
 			
+			if(grid.data('settings').searchall === true)
+				grid.data('searchall').elem.off();
 			$($(this).jqGrid('getGridParam', 'pager')).remove();
 			$(this).jqGrid('GridUnload');
 		},
@@ -652,6 +655,7 @@
 		onclickPgButtons : function (whichbutton, formid, rowid){
 			var grid = $(this);
 			
+			grid.jqGrid('setGridParam', {scrollrows: true});
 			$.jset.fn.clear_form_tooltips(formid);
 			var subforms = $.jset.fn.closeSubForms(formid, grid);
 			if(subforms.is(':visible'))
@@ -722,7 +726,16 @@
 				});
 				hard_post[grid.data('settings').prmNames.copy] = true; 
 			}
-						
+			
+			var postData = grid.jqGrid('getGridParam', 'postData');
+			hard_post[grid.data('settings').grid.prmNames.sort] = postData[grid.data('settings').grid.prmNames.sort];
+			hard_post[grid.data('settings').grid.prmNames.order] = postData[grid.data('settings').grid.prmNames.order];
+			hard_post[grid.data('settings').grid.prmNames.rows] = postData[grid.data('settings').grid.prmNames.rows];
+			if(postData['filters'] != undefined)
+				hard_post['filters'] = postData['filters'];
+			if(postData['_searchall_'] != undefined)
+				hard_post['_searchall_'] = postData['_searchall_'];
+			
 			$.extend(postdata, post, hard_post);
 			
 			if($.isFunction(grid.data('settings').beforeSubmit))
@@ -733,6 +746,7 @@
 	
 		afterSubmit: function(response, postdata, frmoper){
 			var grid = $(this);
+			
 			if(grid.data('copy')){
 				grid.data('copy', false);
 				var obj = $.extend(true, {}, grid.jqGrid('getGridParam', 'prmNames'), {
@@ -763,14 +777,14 @@
 			if(obj.id !== undefined)
 				grid.data('lastID', obj.id);
 
-			
-			//grid.jqGrid('setGridParam', {scrollrows: true});
 			var return_value = [true];
 			if($.isFunction(grid.data('settings').afterSubmit))
 				return_value = grid.data('settings').afterSubmit.call(grid, response, postdata, frmoper, obj);
 			
 			if(return_value[0] && (grid.data('form_action') ==  'add' || grid.data('form_action') ==  'copy') && grid.data('settings').reopen_after_add)
 				grid.data('reopen_form', obj.id);
+			
+			grid.data('row_number', obj.row_number);
 			
 			return return_value;
 		},
@@ -804,6 +818,7 @@
 		grid: {
 			beforeRequest: function(){
 				var grid = $(this);
+				var container = $.jset.fn.get_grid_container(grid);
 				var post = grid.jqGrid('getGridParam', 'postData');
 				var post_columns = $.jset.fn.unformat_columns(this);
 				post_columns[grid.data('settings').prmNames.source] = $.jset.fn.get_value(grid.data('settings').source);
@@ -816,6 +831,25 @@
 				if (grid.data('init')) {
 					grid.data('init', false);
 					
+					if(grid.data('settings').searchall === true){
+						grid.data('searchall', {
+							phrase: '', 
+							elem: $('div.jset-grid-searchall input', container.parent())
+						});
+
+						grid.data('searchall').elem.parent().width(container.width());
+						grid.data('searchall').elem.removeAttr('disabled').focus()
+						.on('keyup', function(e, l){
+							if(grid.data('searchall').timer)
+								clearTimeout(grid.data('searchall').timer);
+								
+							grid.data('searchall').timer = setTimeout(
+								function(){
+									$.jset.fn.searchall_action(grid);
+								}, e.keyCode == '13' ? 0 : 500);
+						});	
+					}			
+
 					$.jset.fn.initMultiselectedRows.call(grid);
 											
 					if (grid.data('settings').empty) {
@@ -826,7 +860,7 @@
 		
 					if (grid.data('settings').search_default.length > 0) {
 						return false;
-				  }
+					}
 				} 
 									
 				if(grid.data('index')[post._order_by_] != undefined){
@@ -876,6 +910,16 @@
 				}
 
 				post_columns[grid.data('settings').grid.prmNames.oper] = 'grid_rows';
+				
+				if(grid.data('row_number')){
+					var page = grid.data('row_number') == 0 ? 1 : Math.ceil(grid.data('row_number') / post[grid.data('settings').grid.prmNames.rows]);
+					post[grid.data('settings').grid.prmNames.page] = page;
+					grid.removeData('row_number');
+					grid.jqGrid('setGridParam', {scrollrows: true});
+				} 
+				else
+					grid.jqGrid('setGridParam', {scrollrows: false});
+					
 				$.extend(post, post_columns);
 
 				if($.isFunction(grid.data('settings').beforeRequest))
@@ -911,25 +955,6 @@
 					    });
 					}
 					
-					if(grid.data('settings').searchall === true){
-						grid.data('searchall', {
-							phrase: '', 
-							elem: $('div.jset-grid-searchall input', container.parent())
-						});
-						
-						grid.data('searchall').elem.parent().width(container.width());
-						grid.data('searchall').elem.removeAttr('disabled').focus()
-						.on('keyup', function(e, l){
-							if(grid.data('searchall').timer)
-								clearTimeout(grid.data('searchall').timer);
-								
-							grid.data('searchall').timer = setTimeout(
-								function(){
-									$.jset.fn.searchall_action(grid);
-								}, e.keyCode == '13' ? 0 : 500);
-						});	
-					}			
-
 					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
 						
 					$('td.ui-search-input > input', container)
@@ -972,7 +997,7 @@
 					grid.data('loaded', true);
 				}
 
-				if(grid.data('settings').row_selection === true && grid.jqGrid('getGridParam', 'records') != 0 && !grid.data('settings').grid.multiselect) {
+				if(grid.data('settings').row_selection === true && grid.jqGrid('getGridParam', 'records') != 0 && !grid.data('settings').grid.multiselect && !grid.data('settings').grid.cellEdit) {
 					if(grid.data('lastID')){
 						grid.jqGrid('setSelection', grid.data('lastID'));
 						grid.data('lastID', false);
@@ -991,8 +1016,6 @@
 				if(grid.data('settings').single_record.active)
 					$.jset.fn.single_record(grid);
 		
-				//grid.jqGrid('setGridParam', {scrollrows: false});
-				
 				$.jset.fn.selectMultiselectedRows.call(grid);
 
 				var nav_buttons = $('#edit_' + grid.attr('id') + ', #view_' + grid.attr('id') + ', #export_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
@@ -1015,6 +1038,9 @@
 			},
 			beforeSelectRow: function (rowid, e) {
 			    var grid = $(this);
+			    if(grid.data('settings').grid.cellEdit === true)
+			    	return true;
+			    	
 			    if(grid.data('settings').row_selection !== true)
 			    	return false;
 			    	
@@ -1077,6 +1103,28 @@
 				var grid = $(this);
 				if(grid.data('settings').persist)
 					$.jset.fn.saveGridState.call(grid);
+			},
+			
+			afterEditCell: function(rowid, cellname, value, iRow, iCol){
+				var grid = $(this);
+				$('td.edit-cell', grid).find(':input').select();
+			},
+			
+			beforeSubmitCell: function(rowid, cellname, value, iRow, iCol){
+				var grid = $(this);
+				var hard_post = {};
+				hard_post[grid.data('settings').prmNames.source] = $.jset.fn.get_value(grid.data('settings').source);
+				if(grid.data('settings').target)
+					hard_post[grid.data('settings').prmNames.target] = $.jset.fn.get_value(grid.data('settings').target);
+				if(grid.data('settings').host)
+					hard_post[grid.data('settings').prmNames.host] = $.jset.fn.get_value(grid.data('settings').host);
+				if(grid.data('settings').db_name)
+					hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name);
+				if(grid.data('settings').db_name_target)
+					hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name_target);
+				if($.jset.version)
+					hard_post[grid.data('settings').prmNames.version] = $.jset.version;
+				return hard_post;
 			}
 		},
 		
@@ -1471,7 +1519,7 @@
 			$.jset.fn.set_master_details(grid);
 			$.jset.fn.create_pager_div(grid, i);
 			grid.addClass('jset_table');
-			if(grid.data('settings').searchall === true){
+			if(grid.data('settings').searchall === true && grid.parent('div.jset-grid-container').length == 0){
 				var div = $('<div class="jset-grid-container"></div>')
 					.insertBefore(grid)
 					.append('<div class="jset-grid-searchall ui-widget-header ui-corner-all ui-state-default"><label class="jset-grid-searchall">' + $.jset.captions.searchall +
@@ -2300,6 +2348,12 @@
 				grid.data('searchall').phrase = grid.data('searchall').elem.val();
 				grid[0].triggerToolbar();
 			}
+		},
+		
+		setup_custom_events: function(grid){
+			/*grid.on('jqGridToolbarBeforeSearch', function() {
+				return grid.data('stop_triggerToolbar') ? 'stop' : '';
+			});*/
 		}
 	});
 })(jQuery);
