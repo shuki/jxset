@@ -158,6 +158,6 @@ class sql_base
 			(#var_list#)
 			SET #field_list#";
 			
-	public $GET_ROW_NUMBER = "SELECT * FROM (SELECT @rownum:=@rownum+1 as `row_number`, id FROM (SELECT @rownum:=0) r, #LD##source##RD# WHERE #where# ORDER BY #order# #direction#) zzyxw WHERE id = ?";
-	public $GET_ROW_NUMBER_SQL_SOURCE = "SELECT * FROM (SELECT @rownum:=@rownum+1 as `row_number`, id FROM (SELECT @rownum:=0) r, (#source#) zzyxx WHERE #where# ORDER BY #order# #direction#) zzyxw WHERE id = ?";
+	public $GET_ROW_NUMBER = "SELECT * FROM (SELECT @rownum:=@rownum+1 as `row_number`, id FROM (SELECT @rownum:=0) r, (select id from #LD##source##RD# WHERE #where# ORDER BY #order# #direction#) zzyxw) zzyxx WHERE id = ?";
+	public $GET_ROW_NUMBER_SQL_SOURCE = "SELECT * FROM (SELECT @rownum:=@rownum+1 as `row_number`, id FROM (SELECT @rownum:=0) r, (select id from (#source#) zzyxx WHERE #where# ORDER BY #order# #direction#) zzyxw) zzyxz WHERE id = ?";
 }
