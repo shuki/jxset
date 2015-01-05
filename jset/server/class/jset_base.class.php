@@ -296,6 +296,7 @@ class jset_base
 		$result->id = $id;
 		if(!is_null($result_before)) $result->result_before = $result_before;
 		if(!is_null($result_after)) $result->result_after = $result_after;
+		$result->row_number = $this->row_number($id);
 		return $result;
 	}
 	
