@@ -803,7 +803,7 @@
 			configure_target: function(element, editoptions)
 			{
 				$(element).bind('load', function(){
-					$(this).width() > editoptions.custom_options.max_width ? $(this).width(editoptions.custom_options.max_width) : null;
+					$(this).width() > editoptions.custom_options.upload_file.max_width ? $(this).width(editoptions.custom_options.upload_file.max_width) : null;
 				})
 				.bind('error', function(){
 					$(this).hide();
@@ -832,23 +832,23 @@
 				
 				trash.show();
 				
-				if(options.editoptions.custom_options.show_link)	
+				if(options.editoptions.custom_options.upload_file.show_link)	
 					target_link.html($.fn.fmatter.uploadFileFmatter(val, options))
 					.show();
 				else
 					target_link.hide();
 				
-				if(options.editoptions.custom_options.show_icon)	
+				if(options.editoptions.custom_options.upload_file.show_icon)	
 					target_icon.html($.fn.fmatter.uploadFileIconFmatter(val, options))
 					.show();
 				else
 					target_icon.hide();
 				
-				if(options.editoptions.custom_options.show_target){
+				if(options.editoptions.custom_options.upload_file.show_target){
 					var extension = val.split('.').pop().toLowerCase();
 										
 					//$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
-					if(options.editoptions.custom_options.show_image && (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png')){
+					if(options.editoptions.custom_options.upload_file.show_image && (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png')){
 						$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
 						$(this).removeAttr('path');
 					}
@@ -1741,6 +1741,11 @@
 					custom_options: {
 						readonly: function(formid, name){
 							$.jset.fn.disable_field(formid, name);
+							$.jset.fn.get_form_field(formid, name).siblings().hide();
+						},
+						enable: function(formid, name){
+							$.jset.fn.enable_field(formid, name);
+							$.jset.fn.get_form_field(formid, name).siblings().show();
 						}
 					},
 					dialog: {
@@ -1792,7 +1797,8 @@
 						 grid: {
 							width:80,
 							height:50
-						}					}
+						}
+					}
 				},
 				stype: 'custom',
 				searchoptions:{
@@ -2229,7 +2235,9 @@
 					file_lable: 'File'
 				},
 				editoptions:{
-					custom_options: $.jset.defaults.upload_file,
+					custom_options: {
+						upload_file: $.jset.defaults.upload_file
+					},
 					id: function(col){
 						return col.Field;
 					}
@@ -2252,16 +2260,16 @@
 					.insertBefore($this)
 					.append($this);
 					
-					var target_element = $(editoptions.custom_options.target_element).hide();
-					editoptions.custom_options.configure_target(target_element, editoptions);
+					var target_element = $(editoptions.custom_options.upload_file.target_element).hide();
+					editoptions.custom_options.upload_file.configure_target(target_element, editoptions);
 					target_element.insertAfter(div);
 											
 					var span = $('<span></span>')
-						.attr('title', editoptions.custom_options.browse_title)
+						.attr('title', editoptions.custom_options.upload_file.browse_title)
 						.appendTo(div);
 						
-				    var fineUploader = span.fineUploader(editoptions.custom_options.fineUploader)
-				        .on('error', editoptions.custom_options.error_handler)
+				    var fineUploader = span.fineUploader(editoptions.custom_options.upload_file.fineUploader)
+				        .on('error', editoptions.custom_options.upload_file.error_handler)
 				        .on('complete', function(event, id, filename, response){
 							if(response.error !== undefined){
 								alert(response.error);
@@ -2270,7 +2278,7 @@
 
 							var dir = response.dir.replace(/\\\//g, "/");
 							$this.val(dir + response.fileName);
-							editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+							editoptions.custom_options.upload_file.target_value.call(target_element, $this.val(), options);
 				        })
 				        .on('progress', function (event, id, fileName, uploadedBytes, totalBytes) {
 							if (uploadedBytes < totalBytes) {
@@ -2288,10 +2296,10 @@
 					$('ul.qq-upload-list').hide();
 					
 					var trash = span.find('.qq-trash-button')
-						.attr('title', editoptions.custom_options.delete_title)
+						.attr('title', editoptions.custom_options.upload_file.delete_title)
 						.bind('click', function(){
 							$this.val('');
-							editoptions.custom_options.target_value.call(target_element, '', options);
+							editoptions.custom_options.upload_file.target_value.call(target_element, '', options);
 						});
 				},
 				beforeShowForm: function(formid, id){
@@ -2299,16 +2307,16 @@
 					var $this = $('#' + id, formid);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
-					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.upload_file.target_selector);
+					editoptions.custom_options.upload_file.target_value.call(target_element, $this.val(), options);
 				},
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
-					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.upload_file.target_selector);
+					editoptions.custom_options.upload_file.target_value.call(target_element, $this.val(), options);
 				},
 			},
 			upload_video:{

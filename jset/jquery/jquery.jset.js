@@ -1125,6 +1125,12 @@
 				if($.jset.version)
 					hard_post[grid.data('settings').prmNames.version] = $.jset.version;
 				return hard_post;
+			},
+			
+			afterSaveCell: function (rowid, cellname, value, iRow, iCol){
+				var grid = $(this);
+				if($.isFunction(grid.data('settings').afterSaveCell))
+					grid.data('settings').afterSaveCell.call(grid, rowid, cellname, value, iRow, iCol);
 			}
 		},
 		
