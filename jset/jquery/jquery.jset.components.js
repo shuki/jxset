@@ -752,119 +752,40 @@
 				}
 			}
 		},
-		
-		upload_file: {
-			height: '140',
-			row_height: '80',
-			max_width: '1000',
-			browse_title: 'Upload File',
-			delete_title: 'Delete File',
-			show_image: true,
-			show_target: true,
-			show_link: true,
-			show_icon: true,
-			input_element: '<input type="text"/>',
-			target_element: '<input type="image" value=""/>',
-			target_selector: 'input[type="image"]',
-			fineUploader: {
-		        debug: false,
-		        request: {
-		            endpoint: $.jset.defaults.dir_pre + 'jset/server/jset_upload.php',
-		            inputName: "userfile",
-		            paramsInBody: true,
-		            params: {
-		            	dir: "files/",
-		            	max: "10000000"
-		            }
-		        },
-				  text: {
-				    uploadButton: ''
-				  },
-				  template: '<div class="qq-uploader">' +
-				              '<pre class="qq-upload-drop-area"><span>{dragZoneText}</span></pre>' +
-				              '<table><tr><td><div class="qq-upload-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-folder-open"></span></div></td>' +
-				              '<td><div><span class="file-link-target"></span></div></td>' +
-				              '<td><div><span class="file-icon-target"></span></div></td>' +
-				              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-close"></span></div></td>' +
-				              '<td><div id="qq-progress-bar" class="qq-progress-bar"></div></td></tr></table>' +
-				              '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
-				              '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
-				            '</div>',
-				  classes: {
-				    success: 'alert alert-success',
-				    fail: 'alert alert-error'
-				  },
-				  validation: {
-				  	//acceptFiles: 'jpeg,png',
-				  	//allowedExtensions: ['jpg','jpeg','gif', 'png']
-				  }
-			},
-
-			configure_target: function(element, editoptions)
-			{
-				$(element).bind('load', function(){
-					$(this).width() > editoptions.custom_options.upload_file.max_width ? $(this).width(editoptions.custom_options.upload_file.max_width) : null;
-				})
-				.bind('error', function(){
-					$(this).hide();
-				})
-				.bind('click', function(){
-					var path = $(this).attr('path') ? $(this).attr('path') : $(this).attr('src');
-					window.open(path);
-				});
-				
-				return element;
-			},
-			target_value: function(val, options)
-			{	
-				var target_element = $(this);
-				var target_link = $('.file-link-target', target_element.siblings('div'));
-				var target_icon = $('.file-icon-target', target_element.siblings('div'));
-				var trash = $('.qq-trash-button', target_element.siblings('div'));
-				
-				if(!val){
-					target_element.hide();
-					target_link.hide();
-					target_icon.hide();
-					trash.hide();
-					return;
-				}
-				
-				trash.show();
-				
-				if(options.editoptions.custom_options.upload_file.show_link)	
-					target_link.html($.fn.fmatter.uploadFileFmatter(val, options))
-					.show();
-				else
-					target_link.hide();
-				
-				if(options.editoptions.custom_options.upload_file.show_icon)	
-					target_icon.html($.fn.fmatter.uploadFileIconFmatter(val, options))
-					.show();
-				else
-					target_icon.hide();
-				
-				if(options.editoptions.custom_options.upload_file.show_target){
-					var extension = val.split('.').pop().toLowerCase();
-										
-					//$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
-					if(options.editoptions.custom_options.upload_file.show_image && (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png')){
-						$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
-						$(this).removeAttr('path');
-					}
-					else
-					{
-						$(this).attr('src', '../jxset/jset/img/file.jpg');
-						$(this).attr('path', val);
-						$(this).show();
-					}
-				}			
-			},
-			error_handler: function(event, id, fileName, reason) {
-		        alert("id: " + id + ", fileName: " + fileName + ", reason: " + reason);
-		   },
+		fineUploader: {
+	        debug: false,
+	        request: {
+	            endpoint: $.jset.defaults.dir_pre + 'jset/server/jset_upload.php',
+	            inputName: "userfile",
+	            paramsInBody: true,
+	            params: {
+	            	dir: "files/",
+	            	max: "10000000"
+	            }
+	        },
+			  text: {
+			    uploadButton: ''
+			  },
+			  template: '<div class="qq-uploader">' +
+			              '<pre class="qq-upload-drop-area"><span>{dragZoneText}</span></pre>' +
+			              '<table><tr><td><div class="qq-upload-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-folder-open"></span></div></td>' +
+			              '<td><div><span class="file-link-target"></span></div></td>' +
+			              '<td><div><span class="file-icon-target"></span></div></td>' +
+			              '<td><div class="qq-trash-button fm-button ui-state-default ui-corner-all fm-button-icon-left" style="width: 24px; height: 16px;">{uploadButtonText}<span class="ui-icon ui-icon-close"></span></div></td>' +
+			              '<td><div id="qq-progress-bar" class="qq-progress-bar"></div></td></tr></table>' +
+			              '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
+			              '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
+			            '</div>',
+			  classes: {
+			    success: 'alert alert-success',
+			    fail: 'alert alert-error'
+			  },
+			  validation: {
+			  	//acceptFiles: 'jpeg,png',
+			  	//allowedExtensions: ['jpg','jpeg','gif', 'png']
+			  }
 		},
-		
+				
 		upload_video: {
 			//empty_url: $.jset.defaults.dir_pre + 'jset/img/empty_image.jpg',
 			empty_url: '',
@@ -2235,9 +2156,97 @@
 					file_lable: 'File'
 				},
 				editoptions:{
-					custom_options: {
-						upload_file: $.jset.defaults.upload_file
+					custom_options:{
+						height: '140',
+						row_height: '80',
+						max_width: '1000',
+						browse_title: 'Upload File',
+						delete_title: 'Delete File',
+						show_image: true,
+						show_target: true,
+						show_link: true,
+						show_icon: true,
+						input_element: '<input type="text"/>',
+						target_element: '<input type="image" value=""/>',
+						target_selector: 'input[type="image"]',			
+						fineUploader: $.jset.defaults.fineUploader,
+						readonly: function(formid, name){
+							$.jset.fn.get_form_field(formid, name).siblings().find('.qq-trash-button, .qq-upload-button').hide();
+						},
+						enable: function(formid, name){
+							var grid = $(this);
+							var $this = $('input[name="' + name + '"]', formid);
+							var options = grid.data('settings').grid.colModel[grid.data('index')[name]];							
+							var editoptions = options['editoptions'];							
+							var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
+							editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+							$.jset.fn.get_form_field(formid, name).siblings().find('.qq-upload-button').show();
+						},
+						configure_target: function(element, editoptions)
+						{
+							$(element).bind('load', function(){
+								$(this).width() > editoptions.custom_options.max_width ? $(this).width(editoptions.custom_options.max_width) : null;
+							})
+							.bind('error', function(){
+								$(this).hide();
+							})
+							.bind('click', function(){
+								var path = $(this).attr('path') ? $(this).attr('path') : $(this).attr('src');
+								window.open(path);
+							});
+							
+							return element;
+						},
+						target_value: function(val, options)
+						{	
+							var target_element = $(this);
+							var target_link = $('.file-link-target', target_element.siblings('div'));
+							var target_icon = $('.file-icon-target', target_element.siblings('div'));
+							var trash = $('.qq-trash-button', target_element.siblings('div'));
+							
+							if(!val){
+								target_element.hide();
+								target_link.hide();
+								target_icon.hide();
+								trash.hide();
+								return;
+							}
+							
+							trash.show();
+							
+							if(options.editoptions.custom_options.show_link)	
+								target_link.html($.fn.fmatter.uploadFileFmatter(val, options))
+								.show();
+							else
+								target_link.hide();
+							
+							if(options.editoptions.custom_options.show_icon)	
+								target_icon.html($.fn.fmatter.uploadFileIconFmatter(val, options))
+								.show();
+							else
+								target_icon.hide();
+							
+							if(options.editoptions.custom_options.show_target){
+								var extension = val.split('.').pop().toLowerCase();
+													
+								//$(this).removeAttr('width').removeAttr('height').css({ width: '', height: '' });
+								if(options.editoptions.custom_options.show_image && (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png')){
+									$(this).attr('src', val) == '' ? $(this).hide() : $(this).show();
+									$(this).removeAttr('path');
+								}
+								else
+								{
+									$(this).attr('src', '../jxset/jset/img/file.jpg');
+									$(this).attr('path', val);
+									$(this).show();
+								}
+							}			
+						},
+						error_handler: function(event, id, fileName, reason) {
+					        alert("id: " + id + ", fileName: " + fileName + ", reason: " + reason);
+					   },
 					},
+						
 					id: function(col){
 						return col.Field;
 					}
@@ -2250,7 +2259,6 @@
 					var $this = $('#' + id, formid);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
-
 					$this.hide()
 					.bind('change', function(){
 						target_element.attr('src', $(this).val()) == '' ? target_element.hide() : target_element.show();
@@ -2260,16 +2268,15 @@
 					.insertBefore($this)
 					.append($this);
 					
-					var target_element = $(editoptions.custom_options.upload_file.target_element).hide();
-					editoptions.custom_options.upload_file.configure_target(target_element, editoptions);
+					var target_element = $(editoptions.custom_options.target_element).hide();
+					editoptions.custom_options.configure_target(target_element, editoptions);
 					target_element.insertAfter(div);
 											
 					var span = $('<span></span>')
-						.attr('title', editoptions.custom_options.upload_file.browse_title)
 						.appendTo(div);
 						
-				    var fineUploader = span.fineUploader(editoptions.custom_options.upload_file.fineUploader)
-				        .on('error', editoptions.custom_options.upload_file.error_handler)
+				    var fineUploader = span.fineUploader(editoptions.custom_options.fineUploader)
+				        .on('error', editoptions.custom_options.error_handler)
 				        .on('complete', function(event, id, filename, response){
 							if(response.error !== undefined){
 								alert(response.error);
@@ -2278,7 +2285,7 @@
 
 							var dir = response.dir.replace(/\\\//g, "/");
 							$this.val(dir + response.fileName);
-							editoptions.custom_options.upload_file.target_value.call(target_element, $this.val(), options);
+							editoptions.custom_options.target_value.call(target_element, $this.val(), options);
 				        })
 				        .on('progress', function (event, id, fileName, uploadedBytes, totalBytes) {
 							if (uploadedBytes < totalBytes) {
@@ -2294,12 +2301,13 @@
 						});
 							
 					$('ul.qq-upload-list').hide();
+					$('div.qq-upload-button input, div.qq-upload-button .ui-icon', span).attr('title', editoptions.custom_options.browse_title);
 					
 					var trash = span.find('.qq-trash-button')
-						.attr('title', editoptions.custom_options.upload_file.delete_title)
+						.attr('title', editoptions.custom_options.delete_title)
 						.bind('click', function(){
 							$this.val('');
-							editoptions.custom_options.upload_file.target_value.call(target_element, '', options);
+							editoptions.custom_options.target_value.call(target_element, '', options);
 						});
 				},
 				beforeShowForm: function(formid, id){
@@ -2307,16 +2315,16 @@
 					var $this = $('#' + id, formid);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
-					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.upload_file.target_selector);
-					editoptions.custom_options.upload_file.target_value.call(target_element, $this.val(), options);
+					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
+					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
 				},
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
 					var grid = $(this);
 					var $this = $('#' + id, formid);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
-					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.upload_file.target_selector);
-					editoptions.custom_options.upload_file.target_value.call(target_element, $this.val(), options);
+					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
+					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
 				},
 			},
 			upload_video:{
