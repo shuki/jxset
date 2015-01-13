@@ -1,14 +1,20 @@
 -- --------------------------------------------------------
 -- מארח:                         127.0.0.1
--- Server version:               5.5.16 - MySQL Community Server (GPL)
+-- Server version:               5.6.20 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
--- HeidiSQL גירסא:               8.1.0.4545
+-- HeidiSQL גירסא:               9.1.0.4867
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+-- Dumping database structure for jxset
+DROP DATABASE IF EXISTS `jxset`;
+CREATE DATABASE IF NOT EXISTS `jxset` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `jxset`;
+
 
 -- Dumping structure for table jxset.demo
 DROP TABLE IF EXISTS `demo`;
@@ -36,23 +42,23 @@ CREATE TABLE IF NOT EXISTS `demo` (
 -- Dumping data for table jxset.demo: ~18 rows (approximately)
 /*!40000 ALTER TABLE `demo` DISABLE KEYS */;
 REPLACE INTO `demo` (`id`, `char`, `text`, `date`, `image`, `video`, `integer`, `decimal`, `boolean`, `select`, `multiselect`, `multicheckbox`, `link`, `html`) VALUES
-	(2, 'r', 't', '2013-07-03', NULL, NULL, 12666, 23.98, 1, 2, NULL, NULL, 'yy', '<div>&nbsp;</div>'),
-	(3, 'ff', 'to lead', '2013-06-26', NULL, NULL, 96543, 85.00, 0, 3, '2,4', NULL, 'ok', '<div>&nbsp;</div>'),
-	(4, 'זה שיר פרידה אז בואי רק אמרי שלום', 'יקבל את המגיע לו', '2013-06-05', NULL, NULL, 222, 21.90, 1, 3, NULL, NULL, 'https://github.com/shuki/jxset', '<div>&nbsp;</div>'),
-	(5, NULL, 'uk', NULL, NULL, NULL, 76, 55.00, 0, 2, NULL, NULL, '77', '<div>&nbsp;</div>'),
-	(6, 'dd', 'זה דבר נהדר', NULL, NULL, NULL, 65, 65.00, 0, 2, '3,4', NULL, 'https://github.com/shuki/jxset', '<div>&nbsp;</div>'),
-	(7, 'tt', 'yy', NULL, NULL, NULL, 67, NULL, 0, 1, NULL, NULL, 'uu', '<div>&nbsp;</div>'),
-	(8, 'asdasd', 'asdasd', '2013-06-25', NULL, NULL, 222, NULL, 0, 1, NULL, NULL, 'qwqw', '<div>&nbsp;</div>'),
-	(9, 'to bo', 'yes', '1999-07-08', NULL, NULL, 222, NULL, 0, 3, NULL, NULL, 'to link', '<div>&nbsp;</div>'),
-	(10, 'as', 'xc', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'er', NULL),
-	(12, 'as', 'sa', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'sa', NULL),
-	(13, 'as', 'sa', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'sa', NULL),
-	(14, 'as', 'sa', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'sa', NULL),
-	(15, 'r', 't', '2013-07-03', NULL, NULL, 12666, 23.98, 1, 2, NULL, NULL, 'yy', '<div>&nbsp;</div>'),
-	(16, 'שדג', 'שדג', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'שדגשדג', NULL),
-	(17, 'שדג', 'שדג', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'שדגשדג', NULL),
-	(18, 'r', 't', '2013-07-03', NULL, NULL, 12666, 23.98, 1, 2, NULL, NULL, 'yy', '<div>&nbsp;</div>'),
-	(19, 'זסב', 'סזב', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'קרארקא', NULL),
+	(2, 'to be\' or not', 'toast', '2013-07-03', NULL, NULL, 12666, 3000.00, 1, 2, NULL, NULL, 'yy', '<div>&nbsp;</div>'),
+	(3, 'ff', 'to lead', '2013-06-26', NULL, NULL, 96543, 22.00, 1, 1, '2,4', NULL, 'ok', '<div>&nbsp;</div>'),
+	(4, 'זה שיר פרידה אז בואי רק אמרי שלום', 'יקבל את המגיע לו', '2013-06-05', NULL, NULL, 2, 21.92, 1, 3, NULL, NULL, 'https://github.com/shuki/jxset', '<div>&nbsp;</div>'),
+	(5, 'holl', 'uk', NULL, NULL, NULL, 76, 3.00, 0, 2, NULL, NULL, '77', '<div>&nbsp;</div>'),
+	(6, 'dd', 'זה דבר נהדר', NULL, NULL, NULL, 65, 222222.00, 0, 2, '3,4', NULL, 'https://github.com/shuki/jxset', '<div>&nbsp;</div>'),
+	(7, 'tt', 'yy', NULL, NULL, NULL, 67, 999999999.99, 0, 1, NULL, NULL, 'uu', '<div>&nbsp;</div>'),
+	(8, 'asd', 'asdasd au', '0000-00-00', NULL, NULL, 222, NULL, 0, 1, NULL, NULL, 'qwqw', '<div>&nbsp;</div>'),
+	(9, 'rr', 'yes', '2014-08-08', NULL, NULL, 222, 3.00, 0, 3, NULL, NULL, 'to link', '<div>&nbsp;</div>'),
+	(10, '222243', 'xc', NULL, NULL, NULL, NULL, 11.00, 0, 2, NULL, NULL, 'er', NULL),
+	(12, 'as', 'sababa', NULL, NULL, NULL, NULL, -44.00, 0, 2, NULL, NULL, 'sa', NULL),
+	(13, 'as', '12344', NULL, NULL, NULL, NULL, 11.00, 0, 2, NULL, NULL, 'sa', NULL),
+	(14, 'asa', 'sa', NULL, NULL, NULL, NULL, -14.00, 0, 2, NULL, NULL, 'sa', NULL),
+	(15, 'r', '33', '1959-07-20', NULL, NULL, 126662, 22.00, 1, 2, NULL, NULL, 'yy', '<div>&nbsp;</div>'),
+	(16, 'שדג', 'www', NULL, NULL, NULL, 121, NULL, 0, 2, NULL, NULL, 'שדגשדג', NULL),
+	(17, 'שדג', 'שדג', NULL, NULL, NULL, NULL, 2323.00, 0, 2, NULL, NULL, 'שדגשדג', NULL),
+	(18, 'r', 't', '2013-07-03', NULL, NULL, 12666, 23.99, 1, 2, NULL, NULL, 'yy', '<div>&nbsp;</div>'),
+	(19, 'זסב', 'סזבx', NULL, NULL, NULL, NULL, NULL, 0, 2, NULL, NULL, 'קרארקא', NULL),
 	(20, 'asdasd', 'asdasd', '2013-06-25', NULL, NULL, 222, NULL, 0, 1, NULL, NULL, 'qwqw', '<div>&nbsp;</div>');
 /*!40000 ALTER TABLE `demo` ENABLE KEYS */;
 
@@ -278,7 +284,7 @@ REPLACE INTO `jset_column` (`id`, `parent`, `name`, `index`, `title`, `control`,
 	(234, 6, 'select', NULL, NULL, 'selectbox', 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, '2', NULL, NULL, NULL, NULL, 'select 1 as id, \'Good\' as name\nunion\nselect 2, \'Bad\'\nunion\nselect 3, \'Average\'', NULL, NULL, NULL, 'required:true', NULL, NULL),
 	(235, 6, 'video', NULL, NULL, 'upload_video', 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	(236, 6, 'multiselect', NULL, NULL, 'multiselect', 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'select 1 as id, \'יוסי\' as name\nunion\nselect 2, \'שאול\'\nunion\nselect 3, \'שוקי\'\nunion\nselect 4, \'תמיר\'', NULL, NULL, NULL, NULL, NULL, NULL),
-	(237, 6, 'date', 'dateme', 'התאריך', 'custom_date', 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+	(237, 6, 'date', NULL, 'התאריך', 'custom_date', 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	(552, 6, 'char', NULL, 'שדה רגיל', NULL, 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'required:true', NULL, NULL),
 	(553, 6, 'image', NULL, NULL, 'upload_file', 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	(554, 6, 'link', NULL, NULL, NULL, 0, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'required:true', NULL, NULL),
@@ -305,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `jset_default_column` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_default_column: ~1 rows (approximately)
+-- Dumping data for table jxset.jset_default_column: ~0 rows (approximately)
 /*!40000 ALTER TABLE `jset_default_column` DISABLE KEYS */;
 REPLACE INTO `jset_default_column` (`id`, `Type`, `Collation`, `Null`, `Key`, `Default`, `Extra`, `Privileges`, `Comment`) VALUES
 	(1, 'varchar', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -367,9 +373,9 @@ CREATE TABLE IF NOT EXISTS `jset_host` (
   `user` varchar(40) DEFAULT NULL,
   `password` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_host: ~1 rows (approximately)
+-- Dumping data for table jxset.jset_host: ~10 rows (approximately)
 /*!40000 ALTER TABLE `jset_host` DISABLE KEYS */;
 REPLACE INTO `jset_host` (`id`, `active`, `name`, `host`, `port`, `server`, `db_name`, `user`, `password`) VALUES
 	(1, 1, 'jxset', 'localhost', '3306', 'mysql', 'jxset', 'root', 'earth12');
@@ -405,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `jset_lang_item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_lang_item: ~24 rows (approximately)
+-- Dumping data for table jxset.jset_lang_item: ~30 rows (approximately)
 /*!40000 ALTER TABLE `jset_lang_item` DISABLE KEYS */;
 REPLACE INTO `jset_lang_item` (`id`, `parent`, `name`, `value`) VALUES
 	(1, 1, 'title', 'Login'),
@@ -486,85 +492,8 @@ CREATE TABLE IF NOT EXISTS `jset_login` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table jxset.jset_login: ~76 rows (approximately)
+-- Dumping data for table jxset.jset_login: ~0 rows (approximately)
 /*!40000 ALTER TABLE `jset_login` DISABLE KEYS */;
-REPLACE INTO `jset_login` (`id`, `stamp`, `ip`, `user`, `password`, `success`) VALUES
-	(1, '2014-06-12 22:14:42', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(2, '2014-06-12 22:14:49', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(3, '2014-06-13 08:28:07', '::1', NULL, NULL, 0),
-	(4, '2014-06-13 08:28:17', '::1', NULL, NULL, 0),
-	(5, '2014-06-13 08:28:20', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(6, '2014-06-14 01:12:50', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(7, '2014-06-14 02:05:21', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(8, '2014-06-14 02:15:18', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(9, '2014-06-14 02:15:20', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(10, '2014-06-14 02:15:21', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(11, '2014-06-14 02:15:22', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(12, '2014-06-14 02:15:23', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(13, '2014-06-14 02:18:54', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(14, '2014-06-14 02:18:56', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(15, '2014-06-14 15:36:16', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(16, '2014-06-21 18:58:27', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(17, '2014-06-21 21:41:30', '::1', 'user', _binary 0xF71102AD6BB53C7F8E164709003094B7, 0),
-	(18, '2014-06-21 21:41:49', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(19, '2014-06-21 21:48:33', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(20, '2014-06-21 21:52:58', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(21, '2014-06-21 22:04:01', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(22, '2014-06-21 22:32:35', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(23, '2014-06-21 22:44:52', '127.0.0.1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(24, '2014-06-21 22:45:50', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(25, '2014-06-22 09:43:41', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(26, '2014-06-23 08:06:56', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(27, '2014-06-23 08:08:26', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(28, '2014-06-23 08:08:36', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(29, '2014-06-23 08:09:16', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(30, '2014-06-23 08:11:34', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(31, '2014-06-23 08:11:47', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(32, '2014-06-23 08:12:19', '::1', 'user', _binary 0x381B52979607C761F5E15649BCA97E0F, 0),
-	(33, '2014-06-23 08:13:25', '::1', 'user', _binary 0x381B52979607C761F5E15649BCA97E0F, 0),
-	(34, '2014-06-23 08:13:40', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(35, '2014-06-23 08:14:14', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(36, '2014-06-23 08:14:48', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(37, '2014-06-23 08:15:54', '::1', 'user', _binary 0xBE52D668390F1B539F0D070FB0F2568F, 0),
-	(38, '2014-06-23 08:16:16', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(39, '2014-06-23 08:17:42', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 0),
-	(40, '2014-06-23 08:17:48', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(41, '2014-06-23 10:34:31', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(42, '2014-06-23 10:41:25', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(43, '2014-06-23 10:41:57', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 1),
-	(44, '2014-06-23 10:54:34', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 1),
-	(45, '2014-06-23 10:59:31', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 0),
-	(46, '2014-06-23 10:59:36', '::1', 'user', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 1),
-	(47, '2014-06-23 11:51:56', '::1', 'user', _binary 0x18F41D8F6D2C4F1B778596B81652E6F9, 0),
-	(48, '2014-06-23 11:52:10', '::1', 'user', _binary 0x18F41D8F6D2C4F1B778596B81652E6F9, 0),
-	(49, '2014-06-23 11:56:43', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(50, '2014-06-23 11:57:02', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(51, '2014-06-23 12:05:17', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(52, '2014-06-23 12:05:31', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
-	(53, '2014-06-23 12:06:53', '::1', 'user', _binary 0x0EF7C64E1AEB0A3FA7E9BAFFFCE34AA1, 0),
-	(54, '2014-06-23 12:08:50', '::1', 'user', _binary 0x0EF7C64E1AEB0A3FA7E9BAFFFCE34AA1, 0),
-	(55, '2014-06-23 12:09:55', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
-	(56, '2014-06-23 12:10:18', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 0),
-	(57, '2014-06-23 12:10:24', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 0),
-	(58, '2014-06-23 12:10:31', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(59, '2014-06-23 12:14:33', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
-	(60, '2014-06-23 12:14:41', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
-	(61, '2014-06-23 12:27:43', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(62, '2014-06-23 12:29:12', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
-	(63, '2014-06-23 12:29:32', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
-	(64, '2014-06-23 12:29:43', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
-	(65, '2014-06-23 12:32:07', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(66, '2014-06-23 12:33:11', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
-	(67, '2014-06-23 12:33:17', '::1', 'user', _binary 0x431699B833459F25C22B7C54ACE29939, 1),
-	(68, '2014-06-23 12:33:54', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(69, '2014-06-23 12:34:20', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 1),
-	(70, '2014-06-23 12:50:45', '::1', '', _binary 0xDDA2142EB663C4064F32BCF779D29CE8, 0),
-	(71, '2014-06-23 13:01:06', '::1', 'user', _binary 0xD23114511528FC964EBB5C07703E9CEB, 0),
-	(72, '2014-06-23 13:01:15', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(73, '2014-06-23 13:01:43', '::1', 'user', _binary 0xE63D84D6853740C6E92C6518ACAC4653, 0),
-	(74, '2014-06-23 13:01:59', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1),
-	(75, '2014-06-23 13:02:14', '::1', 'user', _binary 0xBE06EC7BB96A009A49C213DFEA47B4CC, 1),
-	(76, '2014-06-23 13:03:43', '::1', 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, 1);
 /*!40000 ALTER TABLE `jset_login` ENABLE KEYS */;
 
 
@@ -654,7 +583,7 @@ CREATE TABLE IF NOT EXISTS `jset_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- Dumping data for table jxset.jset_user: ~1 rows (approximately)
+-- Dumping data for table jxset.jset_user: ~0 rows (approximately)
 /*!40000 ALTER TABLE `jset_user` DISABLE KEYS */;
 REPLACE INTO `jset_user` (`id`, `start_date`, `end_date`, `login`, `password`, `group`) VALUES
 	(1, NULL, NULL, 'user', _binary 0xFCEBC8233249EC4800E1F0F43131083A, NULL);
@@ -678,18 +607,25 @@ CREATE TABLE IF NOT EXISTS `note` (
 -- Dumping structure for procedure jxset.p_copy_jset_columns
 DROP PROCEDURE IF EXISTS `p_copy_jset_columns`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `p_copy_jset_columns`(IN `vsource` varchar(45), IN `vtarget` varchar(45))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p_copy_jset_columns`(IN `vsource` varchar(45), IN `vsource_db` varchar(45), IN `vtarget` varchar(45), IN `vtarget_db` varchar(45))
 BEGIN
-  declare did int;
+	set @vs = vsource;
+	set @vt = vtarget;
+	set @s = concat('insert into ', if(vtarget_db is not null, concat(vtarget_db, '.'), ''), 'jset_table (name, source, target) values(?, ?, ?)');
+	PREPARE stmt1 FROM @s;
+ 	EXECUTE stmt1 USING @vt, @vt, @vt;
+ 	DEALLOCATE PREPARE stmt1;
 
-  insert into jset_table (name, source, target) values(vtarget, vtarget, vtarget);
-  set did = (select LAST_INSERT_ID());
+	set @did = (select LAST_INSERT_ID());
 
-  insert into jset_column (`parent`, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `unsortable`, `export`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`, `help`, `validation`, `aggregate`, `object`)
-  select did, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `unsortable`, `export`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`, `help`, `validation`, `aggregate`, `object`
-  from jset_column where parent = (select id from jset_table where name = vsource);
+	set @s = concat('insert into ', if(vtarget_db is not null, concat(vtarget_db, '.'), ''), 'jset_column (`parent`, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `unsortable`, `export`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`, `help`, `validation`, `aggregate`, `object`)
+	select ?, `name`, `index`, `title`, `control`, `hidden`, `edithidden`, `noedit`, `unsortable`, `export`, `list`, `rowpos`, `rowlabel`, `position`, `readonly`, `default_value`, `search_default`, `override`, `width`, `usize`, `height`, `src`, `help`, `validation`, `aggregate`, `object`
+	from ', if(vsource_db is not null, concat(vsource_db, '.'), ''), 'jset_column where parent = (select id from ', if(vsource_db is not null, concat(vsource_db, '.'), ''), 'jset_table where name = ?)');
+	PREPARE stmt1 FROM @s;
+ 	EXECUTE stmt1 USING @did, @vs;
+ 	DEALLOCATE PREPARE stmt1;
 
-  select did as id;
+	select @did as id;
 END//
 DELIMITER ;
 
