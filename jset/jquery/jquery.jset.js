@@ -997,7 +997,7 @@
 					grid.data('loaded', true);
 				}
 
-				if(grid.data('settings').row_selection === true && grid.jqGrid('getGridParam', 'records') != 0 && !grid.data('settings').grid.multiselect && !grid.data('settings').grid.cellEdit) {
+				if(grid.data('settings').row_selection === true && grid.jqGrid('getGridParam', 'records') != 0 && !grid.data('settings').grid.multiselect){ //todo remove check for multiselect, control it by row_selection
 					if(grid.data('lastID')){
 						grid.jqGrid('setSelection', grid.data('lastID'));
 						grid.data('lastID', false);
@@ -1007,12 +1007,14 @@
 					else
 						grid.jqGrid('setSelection', grid.jqGrid('getDataIDs')[0]);
 				}
-				else 
-					if(grid.data('settings').detail) { //&& grid.data('settings').detail.elem.data('loaded')
-						grid.data('last_selection', null);
-						$.jset.fn.filter_details(grid, '_empty_');
-					}
-		
+				else if(grid.data('settings').detail)
+				{ //&& grid.data('settings').detail.elem.data('loaded')
+					grid.data('last_selection', null);
+					$.jset.fn.filter_details(grid, '_empty_');
+				}
+				if(grid.data('SelectedCell') != undefined)		
+					grid.jqGrid("editCell", grid.data('SelectedCell').row, grid.data('SelectedCell').col, false);
+
 				if(grid.data('settings').single_record.active)
 					$.jset.fn.single_record(grid);
 		
@@ -1105,9 +1107,20 @@
 					$.jset.fn.saveGridState.call(grid);
 			},
 			
+			onSelectCell: function(rowid, cellname, value, iRow, iCol){
+				var grid = $(this);
+				grid.data('SelectedCell', {row: iRow, col: iCol});
+				
+				if($.isFunction(grid.data('settings').onSelectCell))
+					grid.data('settings').onSelectCell.call(grid, rowid, cellname, value, iRow, iCol);
+			},
+			   
 			afterEditCell: function(rowid, cellname, value, iRow, iCol){
 				var grid = $(this);
 				$('td.edit-cell', grid).find(':input').select();
+				
+				if($.isFunction(grid.data('settings').afterEditCell))
+					grid.data('settings').afterEditCell.call(grid, rowid, cellname, value, iRow, iCol);
 			},
 			
 			beforeSubmitCell: function(rowid, cellname, value, iRow, iCol){
@@ -1124,11 +1137,16 @@
 					hard_post[grid.data('settings').prmNames.db_name] = $.jset.fn.get_value(grid.data('settings').db_name_target);
 				if($.jset.version)
 					hard_post[grid.data('settings').prmNames.version] = $.jset.version;
+					
+				if($.isFunction(grid.data('settings').beforeSubmitCell))
+					return $.extend(hard_post, grid.data('settings').beforeSubmitCell.call(grid, rowid, cellname, value, iRow, iCol));
+
 				return hard_post;
 			},
 			
 			afterSaveCell: function (rowid, cellname, value, iRow, iCol){
 				var grid = $(this);
+				
 				if($.isFunction(grid.data('settings').afterSaveCell))
 					grid.data('settings').afterSaveCell.call(grid, rowid, cellname, value, iRow, iCol);
 			}

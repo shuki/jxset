@@ -35,6 +35,7 @@ $(function(){
 		//row_selection: false,
 		//reopen_after_add: true,
 		//search_default: searchDefaults,
+		row_selection: false,
 		afterSaveCell: function (rowid, cellname, value){
 			console.log(arguments);
 			var grid = $(this);
