@@ -36,6 +36,9 @@
 		},
 
 		disabled: function(elem){
+			$(elem)
+				.attr('disabled', true)
+				.addClass('jset-field-readonly');
 			$(':input', elem)
 				.attr('disabled', true)
 				.addClass('jset-field-readonly');
