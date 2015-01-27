@@ -512,11 +512,17 @@
 			return ($(this).data('settings') != undefined);
 		},
 		
-		unload: function(){
+		unload: function(unfetch_grid){
 			var grid = $(this);
+			var container = $.jset.fn.get_grid_container(grid);
+	    	if(unfetch_grid)
+	    		$.jset.fn.unfetch_grid(grid.data('settings').source);
+			$.each($('table.jset_table', container).not(grid), function(){
+				$(this).jset('unload', [unfetch_grid]);
+			});
 			if(grid.data('settings') && grid.data('settings').detail){
 				$.each(grid.data('settings').detail, function(){
-					$.jset.fn.get_elem(this.elem).jset('unload');
+					$.jset.fn.get_elem(this.elem).jset('unload', [unfetch_grid]);
 				});
 			}
 			
@@ -533,18 +539,15 @@
 		},
 		
 		reload: function(unfetch_grid){
-	    	grid = $(this);
-	    		
+	    	grid = $(this);	
 	    	grid.data('pending_reload', false);
-	    	if(unfetch_grid)
-	    		$.jset.fn.unfetch_grid(grid.data('settings').source);
 	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName(grid));
 	        var filterToolbarState = $.jset.fn.getFilterToolbar.call(grid);
 	        var settings = $.extend(true, {}, grid.data('settings'), {filterToolbar: {options: {ignore_column_search_default: true}}});
 	        if(filterToolbarState)
 	        	settings.search_default = filterToolbarState.search_default;
 	        var id = grid.attr('id');
-	        grid.jset('unload');
+	        grid.jset('unload', [unfetch_grid]);
 	        return $('table#' + id).jset(settings);
 		},
 		
@@ -1012,7 +1015,7 @@
 					grid.data('last_selection', null);
 					$.jset.fn.filter_details(grid, '_empty_');
 				}
-				if(grid.data('SelectedCell') != undefined)		
+				if(grid.data('SelectedCell') != undefined && grid.jqGrid('getGridParam', 'records') != 0)		
 					grid.jqGrid("editCell", grid.data('SelectedCell').row, grid.data('SelectedCell').col, false);
 
 				if(grid.data('settings').single_record.active)
@@ -1067,7 +1070,7 @@
 							var elem = $.jset.fn.get_elem(this.elem);
 							if(this.recreate && elem.jset('defined')){
 								var settings = this.settings;
-								elem.jset('unload');
+								elem.jset('unload', [true]);
 								if(settings.db_fields){
 									settings.host = settings.db_fields.host ? grid.jqGrid('getCell', id, settings.db_fields.host) : '';
 									settings.db_name = settings.db_fields.db_name ? grid.jqGrid('getCell', id, settings.db_fields.db_name) : '';
