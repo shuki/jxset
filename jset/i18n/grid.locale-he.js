@@ -29,7 +29,7 @@ $.extend($.jgrid,{
 	edit : {
 		addCaption: "הוסף רשומה",
 		editCaption: "ערוך רשומה",
-		bSubmit: "שלח",
+		bSubmit: "שמור",
 		bCancel: "בטל",
 		bClose: "סגור",
 		saveData: "נתונים השתנו! לשמור?",
@@ -79,7 +79,7 @@ $.extend($.jgrid,{
 	},
 	col : {
 		caption: "הצג/הסתר עמודות",
-		bSubmit: "שלח",
+		bSubmit: "שמור",
 		bCancel: "בטל"
 	},
 	errors : {
