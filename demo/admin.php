@@ -12,6 +12,7 @@
 
 <head>
 <title>Jxset Admin</title>
+<script src="js/defaults.js" type="text/javascript"></script>
 <script src="js/admin.js" type="text/javascript"></script>
 </head>
 

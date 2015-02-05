@@ -598,6 +598,18 @@
 			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
 				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
 				
+			if (/iPhone|iPod|iPad/.test(navigator.userAgent)) {
+			  $('iframe').wrap(function() {
+			    var $this = $(this);
+			    return $('<div />').css({
+			      width: $this.attr('width'),
+			      height: $this.attr('height'),
+			      overflow: 'auto',
+			      '-webkit-overflow-scrolling': 'touch'
+			    });
+			  });
+			}
+							
 /*			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
 					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
