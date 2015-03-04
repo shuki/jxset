@@ -597,18 +597,6 @@
 
 			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
 				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
-				
-			if (/iPhone|iPod|iPad/.test(navigator.userAgent)) {
-			  $('iframe').wrap(function() {
-			    var $this = $(this);
-			    return $('<div />').css({
-			      width: $this.attr('width'),
-			      height: $this.attr('height'),
-			      overflow: 'auto',
-			      '-webkit-overflow-scrolling': 'touch'
-			    });
-			  });
-			}
 							
 /*			$.each(grid.data('columns'), function(){
 				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
@@ -1124,10 +1112,17 @@
 			
 			onSelectCell: function(rowid, cellname, value, iRow, iCol){
 				var grid = $(this);
-				grid.data('SelectedCell', {row: iRow, col: iCol});
+				grid.data('SelectedCell', {rowid: rowid, cellname:cellname, value: value, row: iRow, col: iCol});
 				
 				if($.isFunction(grid.data('settings').onSelectCell))
 					grid.data('settings').onSelectCell.call(grid, rowid, cellname, value, iRow, iCol);
+			},
+			
+			beforeEditCell: function(rowid, cellname, value, iRow, iCol){
+				var grid = $(this);
+				
+				if($.isFunction(grid.data('settings').beforeEditCell))
+					grid.data('settings').beforeEditCell.call(grid, rowid, cellname, value, iRow, iCol);
 			},
 			   
 			afterEditCell: function(rowid, cellname, value, iRow, iCol){
@@ -2364,7 +2359,11 @@
 		},
 		
 		closeSubForms: function(formid, grid){
-			return $("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
+			//iframes not executing click event yet
+			var iframes = $("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form').find('iframe').contents()).trigger('click');
+			var children = $("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
+			return iframes.add(children);
+			//return $("div.ui-jqgrid[id^='gbox_'] a[id='cData']", $(formid).closest('form')).trigger('click');
 		},
 		
 		version_check: function(data){
