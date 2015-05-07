@@ -65,6 +65,7 @@
 			hide_submit_row: false,
 			hide_horizontal_scrollbar: false,
 			clearSearch: false,
+			preload_source: false,
 			persist: true,
 			filterToolbar:{
 				hide: false,
@@ -834,6 +835,12 @@
 				if (grid.data('init')) {
 					grid.data('init', false);
 					
+					if(grid.data('settings').preload_source){
+						var preload_rows = $.jset.fn.fetch_grid_rows(grid.data('settings').preload_source);
+						grid.jqGrid('setGridParam', {datatype: 'jsonstring'});
+						grid.jqGrid('setGridParam', {datastr: preload_rows});
+					}
+								
 					if(grid.data('settings').searchall === true){
 						grid.data('searchall', {
 							phrase: '', 
@@ -864,6 +871,9 @@
 					if (grid.data('settings').search_default.length > 0) {
 						return false;
 					}
+				} else {
+					if(grid.data('settings').preload_source && grid.jqGrid('getGridParam', 'datatype') == 'local')
+						grid.jqGrid('setGridParam', {datatype: 'json'});				
 				} 
 									
 				if(grid.data('index')[post._order_by_] != undefined){
@@ -1514,6 +1524,20 @@
 					jsetParams[settings.prmNames.param + key] = value;
 				});	
 			$.post(settings.dir_rel + settings.url, jsetParams, callback, 'json');
+		},
+		
+		store_grid_rows: function(source, data){
+			var obj = {};
+			obj[source] = data;
+			$.jset.grid_rowsStore = $.extend($.jset.grid_rowsStore || {}, true, obj);
+		},
+		
+		fetch_grid_rows: function(source){
+			return $.jset.grid_rowsStore ? (source ? $.jset.grid_rowsStore[source] : $.jset.grid_rowsStore) : false;
+		},
+		
+		unfetch_grid_rows: function(source){
+			source ? delete $.jset.grid_rowsStore[source] : delete $.jset.grid_rowsStore;
 		},
 		
 		set_source_param: function(settings){
