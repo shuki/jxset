@@ -17,6 +17,10 @@
 	
 	$.jset = ($.jset == undefined) ? jset : $.extend(true, jset, $.jset);
 	
+	$(document).on('click', 'div.ui-tooltip', function(){
+		$(this).hide();
+	});
+	
 	// function used in defaults
 	$.jset = $.extend(true, $.jset, {
 		fn:{
