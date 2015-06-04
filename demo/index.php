@@ -13,7 +13,7 @@
 
 <title>Jxset</title>
 <script>
-	//$.jset.fn.store_grid('demo', <?php echo jset_dispatch::get_grid_definition('demo', 'jxset/demo');?>);
+	$.jset.fn.store_grid('demo', <?php echo jset_dispatch::get_grid_definition('demo', 'jxset/demo');?>);
 </script>
 <script src="js/index.js" type="text/javascript"></script>
 </head>
