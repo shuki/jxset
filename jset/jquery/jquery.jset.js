@@ -125,6 +125,7 @@
 			},
 			copy:{
 				navButtonAdd: true,
+				confirm: false,
 				showFormInit: null,
 				properties: {
 					closeAfterAdd: true,
@@ -1818,6 +1819,9 @@
 				var options = $.extend(true, {}, grid.data('settings').copy.options,
 					{
 						onClickButton: function(){
+							if(grid.data('settings').copy.confirm && !confirm($.jset.nav.confirmCopy))
+								return;
+							
 							var id = grid.jqGrid('getGridParam', 'selrow');
 							if (id > 0) {
 								grid.data('copy_form', true);

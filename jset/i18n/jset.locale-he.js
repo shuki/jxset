@@ -40,7 +40,8 @@
 			'import': 'ייבא מאקסל',
 	        addAll: 'הצג את כל העמודות',
 	        removeAll: 'הסתר את כל העמודות',
-	        itemsCount: 'עמודות מוצגות'
+	        itemsCount: 'עמודות מוצגות',
+			confirmCopy: 'האם ברצונך להעתיק את הרשומה המסומנת?'	        
 		},
 		captions:{
 			searchall: 'חיפוש'

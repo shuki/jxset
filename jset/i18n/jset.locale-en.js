@@ -40,7 +40,8 @@
 			'import': 'Import Data',
 			addAll: 'Make all visible',
 			removeAll: 'Hidde All',
-			itemsCount: 'Avlialble Columns'
+			itemsCount: 'Avlialble Columns',
+			confirmCopy: 'Are you sure you want to copy the selected row?'
 		},
 		captions:{
 			searchall: 'Search'
