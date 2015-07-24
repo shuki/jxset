@@ -588,7 +588,7 @@
 		beforeInitData: function(formid){
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].beforeInitData))
+				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].beforeInitData))
 					$.jset.defaults.control[this.control].beforeInitData.call(grid, formid);
 			});	
 					
@@ -631,7 +631,7 @@
 			//$.jset.fn.closeSubForms(formid, grid);
 			
 			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].beforeShowForm))
+				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].beforeShowForm))
 					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
 			});
 			
@@ -645,7 +645,7 @@
 			$(formid).validate().resetForm();
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].afterShowForm))
+				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].afterShowForm))
 					$.jset.defaults.control[this.control].afterShowForm.call(grid, formid, this.index || this.Field);
 			});			
 			var id = $(formid).find('#id').val();
@@ -677,7 +677,7 @@
 		afterclickPgButtons : function(whichbutton, formid, rowid){
 			var grid = $(this);
 			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].afterclickPgButtons))
+				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].afterclickPgButtons))
 					$.jset.defaults.control[this.control].afterclickPgButtons.call(grid, whichbutton, formid, rowid, this.Field);
 			});
 			
@@ -810,7 +810,7 @@
 				return false;
 				
 			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].onClose))
+				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].onClose))
 					$.jset.defaults.control[this.control].onClose.call(grid, formid, this.index || this.Field);
 			});			
 
@@ -2192,7 +2192,7 @@
 		
 		run_columns_event: function(grid, formid, event_name){
 			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control][event_name]))
+				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control][event_name]))
 					$.jset.defaults.control[this.control][event_name].call(grid, formid, this.index || this.Field);
 			});	
 		},
