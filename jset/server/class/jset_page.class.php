@@ -10,9 +10,10 @@
 
 class jset_page
 {
-	public static function create($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false, $theme = 'redmond')
+	public static function create($dir_pre, $lang = 'en', $dir_rel = '', $rtl = false, $theme = 'redmond', $login_verify = true)
 	{
-		jset_login::verify();
+		if($login_verify)
+			jset_login::verify();
 		self::doctype();
 		self::head($dir_pre, $lang, $dir_rel, $rtl, $theme);
 	}
