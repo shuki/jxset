@@ -123,8 +123,10 @@ class report {
 			if($report->redirectURL)
 				$data->redirectURL = str_replace($parameters->tokens, $parameters->values, $report->redirectURL);
 			$title = str_replace(self::PHP_AUTH_USER, $_SERVER['PHP_AUTH_USER'], $report->title);
-			$data->title = 	str_replace($parameters->tokens, $parameters->values, $title);
+			$title = str_replace($parameters->tokens, $parameters->values, $title);
+			$data->title = 	str_replace($parameters->token_names, $parameters->value_names, $title);
 			$description = str_replace(self::PHP_AUTH_USER, $_SERVER['PHP_AUTH_USER'], $report->description);
+			$description = str_replace($parameters->token_names, $parameters->value_names, $description);
 			$data->description = str_replace($parameters->tokens, $parameters->values, $description);
 			$data->parameters = $parameters;
 			$data->report = $report;
@@ -206,13 +208,18 @@ class report {
 						$cannot_run = true;
 			}
 			
-			foreach($vars as $var)
+			foreach($vars as $var){
 				$values[] = $fields[$var]->isSantized ? mysql_escape_string($fields[$var]->value) : $fields[$var]->value;
+				$value_names[] = $fields[$var]->list[$fields[$var]->value];
+				$token_names[] = substr($fields[$var]->token, 0, -1) . '_name}';
+			}
 		}
 		
 		$result->fields = $fields;
 		$result->tokens = $matches[0];
+		$result->token_names = $token_names;
 		$result->values = $values;
+		$result->value_names = $value_names;
 		$result->cannot_run = $cannot_run;
 		$result->interactive = $interactive;
 		return $result;

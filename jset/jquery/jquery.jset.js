@@ -1596,6 +1596,7 @@
 				$.extend(true, grid_settings, t.p.grid);
 				$.jset.fn.restoreGridState.call(grid, grid_settings);
 			}
+			//console.log(JSON.stringify(t.p.persist ? grid_settings : grid.data('settings').grid, null, "\t"));
 			grid.jqGrid(t.p.persist ? grid_settings : grid.data('settings').grid);
 
 			if(grid.data('settings').persist)

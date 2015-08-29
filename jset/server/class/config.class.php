@@ -39,6 +39,7 @@ class config
 	const password_page = 'password.php';
 	const user_table = 'jset_user';
 	const encrypt_salt = 'abba';
+	const password_reset = '1234';
 	
 	const mysqldump_prefix = '';
 	const errorLogFile = 'log/error_log_file.txt';
@@ -49,4 +50,13 @@ class config
 	
 	const join_list_suffix = '_jxlist';
 	const join_field_suffix = '_jxfield';
+
+	// for report
+	const dbname_default = 'jxset';
+	//const tpl = 'page.tpl';
+	
+	const memcache = true;
+	const memcache_host = '127.0.0.1';
+	const memcache_port = 11211;
+	const memcache_time = 80;
 }
