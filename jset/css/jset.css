@@ -309,3 +309,7 @@ input[type='checkbox'].jset-multicheckbox{
 	height: auto;
 	width: auto;
 }
+
+.ui-widget-overlay.jqgrid-overlay {
+    position: absolute;
+}
