@@ -1,7 +1,7 @@
 /*! jQuery UI - v1.11.4 - 2015-10-01
 * http://jqueryui.com
 * Includes: core.css, draggable.css, resizable.css, selectable.css, sortable.css, accordion.css, autocomplete.css, button.css, datepicker.css, dialog.css, menu.css, progressbar.css, selectmenu.css, slider.css, spinner.css, tabs.css, tooltip.css, theme.css
-* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Arial&fwDefault=normal&fsDefault=1.6em&cornerRadius=0px&bgColorHeader=%234290eb&bgTextureHeader=highlight_soft&bgImgOpacityHeader=50&borderColorHeader=%230d18aa&fcHeader=%23ffffff&iconColorHeader=%23ffffff&bgColorContent=%23ffffff&bgTextureContent=flat&bgImgOpacityContent=75&borderColorContent=%23081772&fcContent=%230a0a0a&iconColorContent=%23FEA502&bgColorDefault=%230c1182&bgTextureDefault=glass&bgImgOpacityDefault=50&borderColorDefault=%23060505&fcDefault=%23ffffff&iconColorDefault=%23ffffff&bgColorHover=%230917ae&bgTextureHover=glass&bgImgOpacityHover=75&borderColorHover=%230c1182&fcHover=%2324dfd1&iconColorHover=%23FEA502&bgColorActive=%23ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=%23050566&fcActive=%230f249e&iconColorActive=%23ffffff&bgColorHighlight=%231478d8&bgTextureHighlight=glass&bgImgOpacityHighlight=55&borderColorHighlight=%23030586&fcHighlight=%23ffffff&iconColorHighlight=%23FEA502&bgColorError=%23ffffff&bgTextureError=glass&bgImgOpacityError=95&borderColorError=%23cd0a0a&fcError=%23cd0a0a&iconColorError=%23cd0a0a&bgColorOverlay=%23f7f6f6&bgTextureOverlay=flat&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=%230b139f&bgTextureShadow=flat&bgImgOpacityShadow=0&opacityShadow=0&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Arial&fwDefault=normal&fsDefault=1.2em&cornerRadius=0px&bgColorHeader=%234290eb&bgTextureHeader=highlight_soft&bgImgOpacityHeader=50&borderColorHeader=%230d18aa&fcHeader=%23ffffff&iconColorHeader=%23ffffff&bgColorContent=%23ffffff&bgTextureContent=flat&bgImgOpacityContent=75&borderColorContent=%23081772&fcContent=%230a0a0a&iconColorContent=FEA502&bgColorDefault=%230c1182&bgTextureDefault=glass&bgImgOpacityDefault=50&borderColorDefault=%23060505&fcDefault=%23ffffff&iconColorDefault=%23ffffff&bgColorHover=%230917ae&bgTextureHover=glass&bgImgOpacityHover=75&borderColorHover=%230c1182&fcHover=%2324dfd1&iconColorHover=FEA502&bgColorActive=%23ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=%23050566&fcActive=%230f249e&iconColorActive=FEA502&bgColorHighlight=%231478d8&bgTextureHighlight=glass&bgImgOpacityHighlight=55&borderColorHighlight=%23030586&fcHighlight=%23ffffff&iconColorHighlight=FEA502&bgColorError=%23ffffff&bgTextureError=glass&bgImgOpacityError=95&borderColorError=%23cd0a0a&fcError=%23cd0a0a&iconColorError=%23cd0a0a&bgColorOverlay=%23f7f6f6&bgTextureOverlay=flat&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=%230b139f&bgTextureShadow=flat&bgImgOpacityShadow=0&opacityShadow=0&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px
 * Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
 
 /* Layout helpers
@@ -831,7 +831,7 @@ body .ui-tooltip {
 ----------------------------------*/
 .ui-widget {
 	font-family: Arial;
-	font-size: 1.6em;
+	font-size: 1.2em;
 }
 .ui-widget .ui-widget {
 	font-size: 1em;
@@ -991,7 +991,7 @@ body .ui-tooltip {
 	background-image: url("images/ui-icons_FEA502_256x240.png");
 }
 .ui-state-active .ui-icon {
-	background-image: url("images/ui-icons_ffffff_256x240.png");
+	background-image: url("images/ui-icons_FEA502_256x240.png");
 }
 .ui-state-highlight .ui-icon {
 	background-image: url("images/ui-icons_FEA502_256x240.png");
