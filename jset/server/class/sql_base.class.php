@@ -44,6 +44,8 @@ class sql_base
 	
 	public $TABLE_EVENT = "jset_event";
 	public $GET_EVENTS = "SELECT * FROM jset_event WHERE parent = ? LIMIT 1";
+
+	public $TABLE_CSS = "jset_css";
 	
 	public $GET_ONE_RECORD = "select * from (#table#) zzyxw limit 1";
 	public $GET_COLUMNS_BASE = "SHOW FULL COLUMNS FROM #LD##table##RD#";

@@ -8,9 +8,14 @@
  */
  include_once("autoload.php");
  $dir_pre = config::jxset;
- jset_page::create(config::jxset);
+ jset_page::create(config::jxset, 'en', '', false, 'micha');
 ?>
-
+<style>
+<?php
+echo jset_css::get();
+?>
+</style>
+ 
 <title>Jxset</title>
 <script>
 	$.jset.fn.store_grid('demo', <?php echo jset_dispatch::get_grid_definition('demo', 'jxset/demo');?>);
