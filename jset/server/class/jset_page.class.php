@@ -47,6 +47,7 @@ EOT;
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jquery-ui/css/{$theme}/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jqGrid/css/ui.jqgrid.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jqGrid/plugins/ui.multiselect.css">
+<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/css/theme/{$theme}.css" />
 
 <!--script src="{$dir_pre}jset/jquery/jquery-1.9.1.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery-migrate-1.2.1.js" type="text/javascript"></script-->
