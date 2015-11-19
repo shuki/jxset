@@ -44,7 +44,7 @@
 			confirmCopy: 'هل تريد نسخ سجل تميز?'	        
 		},
 		captions:{
-			searchall: 'חיפוש'
+			searchall: 'بحث'
 		}
 	};
 
