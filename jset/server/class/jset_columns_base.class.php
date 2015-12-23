@@ -253,9 +253,9 @@ class jset_columns_base {
 	// get lists
 	protected function lists($db, &$cols){
 		foreach($cols as $row)
-			if($row->list)
+			if(trim($row->list))
 			{
-				$lists = jset_list::values($db, $row->list, $this->settings);
+				$lists = jset_list::values($db, trim($row->list), $this->settings);
 				$row->values = $lists->values;
 				if($lists->master_fields)
 					$row->master_fields = $lists->master_fields;
