@@ -44,6 +44,7 @@ class config
 	const mysqldump_prefix = '';
 	const errorLogFile = 'log/error_log_file.txt';
 	
+	const export_all = true;
 	const export_limit = 150;
 	const no_export_limit = 1000000;
 	const export_charset_windows = 'Windows-1255';

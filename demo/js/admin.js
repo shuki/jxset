@@ -24,6 +24,9 @@ $(function(){
 		filterToolbar:{
 			navButtonAdd: false
 		},
+		'import':{
+			navButtonAdd: true
+		},
   		grid: {
   			autowidth: true,
 			//width: grid_width,
@@ -44,6 +47,9 @@ $(function(){
 			source: 'id',
 			target: 'parent'}
 		],
+		'import':{
+			navButtonAdd: true
+		},
   		grid: {
 			autowidth: true,
 			//width: grid_width,
@@ -68,6 +74,9 @@ $(function(){
 			elem: '#events',
 			settings: events_settings
 		}],
+		'import':{
+			navButtonAdd: true
+		},
   		grid: {
 			autowidth: true,
 			//width: grid_width,
@@ -85,6 +94,9 @@ $(function(){
 			settings: tables_settings,
 			recreate: true
 		}],
+		'import':{
+			navButtonAdd: true
+		},
 	    grid: {
 			autowidth: true,
 			//width: grid_width,

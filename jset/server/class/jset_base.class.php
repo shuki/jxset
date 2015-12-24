@@ -369,7 +369,7 @@ private function export()
 		foreach($fields_array as $field_name)
 		{
 			$col = $this->col($field_name);
-			if($col->export == 1)
+			if((defined('config::export_all') && config::export_all) || $col->export == 1)
 			{
 				$field = $col->Field;
 				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
@@ -381,7 +381,7 @@ private function export()
 	}
 	else
 		foreach($this->columns->source->cols as $col)
-			if($col->export == 1)
+			if((defined('config::export_all') && config::export_all) || $col->export == 1)
 			{
 				$field = $col->Field;
 				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
