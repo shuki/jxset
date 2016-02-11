@@ -1053,7 +1053,8 @@
 				if(grid.data('reopen_form')){
 					var id = grid.data('reopen_form');
 					grid.removeData('reopen_form');
-					grid.data('settings').navigation.options.editfunc.call(grid, id, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false}));
+					//grid.data('settings').navigation.options.editfunc.call(grid, id, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false}));
+					setTimeout(function(){grid.data('settings').navigation.options.editfunc.call(grid, id, $.extend(true, {}, grid.data('settings').navigation.edit, {focusSelector: false}));}, 0);
 				}
 			},
 			beforeSelectRow: function (rowid, e) {
