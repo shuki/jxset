@@ -11,9 +11,12 @@ label.jset-grid-searchall{
 	padding: 0px 3px 0px 2px;
 }
 
-.jset-grid-searchall input{
+.jset-grid-searchall{
 	font-size: 13px;
 	padding: 2px 0 2px 0px;
+}
+
+.jset-grid-searchall input{
 	width: 70%;
 }
 
