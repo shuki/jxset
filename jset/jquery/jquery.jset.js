@@ -1587,7 +1587,7 @@
 				var div = $('<div class="jset-grid-container"></div>')
 					.insertBefore(grid)
 					.append('<div class="jset-grid-searchall ui-widget-header ui-corner-all ui-state-default"><label class="jset-grid-searchall">' + $.jset.captions.searchall +
-					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" size="60" /></div>')
+					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" /></div>')
 					.append(grid)
 					.css('direction', grid.data('settings').grid.direction);
 			}
