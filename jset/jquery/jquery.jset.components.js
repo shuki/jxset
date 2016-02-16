@@ -393,7 +393,10 @@
 			var filter_field = $.jset.fn.get_filterToolbar_field($.jset.fn.get_grid_by_element(elem), elem.data('settings').filter[0].target);
 			if(filter_field.val() != value)
 			{
-				filter_field.val(value);
+				if(elem.jqGrid('getGridParam', 'datatype') != elem.data('settings').grid.datatype)
+					elem.jqGrid('setGridParam', {datatype: elem.data('settings').grid.datatype});
+
+				filter_field.val(value ? value : '-1');
 				elem[0].triggerToolbar();
 			}
 		},
@@ -1282,7 +1285,6 @@
 					var grid = $(this);
 					var elem = $(formid).find('textarea#' + id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
-					//console.log($.extend(true, {}, $.jset.defaults.editor, options));
 					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
 				}
 			},
@@ -1345,10 +1347,12 @@
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('table#' + id);
 					var grid = $(this);
-					if(grid.data('form_action') == 'add' || grid.data('form_action') == 'copy')
-						elem.closest('span.FormElement').hide();
-						
 					var settings = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].settings;
+					if(grid.data('form_action') == 'add' || grid.data('form_action') == 'copy'){
+						elem.closest('span.FormElement').hide();
+						settings.grid.datatype = 'local';
+					}	
+
 					elem.jset(settings);
 				},
 				beforeShowForm: function(formid, id){
