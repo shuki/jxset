@@ -391,12 +391,11 @@
 				return '';
 				
 			var filter_field = $.jset.fn.get_filterToolbar_field($.jset.fn.get_grid_by_element(elem), elem.data('settings').filter[0].target);
-			if(filter_field.val() != value)
-			{
+			if($(this).data('form_action') == 'edit' && filter_field.val() != value){
 				if(elem.jqGrid('getGridParam', 'datatype') == 'local')
 					elem.jqGrid('setGridParam', {datatype: 'json'});
 
-				filter_field.val(value ? value : '-1');
+				filter_field.val(value);
 				elem[0].triggerToolbar();
 			}
 		},
