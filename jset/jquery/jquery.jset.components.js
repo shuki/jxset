@@ -393,8 +393,8 @@
 			var filter_field = $.jset.fn.get_filterToolbar_field($.jset.fn.get_grid_by_element(elem), elem.data('settings').filter[0].target);
 			if(filter_field.val() != value)
 			{
-				if(elem.jqGrid('getGridParam', 'datatype') != elem.data('settings').grid.datatype)
-					elem.jqGrid('setGridParam', {datatype: elem.data('settings').grid.datatype});
+				if(elem.jqGrid('getGridParam', 'datatype') == 'local')
+					elem.jqGrid('setGridParam', {datatype: 'json'});
 
 				filter_field.val(value ? value : '-1');
 				elem[0].triggerToolbar();
