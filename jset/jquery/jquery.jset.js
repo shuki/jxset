@@ -125,7 +125,7 @@
 			},
 			copy:{
 				navButtonAdd: true,
-				confirm: false,
+				confirm: true,
 				showFormInit: null,
 				properties: {
 					closeAfterAdd: true,
