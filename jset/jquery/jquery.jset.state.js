@@ -22,7 +22,7 @@
 	    },
 	    
 	    myColumnStateName: function (grid) {
-	        return window.location.pathname + '#' + grid[0].id + (user_attributes != undefined && user_attributes.id != undefined ? '#' + user_attributes.id : '');
+	        return window.location.href + '#' + grid[0].id + (user_attributes != undefined && user_attributes.id != undefined ? '#' + user_attributes.id : '');
 	    },
 	    
 	    saveGridState: function () {
