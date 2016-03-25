@@ -69,7 +69,7 @@ $.extend($.jgrid,{
 		deltext: "",
 		deltitle: "מחק שורה מסומנת",
 		searchtext: "",
-		searchtitle: "חפש רשומות",
+		searchtitle: "חיפוש מתקדם",
 		refreshtext: "",
 		refreshtitle: "טען גריד מחדש",
 		alertcap: "אזהרה",
