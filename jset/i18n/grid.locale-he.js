@@ -49,7 +49,10 @@ $.extend($.jgrid,{
 			novalue : " ערך מוחזר נדרש!",
 			customarray : "פונקציה מתואמת (custom function) חייבת להחזיר מערך!",
 			customfcheck : "פונקציה מתואמת (custom function) חייבת להיות מוגדרת למקרה של בדיקה מתואמת!"
-		}
+		},
+		// in rtl buttons are swaped
+		bNext: "הקודם",
+		bPrevious: "הבא"
 	},
 	view : {
 		caption: "הצג רשומה",

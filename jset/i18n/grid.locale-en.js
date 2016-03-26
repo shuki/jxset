@@ -50,7 +50,9 @@ $.extend($.jgrid,{
 			customarray : "Custom function should return array!",
 			customfcheck : "Custom function should be present in case of custom checking!"
 			
-		}
+		},
+		bNext: "Next",
+		bPrevious: "Previous"
 	},
 	view : {
 		caption: "View Record",

@@ -46,7 +46,10 @@ $.extend($.jgrid,{
 			novalue : " قيمة الرجوع مطلوبة!",
 			customarray : "يجب على الدالة الشخصية أن تنتج جدولا",
 			customfcheck : "الدالة الشخصية مطلوبة في حالة التحقق الشخصي"
-		}
+		},
+		// in rtl buttons are swaped
+		bNext: "سابق",
+		bPrevious: "التالى"
 	},
 	view : {
 		caption: "رأيت التسجيلات",
