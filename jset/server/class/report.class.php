@@ -281,7 +281,7 @@ class report {
 	}
 	
 	private function display_page($data){
-		define('SMARTY_DIR', 'smarty/libs/');
+		define('SMARTY_DIR', '../../smarty/libs/');
 		
 		require_once(SMARTY_DIR . 'Smarty.class.php');
 		$smarty = new Smarty();
