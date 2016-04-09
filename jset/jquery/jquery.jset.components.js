@@ -2185,7 +2185,7 @@
 							var options = grid.data('settings').grid.colModel[grid.data('index')[name]];							
 							var editoptions = options['editoptions'];							
 							var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-							editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+							editoptions.custom_options.target_value.call(target_element, grid, $this.val(), options);
 							$.jset.fn.get_form_field(formid, name).siblings().find('.qq-upload-button').show();
 						},
 						configure_target: function(element, editoptions)
@@ -2203,7 +2203,7 @@
 							
 							return element;
 						},
-						target_value: function(val, options)
+						target_value: function(grid, val, options)
 						{	
 							var target_element = $(this);
 							var target_link = $('.file-link-target', target_element.siblings('div'));
@@ -2218,7 +2218,8 @@
 								return;
 							}
 							
-							trash.show();
+							if(!$.jset.fn.readonlyCheck(grid))
+								trash.show();
 							
 							if(options.editoptions.custom_options.show_link)	
 								target_link.html($.fn.fmatter.uploadFileFmatter(val, options))
@@ -2291,7 +2292,7 @@
 
 							var dir = response.dir.replace(/\\\//g, "/");
 							$this.val(dir + response.fileName);
-							editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+							editoptions.custom_options.target_value.call(target_element, grid, $this.val(), options);
 				        })
 				        .on('progress', function (event, id, fileName, uploadedBytes, totalBytes) {
 							if (uploadedBytes < totalBytes) {
@@ -2313,7 +2314,7 @@
 						.attr('title', editoptions.custom_options.delete_title)
 						.bind('click', function(){
 							$this.val('');
-							editoptions.custom_options.target_value.call(target_element, '', options);
+							editoptions.custom_options.target_value.call(target_element, grid, '', options);
 						});
 				},
 				beforeShowForm: function(formid, id){
@@ -2322,7 +2323,7 @@
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+					editoptions.custom_options.target_value.call(target_element, grid, $this.val(), options);
 				},
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
 					var grid = $(this);
@@ -2330,7 +2331,7 @@
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
 					var target_element = $($this.parent('div')).siblings(editoptions.custom_options.target_selector);
-					editoptions.custom_options.target_value.call(target_element, $this.val(), options);
+					editoptions.custom_options.target_value.call(target_element, grid, $this.val(), options);
 				},
 			},
 			upload_video:{

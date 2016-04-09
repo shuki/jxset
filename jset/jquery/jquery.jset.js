@@ -635,7 +635,7 @@
 					$.jset.defaults.control[this.control].beforeShowForm.call(grid, formid, this.index || this.Field);
 			});
 			
-			$.jset.fn.readonlySet(grid, formid, $.jset.fn.readonlyCheck(grid));
+			$.jset.fn.readonlySet(grid, formid, $.jset.fn.readonlyAncestorCheck(grid));
 			
 			if($.isFunction(grid.data('settings').beforeShowForm))
 				grid.data('settings').beforeShowForm.call(grid, formid);			
@@ -663,7 +663,6 @@
 		
 		onclickPgButtons : function (whichbutton, formid, rowid){
 			var grid = $(this);
-			
 			grid.jqGrid('setGridParam', {scrollrows: true});
 			$.jset.fn.clear_form_tooltips(formid);
 			var subforms = $.jset.fn.closeSubForms(formid, grid);
@@ -1042,10 +1041,10 @@
 				grid.getGridParam("reccount") == 0 ? nav_buttons.addClass('ui-state-disabled') : nav_buttons.removeClass('ui-state-disabled');
 	
 				var del_copy_buttons = $('#del_' + grid.attr('id') + ', #copy_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
-				grid.getGridParam("reccount") != 0 && !$.jset.fn.readonlyCheck(grid) ? del_copy_buttons.removeClass('ui-state-disabled') : del_copy_buttons.addClass('ui-state-disabled');
+				grid.getGridParam("reccount") != 0 && !$.jset.fn.readonlyAncestorCheck(grid) ? del_copy_buttons.removeClass('ui-state-disabled') : del_copy_buttons.addClass('ui-state-disabled');
 
 				var add_button = $('#add_' + grid.attr('id'), $.jset.fn.get_grid_container(grid));
-				!$.jset.fn.readonlyCheck(grid) ? add_button.removeClass('ui-state-disabled') : add_button.addClass('ui-state-disabled');
+				!$.jset.fn.readonlyAncestorCheck(grid) ? add_button.removeClass('ui-state-disabled') : add_button.addClass('ui-state-disabled');
 
 				if($.isFunction(grid.data('settings').loadComplete))
 					grid.data('settings').loadComplete.call(grid, data);
@@ -1384,6 +1383,10 @@
 		},
 		
 		readonlyCheck: function(grid){
+			return !$('a[id=sData]', $.jset.fn.get_grid_container(grid)).is(':visible');
+		},
+		
+		readonlyAncestorCheck: function(grid){
 			return $('a[id=sData]', grid.closest('form').siblings('table.EditTable')).length && 				
 				!$('a[id=sData]', grid.closest('form').siblings('table.EditTable')).is(':visible');
 		},
