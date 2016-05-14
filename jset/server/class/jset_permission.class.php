@@ -28,12 +28,18 @@ class jset_permission
 		return $db->exec(str_replace('#table#', config::user_table, $sql_class->RESET_USER_PASSWORD), array(config::password_reset, config::encrypt_salt, $id));
 	}
 	
-	public static function get_user_attributes_js()
+	public static function get_user_attributes_js($list = null)
 	{
+		$vars = '';
+		if($list)
+			foreach($list as $key)
+				if(isset($_SESSION['jset_user_' . $key]))
+					$vars .= "user_attributes.{$key} = '" . $_SESSION['jset_user_' . $key] . "';\n";
+		
 		return "var user_attributes = {};
 		user_attributes.id = '" . $_SESSION['jset_user_id'] . "';
 		user_attributes.login = '" . $_SESSION['jset_user_login'] . "';
 		user_attributes.group = '" . $_SESSION['jset_user_group'] . "';
-		";
+		$vars";
 	}
 }
