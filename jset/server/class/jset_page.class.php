@@ -47,7 +47,7 @@ EOT;
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jquery-ui/css/{$theme}/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jqGrid/css/ui.jqgrid.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jqGrid/plugins/ui.multiselect.css">
-<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/css/theme/{$theme}.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/jquery-ui/font-awesome-4.4.0/css/font-awesome.css" />
 
 <!--script src="{$dir_pre}jset/jquery/jquery-1.9.1.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery-migrate-1.2.1.js" type="text/javascript"></script-->
@@ -124,6 +124,7 @@ EOT;
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/css/jset.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/template/panel/panel.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/template/pane/pane.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{$dir_pre}jset/css/theme/{$theme}.css" />
 {$rtl_css}
 
 EOT;

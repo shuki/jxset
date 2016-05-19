@@ -12,7 +12,7 @@
 ?>
 <style>
 <?php
-echo jset_css::get();
+	//echo jset_css::get();
 ?>
 </style>
  
@@ -24,7 +24,7 @@ echo jset_css::get();
 </head>
 
 <body>
-	<div><a href="login.php?signout"><img src="<?php echo $dir_pre ?>jset/img/out.png" title="צא"></a> <a href="<?php echo config::password_page; ?>"><?php echo $_SESSION['jset_user_login']; ?></a> שלום</div>
+	<div class="top-strap"> <a href="login.php?signout"><img src="<?php echo $dir_pre ?>jset/img/power-black.png" title="צא"></a> <a href="<?php echo config::password_page; ?>"><?php echo $_SESSION['jset_user_login']; ?></a> שלום</div>
 	<table id="grid"></table>
 </body>
 </html>

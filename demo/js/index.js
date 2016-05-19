@@ -33,11 +33,17 @@ $(function(){
 	  	//source: 'demo', //name of table, view or the actual sql that you wish to display in the grid
 		load_edit_record: true, //reload record before editting
 		searchall: true,
+		template: {
+			use: true,
+			columns: 1
+		},
 		//reopen_after_add: true,
 		//search_default: searchDefaults,
 	    grid: {
-			autowidth: true,
-			height: windowHeight - 150,
+	    	direction: 'rtl',
+		    width: $(window).width() - 15,
+		    height: $(window).height() - 155,
+			rownumWidth: 30,
 			footerrow : true,
 			userDataOnFooter : true
 	  	},
