@@ -2002,6 +2002,8 @@
 											directionality : 'rtl',
 											theme_advanced_resizing : false,
 											theme_advanced_resizing_use_cookie : false,
+											relative_urls: false,
+											remove_script_host: false,
 											height: $this.attr('rows') * 14,
 											width: $this.attr('cols')* 5.25
 										}));
