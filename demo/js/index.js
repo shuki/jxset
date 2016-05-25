@@ -30,7 +30,6 @@ $(function(){
 	var grid = $('#grid');
 	var settings = {
 	  	source: 'demo', //name of table, view or the actual sql that you wish to display in the grid
-	  	//source: 'demo', //name of table, view or the actual sql that you wish to display in the grid
 		load_edit_record: true, //reload record before editting
 		searchall: true,
 		template: {
