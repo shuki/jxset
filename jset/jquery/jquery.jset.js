@@ -597,7 +597,9 @@
 		},
 		
 		onInitializeForm : function(formid) {
-			var grid = $(this);			
+			var grid = $(this);	
+			$('<img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '" class="sDataLoading">').insertBefore($('a[id=sData]', $.jset.fn.get_grid_container(grid))).hide();
+
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
 
@@ -707,6 +709,10 @@
 					delete postdata[this.name];
 				}
 			});*/
+			
+			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).hide();
+			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').show();
+
 			var post = $.jset.fn.unformat_columns(this, postdata);
 			var hard_post = {};
 			
@@ -746,14 +752,23 @@
 			
 			$.extend(postdata, post, hard_post);
 			
-			if($.isFunction(grid.data('settings').beforeSubmit))
-				return grid.data('settings').beforeSubmit.call(grid, postdata, formid);
+			var return_value = [true];
 			
-			return [true];
+			if($.isFunction(grid.data('settings').beforeSubmit)){
+				return_value = grid.data('settings').beforeSubmit.call(grid, postdata, formid);
+				if(!return_value[0]){
+					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
+					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
+				}
+			}
+			
+			return return_value;
 		},
 	
 		afterSubmit: function(response, postdata, frmoper){
 			var grid = $(this);
+			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
+			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
 			
 			if(grid.data('copy')){
 				grid.data('copy', false);

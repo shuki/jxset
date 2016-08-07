@@ -317,3 +317,9 @@ input[type='checkbox'].jset-multicheckbox{
 .ui-widget-overlay.jqgrid-overlay {
     position: absolute;
 }
+
+img.sDataLoading {
+	height:20px;
+	vertical-align: middle;
+	padding: 0 0 0 20px;
+}
