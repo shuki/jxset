@@ -626,7 +626,7 @@ private function export()
 	private function getStringForGroup($group)
 	{
 		$i_='';
-		$sopt = array('eq' => "=",'ne' => "<>",'lt' => "<",'le' => "<=",'gt' => ">",'ge' => ">=",'bw'=>" {$i_}LIKE ",'bn'=>" NOT {$i_}LIKE ",'in'=>' IN ','ni'=> ' NOT IN','ew'=>" {$i_}LIKE ",'en'=>" NOT {$i_}LIKE ",'cn'=>" {$i_}LIKE ",'nc'=>" NOT {$i_}LIKE ", 'nu'=>'IS NULL', 'nn'=>'IS NOT NULL');
+		$sopt = array('eq' => "=",'ne' => "<>",'lt' => "<",'le' => "<=",'gt' => ">",'ge' => ">=",'bw'=>" {$i_}LIKE ",'bn'=>" NOT {$i_}LIKE ",'in'=>' IN ','ni'=> ' NOT IN','ew'=>" {$i_}LIKE ",'en'=>" NOT {$i_}LIKE ",'cn'=>" {$i_}LIKE ",'nc'=>" NOT {$i_}LIKE ", 'nu'=>'IS NULL', 'nn'=>'IS NOT NULL', 'fi'=>'FIND_IN_SET');
 		$s = "(";
 		if( isset ($group['groups']) && is_array($group['groups']) && count($group['groups']) >0 )
 		{
@@ -674,6 +674,9 @@ private function export()
 							case 'nu':
 							case 'nn':
 								$s .= $field.' '.$sopt[$op]." ";
+								break;
+							case 'fi':
+								$s .= $sopt[$op]."('$v', ".$field.') > 0 ';
 								break;
 							default :
 								$s .= $field.' '.$sopt[$op]." '$v' ";
