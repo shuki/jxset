@@ -412,7 +412,7 @@ private function export()
 
 	foreach($data as $row){
 		foreach($row as $key => $value)
-			$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $value)) . '",';
+			$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '",';
 	
 		$output .= substr($line, 0, -1) . "\n";
 		$line = '';
@@ -768,5 +768,9 @@ private function export()
 		}
 		
 		return implode(',', $result);
+	}
+	
+	private function strip_html($value){
+		return htmlspecialchars_decode(strip_tags(str_replace(array('<br />', '&nbsp;', '&ndash;', '&mdash;'), array("\n", ' ', '-', '_'), $value)));
 	}
 }
