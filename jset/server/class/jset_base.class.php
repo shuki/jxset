@@ -651,35 +651,38 @@ private function export()
 					}
 					$field = $this->sql_class->LD . $val['field'] . $this->sql_class->RD;
 					$op = $val['op'];
-					$v = $val['data'];
+					$v = stripslashes($val['data']);
 					if( $op ) {
 						switch ($op)
 						{
 							case 'bw':
 							case 'bn':
-								$s .= $field.' '.$sopt[$op]."'$v%'";
+								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
+								$s .= $field .' '. $sopt[$op] . $this->db->con->quote("$v%") . ' ';
 								break;
 							case 'ew':
 							case 'en':
-								$s .= $field.' '.$sopt[$op]."'%$v'";
+								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
+								$s .= $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v") . ' ';
 								break;
 							case 'cn':
 							case 'nc':
-								$s .= $field.' '.$sopt[$op]."'%$v%'";
+								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
+								$s .= $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v%") . ' ';
 								break;
 							case 'in':
 							case 'ni':
-								$s .= $field.' '.$sopt[$op]."( $v )";
+								$s .= $field . ' ' . $sopt[$op] . " ( $v ) ";
 								break;
 							case 'nu':
 							case 'nn':
-								$s .= $field.' '.$sopt[$op]." ";
+								$s .= $field . ' ' . $sopt[$op] . ' ';
 								break;
 							case 'fi':
-								$s .= $sopt[$op]."('$v', ".$field.') > 0 ';
+								$s .= $sopt[$op] . ' (' . $this->db->con->quote($v) . ', ' . $field . ') > 0 ';
 								break;
 							default :
-								$s .= $field.' '.$sopt[$op]." '$v' ";
+								$s .= $field . ' ' . $sopt[$op] . ' ' . $this->db->con->quote($v) . ' ';
 								break;
 						}
 					}
@@ -702,8 +705,9 @@ private function export()
 			if($val)
 				foreach($this->columns->source->cols as $col)
 					if(!$col->hidden || $col->edithidden || (isset($this->columns->index[substr($col->Field, 0, -5)]) && strrpos ($col->Field , '_name'))){
-						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE " . $this->db->con->quote("%" . stripslashes($val) . "%") . " OR ";
-						$date_array = explode('/', stripslashes($val), 3);
+						$val = stripslashes($val);
+						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE " . $this->db->con->quote("%" . str_replace(array('%', '_'), array('\%', '\_'), $val) . "%") . " OR ";
+						$date_array = explode('/', $val, 3);
 						if(count($date_array) > 1){
 							$rdate_array = array_reverse($date_array);
 							$dval_array = array();
@@ -712,7 +716,7 @@ private function export()
 									$dval_array[]= str_pad($ditem, 2, '0', STR_PAD_LEFT);
 							
 							$dval = implode('-', $dval_array);							
-							$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE " . $this->db->con->quote("%" . stripslashes($dval) . "%") . " OR ";
+							$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE " . $this->db->con->quote("%" . $dval . "%") . " OR ";
 						}
 					}
 			$sql .= ($q ? '(' . substr($q, 0, -4) . ') AND ' : '');
