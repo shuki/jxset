@@ -30,18 +30,54 @@ class jset_table {
 		return preg_match('/^select\s|^call\s/i', $source);
 	}
 	
-	private function table($db, $settings){
+	// update table source with joins from column list
+	public function update_source_with_joins($db, $id, $name, $section){
+		$sql_class = sql::create($db);
+		$settings = new stdClass;
+		$settings->_source_ = $name;
+		$settings->_section_ = $section;
+		$table = jset_table::table($db, $settings, false);
+
+		$source = $table->source;
+		if(!self::is_sql($source))
+			return;
+		
+		$jset_columns = jset_columns::create($db);
+		$columns = $jset_columns->get($db, $table, $settings);
+		
+		$fields = "\n";
+		$joins = "\n";
+		foreach($columns->source->cols as $col){
+			if($col->join){
+				$fields .= ",{$col->join->field_name}\n";
+				$joins .= "{$col->join->join}\n";
+			}
+		}
+		
+		if($fields == "\n")
+			return;
+		
+		if(defined('config::tag_source_fields_start') && defined('config::tag_source_fields_end') && defined('config::tag_source_joins_start') && defined('config::tag_source_joins_end')){
+			$source = gen_utils::replace_between($source, config::tag_source_fields_start, config::tag_source_fields_end, $fields);
+			$source = gen_utils::replace_between($source, config::tag_source_joins_start, config::tag_source_joins_end, $joins);
+			$db->execute($sql_class->UPDATE_TABLE_SOURCE, array($source, $id));
+		}
+	}
+		
+	private function table($db, $settings, $eval = true){
 		$sql_class = sql::create($db);
 	  	$db->query($sql_class->GET_TABLE, array($settings->_source_, $settings->_section_));
 		$result = $db->fetch();
 		if($result){
 			if(self::is_sql($result->source))
 				$result->sql = true;
-
-			if(eval("\$sql = \"$result->source\";") === FALSE)
-				die("unable to eval source: {$result->source}");
 			
-			$result->source = $sql;
+			if($eval){
+				if(eval("\$sql = \"$result->source\";") === FALSE)
+					die("unable to eval source: {$result->source}");
+				
+				$result->source = $sql;
+			}
 			return $result;
 		}else
 			return self::defaults($settings->_source_);
@@ -62,6 +98,6 @@ class jset_table {
 		$result->source = $source;
 		if($target) $result->target = $target;
 		return $result;
-	}	
+	}
 }
 

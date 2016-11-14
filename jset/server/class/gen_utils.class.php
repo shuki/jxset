@@ -50,5 +50,23 @@ class gen_utils
 		return $headers->$name;
 	}
 
+	public function replace_between($str, $needle_start, $needle_end, $replacement){
+		if(!$needle_start || !$needle_end)
+			return $str;
+		
+		$pos = strpos($str, $needle_start);
+		if($pos === false)
+			return $str;
+		
+		$start = $pos + strlen($needle_start);
+	
+		$pos = strpos($str, $needle_end, $start);
+		if($pos === false)
+			return $str;
+		
+		$end = $pos;
+	
+		return substr_replace($str, $replacement, $start, $end - $start);
+	}
 }
 

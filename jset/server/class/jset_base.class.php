@@ -362,68 +362,68 @@ class jset_base
 		return class_exists('app_dump') ? app_dump::process($this->db, $array[5], $this->settings) : $array[5];
 	}
 
-private function export()
-{
-	if(isset($this->settings->_fields_)){
-		$fields_array = json_decode($this->settings->_fields_, true);
-		foreach($fields_array as $field_name)
-		{
-			$col = $this->col($field_name);
-			if((defined('config::export_all') && config::export_all) || $col->export == 1)
+	private function export()
+	{
+		if(isset($this->settings->_fields_)){
+			$fields_array = json_decode($this->settings->_fields_, true);
+			foreach($fields_array as $field_name)
 			{
-				$field = $col->Field;
-				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
-				$fields .= $field . ",";
-				$field_names .= $name . ",";
-				$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
+				$col = $this->col($field_name);
+				if((defined('config::export_all') && config::export_all) || $col->export == 1)
+				{
+					$field = $col->Field;
+					$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
+					$fields .= $field . ",";
+					$field_names .= $name . ",";
+					$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
+				}
 			}
 		}
-	}
-	else
-		foreach($this->columns->source->cols as $col)
-			if((defined('config::export_all') && config::export_all) || $col->export == 1)
-			{
-				$field = $col->Field;
-				$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
-				$fields .= $field . ",";
-				$field_names .= $name . ",";
-				$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
-			}
+		else
+			foreach($this->columns->source->cols as $col)
+				if((defined('config::export_all') && config::export_all) || $col->export == 1)
+				{
+					$field = $col->Field;
+					$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
+					$fields .= $field . ",";
+					$field_names .= $name . ",";
+					$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
+				}
+		
+		if(!$fields){
+			header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
+			header('Content-type: text/csv');
+			return '';
+		}
+		
+		$fields = substr($fields, 0, -1);
+		$field_names = substr($field_names, 0, -1);
+		$filters = substr($filters, 0, -1);
+		$order = $this->order();
+		$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
+		$limit = general::get_export_limit($this->db, $this->settings);
+		$field_list = $this->coalesce($this->field_list($fields));
+		$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
+		//$sql = $this->sql_class->EXPORT;
+		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#limit#', '#LD#', '#RD#'), 
+					array($field_list, $this->table->source, $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
+		$this->db->query($sql);
+		$data = $this->db->fetchAll();
 	
-	if(!$fields){
-		header('Content-disposition: attachment; filename=' . $this->table->name . '.csv');
-		header('Content-type: text/csv');
+		foreach($data as $row){
+			foreach($row as $key => $value)
+				$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '",';
+		
+			$output .= substr($line, 0, -1) . "\n";
+			$line = '';
+		}
+		$output = substr($output, 0, -1);
+		
+		echo str_replace(",", ",", $field_names) . "\n";
+		echo $output;
 		return '';
 	}
-	
-	$fields = substr($fields, 0, -1);
-	$field_names = substr($field_names, 0, -1);
-	$filters = substr($filters, 0, -1);
-	$order = $this->order();
-	$direction = !$this->settings->_order_direction_ ? $this->settings->_direction_ : $this->settings->_order_direction_;
-	$limit = general::get_export_limit($this->db, $this->settings);
-	$field_list = $this->coalesce($this->field_list($fields));
-	$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
-	//$sql = $this->sql_class->EXPORT;
-	$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#limit#', '#LD#', '#RD#'), 
-				array($field_list, $this->table->source, $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
-	$this->db->query($sql);
-	$data = $this->db->fetchAll();
-
-	foreach($data as $row){
-		foreach($row as $key => $value)
-			$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '",';
-	
-		$output .= substr($line, 0, -1) . "\n";
-		$line = '';
-	}
-	$output = substr($output, 0, -1);
-	
-	echo str_replace(",", ",", $field_names) . "\n";
-	echo $output;
-	return '';
-}
-	
+		
 //-----------------    internal functions ------------------------
 	private function request_check($request)
 	{
@@ -704,7 +704,7 @@ private function export()
 			$q = '';
 			if($val)
 				foreach($this->columns->source->cols as $col)
-					if(!$col->hidden || $col->edithidden || (isset($this->columns->index[substr($col->Field, 0, -5)]) && strrpos ($col->Field , '_name'))){
+					if(!$col->hidden || $col->edithidden || (isset($this->columns->index[substr($col->Field, 0, -5)]) && strrpos ($col->Field , config::join_field_suffix))){
 						$val = stripslashes($val);
 						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE " . $this->db->con->quote("%" . str_replace(array('%', '_'), array('\%', '\_'), $val) . "%") . " OR ";
 						$date_array = explode('/', $val, 3);

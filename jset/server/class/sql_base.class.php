@@ -41,6 +41,7 @@ class sql_base
 
 	public $GET = "SELECT * FROM #table#";	
 	public $GET_TABLE = "SELECT * FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1";
+	public $UPDATE_TABLE_SOURCE = "UPDATE jset_table SET source = ? WHERE id = ?";
 	
 	public $TABLE_EVENT = "jset_event";
 	public $GET_EVENTS = "SELECT * FROM jset_event WHERE parent = ? LIMIT 1";
@@ -136,7 +137,7 @@ class sql_base
 	
 	public $GET_HOST_CREDENTIALS = "select * from #table# where name = ?";
 	
-	public $INSERT_JSET_COLUMN = "insert ignore into jset_column (parent, name) values (?, ?)";
+	public $INSERT_JSET_COLUMN = "insert ignore into jset_column (parent, name, rowpos, `export`, hidden) values (?, ?, ?, ?, ?)";
 	public $INSERT_JSET_COLUMNS = "insert ignore into jset_column (parent, name)
 		SELECT ?,	#LD#COLUMN_NAME#RD#
 		FROM information_schema.COLUMNS

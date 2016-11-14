@@ -12,7 +12,13 @@ include_once("autoload.php");
 
 class jset_columns_base {
 	private $settings;
+	private $sql_class;
 	
+	function __construct($db = null)
+	{
+		$this->sql_class = sql::create($db);
+	}
+
 	public function get($db, $table, $settings){
 		$this->settings = $settings;
 		$result->source->cols = $this->columns($db, $table, $index, $aggregate);
@@ -31,23 +37,21 @@ class jset_columns_base {
 			$res = $db->query(str_replace('#table#', $source, $sql_class->GET_ONE_RECORD));
 			if($row = $db->fetch())
 				foreach($row as $key => $value)
-					$db->execute($sql_class->INSERT_JSET_COLUMN, array($id, $key));
+					$db->execute($sql_class->INSERT_JSET_COLUMN, array($id, $key, 10, 1, substr($key, -strlen(config::join_field_suffix)) === config::join_field_suffix));
 		}else
 			$db->execute(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD), $sql_class->INSERT_JSET_COLUMNS), array($id, $source));
 	}
 	
-//-----------------    internal functions ------------------------
+	//-----------------    internal functions ------------------------
 	protected function columns($db, $table, &$index, &$aggregate){
-		$sql_class = sql::create($db);
 		return $table->sql ? $this->columns_sql($db, $table, $index, $aggregate) :
-		(db_utils::table_exists($db, $sql_class->TABLE_COLUMN) ?
+		(db_utils::table_exists($db, $this->sql_class->TABLE_COLUMN) ?
 			$this->columns_all($db, $table, $index, $aggregate) :
 			$this->columns_base($db, $table->name, $index));
 	}
 
 	protected function columns_base($db, $name, &$index) {
-		$sql_class = sql::create($db);
-  		$db->query(str_replace(array('#table#', '#LD#', '#RD#'), array($name, $sql_class->LD, $sql_class->RD), $sql_class->GET_COLUMNS_BASE));
+  		$db->query(str_replace(array('#table#', '#LD#', '#RD#'), array($name, $this->sql_class->LD, $this->sql_class->RD), $this->sql_class->GET_COLUMNS_BASE));
 		$cols = $this->process($db, $index, $notused);
 		if(!$cols)
 			die('no columns defined for source or target: ' . $name);
@@ -56,8 +60,7 @@ class jset_columns_base {
 	}
 
 	protected function columns_all($db, $table, &$index, &$aggregate){ 
-		$sql_class = sql::create($db);
-  		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_ALL), array($table->name, $table->section, $table->source));
+  		$db->query(str_replace(array('#LD#', '#RD#'), array($this->sql_class->LD, $this->sql_class->RD),$this->sql_class->GET_COLUMNS_ALL), array($table->name, $table->section, $table->source));
 		$cols = $this->process($db, $index, $aggregate);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
@@ -71,12 +74,11 @@ class jset_columns_base {
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
-		return $this->lists($db, $cols);
+		return $this->lists($db, $cols, $table);
 	}
 	
 	protected function columns_meta($db, $sql, &$index){
-		$sql_class = sql::create($db);
-  		$res = $db->query(str_replace('#table#', $sql, $sql_class->GET_ONE_RECORD));
+  		$res = $db->query(str_replace('#table#', $sql, $this->sql_class->GET_ONE_RECORD));
 
 		try
 		{
@@ -145,11 +147,10 @@ class jset_columns_base {
 	}
 
 	protected function columns_extension($db, $name, $section, $index, $cols, &$aggregate){
-		$sql_class = sql::create($db);
-		if(!db_utils::table_exists($db, $sql_class->TABLE_COLUMN))
+		if(!db_utils::table_exists($db, $this->sql_class->TABLE_COLUMN))
 			return $cols;
 		
-		$db->query(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD),$sql_class->GET_COLUMNS_EXTENSION), array($name, $section));
+		$db->query(str_replace(array('#LD#', '#RD#'), array($this->sql_class->LD, $this->sql_class->RD),$this->sql_class->GET_COLUMNS_EXTENSION), array($name, $section));
 		$rows = $db->fetchAll();
 		foreach($rows as $row){
 			if(isset($index[$row->Field])){
@@ -251,7 +252,7 @@ class jset_columns_base {
     			$value;
     }
 	// get lists
-	protected function lists($db, &$cols){
+	protected function lists($db, &$cols, $table = null){
 		foreach($cols as $row)
 			if(trim($row->list))
 			{
@@ -264,7 +265,7 @@ class jset_columns_base {
 					$row->sqls = $lists->sqls;
 					$row->list = $row->sqls[0];
 				}
-				//$row->join = $this->join($row, $lists);
+				$row->join = $this->join($row, $lists, $table->target);
 			}
 
 		return $cols;
@@ -313,17 +314,17 @@ class jset_columns_base {
 	    return $trans[$value] ? $trans[$value] : 'int';
 	}
 	
-	private function join($row, $lists){
+	private function join($row, $lists, $target){
+		$target = trim($row->src) ? trim($row->src) : $target;
 		$result = new stdClass;
 		
 		$field = $row->Field;
-		$table_name = $list->is_sql ? 'a' : $row->list;
 		$sql = $lists->sql;
 		$list_name = $field . config::join_list_suffix;
 		$field_name = $field . config::join_field_suffix;
 		
 		$result->field_name = $list_name . '.name AS ' . $field_name;
-		$result->join = " LEFT JOIN ($sql) AS $list_name ON a.`$field` = $list_name.id ";
+		$result->join = " LEFT JOIN ($sql) AS $list_name ON {$this->sql_class->LD}{$target}{$this->sql_class->RD}.{$this->sql_class->LD}{$field}{$this->sql_class->RD} = $list_name.id ";
 		return $result;
 	}
 }

@@ -60,6 +60,7 @@
 			searchall: false,
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
+			join_field_suffix: '_name',
 			spacing: '20px',
 			caption_class: 'CaptionField',
 			row_selection: true,
@@ -896,9 +897,9 @@
 				} 
 									
 				if(grid.data('index')[post._order_by_] != undefined){
-					var order_by_name = post['_order_by_'] + '_name';
-					if(post._order_by_ && grid.data('columns')[grid.data('index')[post._order_by_]].list && typeof grid.data('columns')[grid.data('index')[post._order_by_ + '_name']] != "undefined")
-						post._order_by_ = post._order_by_ + '_name';
+					var order_by_name = post['_order_by_'] + grid.data('settings').join_field_suffix;
+					if(post._order_by_ && grid.data('columns')[grid.data('index')[post._order_by_]].list && typeof grid.data('columns')[grid.data('index')[post._order_by_ + grid.data('settings').join_field_suffix]] != "undefined")
+						post._order_by_ = post._order_by_ + grid.data('settings').join_field_suffix;
 				} else
 					delete post._order_by_;
 					
@@ -919,8 +920,8 @@
 						if(!this.hidden && this.name != 'rn')
 						{
 							if(grid.data('settings').export.associative == 'both')
-								if(typeof grid.data('index')[this.index + '_name'] != 'undefined')
-									fields.push(this.index + '_name');
+								if(typeof grid.data('index')[this.index + grid.data('settings').join_field_suffix] != 'undefined')
+									fields.push(this.index + grid.data('settings').join_field_suffix);
 
 							fields.push(this.index);
 						}
