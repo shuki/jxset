@@ -64,7 +64,7 @@ class jset_table {
 		}
 	}
 		
-	private function table($db, $settings, $eval = true){
+	public function table($db, $settings, $eval = true){
 		$sql_class = sql::create($db);
 	  	$db->query($sql_class->GET_TABLE, array($settings->_source_, $settings->_section_));
 		$result = $db->fetch();

@@ -137,7 +137,7 @@ class sql_base
 	
 	public $GET_HOST_CREDENTIALS = "select * from #table# where name = ?";
 	
-	public $INSERT_JSET_COLUMN = "insert ignore into jset_column (parent, name, rowpos, `export`, hidden) values (?, ?, ?, ?, ?)";
+	public $INSERT_JSET_COLUMN = "insert ignore into jset_column (parent, name, rowpos, `export`, hidden, title) values (?, ?, ?, ?, ?, ?)";
 	public $INSERT_JSET_COLUMNS = "insert ignore into jset_column (parent, name)
 		SELECT ?,	#LD#COLUMN_NAME#RD#
 		FROM information_schema.COLUMNS

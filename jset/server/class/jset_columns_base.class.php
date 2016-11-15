@@ -37,10 +37,43 @@ class jset_columns_base {
 			$res = $db->query(str_replace('#table#', $source, $sql_class->GET_ONE_RECORD));
 			if($row = $db->fetch())
 				foreach($row as $key => $value)
-					$db->execute($sql_class->INSERT_JSET_COLUMN, array($id, $key, 10, 1, substr($key, -strlen(config::join_field_suffix)) === config::join_field_suffix));
+					$db->execute($sql_class->INSERT_JSET_COLUMN, array($id, $key, 10, 1, 0, null));
 		}else
 			$db->execute(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD), $sql_class->INSERT_JSET_COLUMNS), array($id, $source));
 	}
+
+	
+	// create jset_column records for the passed jset_table id
+	public function create_jset_columns($db, $id, $name, $section){
+		$sql_class = sql::create($db);
+		$settings = new stdClass;
+		$settings->_source_ = $name;
+		$settings->_section_ = $section;
+		$table = jset_table::table($db, $settings, false);
+		
+		$source = $table->source;
+		$jset_columns = jset_columns::create($db);
+		$columns = $jset_columns->get($db, $table, $settings);
+		$index = $columns->index;
+
+		if(jset_table::is_sql($source)){
+			foreach($columns->source->cols as $col){
+				$hidden = 0;
+				$title = null;
+				if($join_field_base_name = gen_utils::get_join_field_base_name($col->Field)){
+					if(isset($columns->source->cols[$index[$join_field_base_name]])){
+						$join_field_base_col = $columns->source->cols[$index[$join_field_base_name]];
+						$hidden = 1;
+						$title = $join_field_base_col->title;
+					}
+				}
+				$db->execute($sql_class->INSERT_JSET_COLUMN, array($id, $col->Field, 10, 1, $hidden, $title));
+			}	
+		}
+		else
+			$db->execute(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD), $sql_class->INSERT_JSET_COLUMNS), array($id, $source));
+	}
+	
 	
 	//-----------------    internal functions ------------------------
 	protected function columns($db, $table, &$index, &$aggregate){
@@ -314,17 +347,18 @@ class jset_columns_base {
 	    return $trans[$value] ? $trans[$value] : 'int';
 	}
 	
-	private function join($row, $lists, $target){
-		$target = trim($row->src) ? trim($row->src) : $target;
+	private function join($row, $lists, $target_table){
 		$result = new stdClass;
 		
 		$field = $row->Field;
+		$src = trim($row->src);
 		$sql = $lists->sql;
 		$list_name = $field . config::join_list_suffix;
 		$field_name = $field . config::join_field_suffix;
-		
+		$target = $src ? $src : "{$this->sql_class->LD}{$target_table}{$this->sql_class->RD}.{$this->sql_class->LD}{$field}{$this->sql_class->RD}";
+				
 		$result->field_name = $list_name . '.name AS ' . $field_name;
-		$result->join = " LEFT JOIN ($sql) AS $list_name ON {$this->sql_class->LD}{$target}{$this->sql_class->RD}.{$this->sql_class->LD}{$field}{$this->sql_class->RD} = $list_name.id ";
+		$result->join = " LEFT JOIN ($sql) AS $list_name ON $target = $list_name.id ";
 		return $result;
 	}
 }

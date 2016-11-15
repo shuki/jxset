@@ -68,5 +68,9 @@ class gen_utils
 	
 		return substr_replace($str, $replacement, $start, $end - $start);
 	}
+
+	public function get_join_field_base_name($name){
+		return (substr($name, -strlen(config::join_field_suffix)) === config::join_field_suffix) ? substr($name, 0, -strlen(config::join_field_suffix)) : null;
+	}
 }
 

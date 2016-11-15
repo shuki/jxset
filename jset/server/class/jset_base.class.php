@@ -704,7 +704,7 @@ class jset_base
 			$q = '';
 			if($val)
 				foreach($this->columns->source->cols as $col)
-					if(!$col->hidden || $col->edithidden || (isset($this->columns->index[substr($col->Field, 0, -5)]) && strrpos ($col->Field , config::join_field_suffix))){
+					if(!$col->hidden || $col->edithidden || isset($this->columns->index[gen_utils::get_join_field_base_name($col->Field)])){
 						$val = stripslashes($val);
 						$q .= 'cast(' . $this->sql_class->LD . $col->Field . $this->sql_class->RD . " as char) LIKE " . $this->db->con->quote("%" . str_replace(array('%', '_'), array('\%', '\_'), $val) . "%") . " OR ";
 						$date_array = explode('/', $val, 3);
