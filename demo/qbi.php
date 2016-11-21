@@ -16,11 +16,9 @@
 </head>
 
 <body>
-	<div style="float:left;"><textarea id="sql" rows="14" cols="120">SQL...</textarea></div>
-	<div style="float:left;"><table id="host"></table></div>
+	<div style="style="float:left;"><textarea id="sql" rows="14" cols="120">SQL...</textarea></div>
 	<div style="float:left;"><button id="submit" type="button" style="width:262px">Submit</button></div>
 	<br></br>
-	<div style="width:150%;float:left;"><table id="grid"></table></div>
-	<img src="jset/img/loading.gif" id="loading" style="display:none">
+	<div style="width:100%;float:left;"><table id="grid"></table></div>
 </body>
 </html>
