@@ -641,7 +641,60 @@
 			var store = table.data('store');
 			return store[options.colModel.name][options.rowId];
 		},
+
+		multicheckbox_formatter : function(cellvalue, options, rowobject) {
+			var store = $(this).data('store');
+			if(store[options.colModel.name] == undefined)
+				store[options.colModel.name] = {};
+			store[options.colModel.name][options.rowId] = cellvalue;
+
+			var grid = $(this);
+			cellvalue = cellvalue + "";
+			var oSelect = false, ret=[];
+			if(options.colModel.formatoptions != undefined){
+				oSelect= options.colModel.formatoptions.value;
+			} else if(options.colModel.editoptions != undefined){
+				oSelect= options.colModel.editoptions.value;
+			}
+			if (oSelect) {
+				scell = [];
+				scell = cellvalue.split(",");
+				scell = $.map(scell,function(n){return $.trim(n);});
+
+				if(typeof $.jset.message_flag == 'undefined')
+					$.jset.message_flag = true;
+				if($.isArray(oSelect)){
+					var flag = true;
+					for (var i = 0; i < oSelect.length; i++) {
+						var id_str = oSelect[i].id + '';
+						id_str = id_str.toLowerCase();
+						if($.inArray(id_str, scell) > -1){
+							ret.push(oSelect[i].name);
+							flag = false;
+						}
+					}
+
+					if(flag && $.trim(cellvalue) && $.trim(cellvalue) != 0)
+					{
+						if($.jset.message_flag){
+							$.jset.message_flag = false;
+							var field_label = grid.data('settings').grid.colNames[grid.data('index')[options.colModel.name]];
+							alert($.jgrid.format($.jset.messages.selectboxItemNotFound, field_label, cellvalue));
+						}
+						ret[0] = cellvalue;
+					}
+				} 
+			}
+			cellvalue = ret.join(", ");
+			return  cellvalue === "" ? $.fn.fmatter.defaultFormat(cellvalue,options) : cellvalue;
+		},
 		
+		multicheckbox_unformatter: function(cellvalue, options, cellObject) {
+			var table = $(cellObject).parents('table:first');
+			var store = table.data('store');
+			return store[options.colModel.name][options.rowId];
+		},		
+			
 		select_option_exists: function(elem, value){
 			var exists = false;
 			$(elem).find('option').each(function(){
@@ -1498,6 +1551,7 @@
 			},
 			multicheckbox:{
 				edittype:'custom',
+				//formatter: 'selectbox',
 				editoptions: {
 					value: {},
 					size: function(col){
@@ -1509,6 +1563,7 @@
 					defaultValue: function(col){
 						return col.default_value;
 					},
+					//multiple: true,
 					custom_options: {
 						columns: 2,
 						layout: 'simple'
