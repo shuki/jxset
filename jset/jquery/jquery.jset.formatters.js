@@ -190,6 +190,15 @@
 			var colModel = options.formatoptions ? options : options.colModel;
 			var file_lable = (extension == 'jpg' || extension == 'jpeg' || extension == 'gif' || extension == 'png') ? colModel.formatoptions.picture_lable : colModel.formatoptions.file_lable;
 			return '<a target="_blank" href="' + cellvalue +'"><img src="../jxset/jset/img/file.jpg" height="38" title="' + file_lable + ' ' + extension + '"/></a>';
+		},
+		multicheckboxFmatter: function(cellvalue, options, rowdata, act){
+			var grid = $(this);
+			var store = grid.data('store');
+			if(store[options.colModel.name] == undefined)
+				store[options.colModel.name] = {};
+			store[options.colModel.name][options.rowId] = cellvalue;
+			
+			return grid.data('index')[options.colModel.name + grid.data('settings').join_field_suffix] != undefined ? rowdata[grid.data('index')[options.colModel.name + grid.data('settings').join_field_suffix]] : cellvalue;
 		}
 	});
 	
@@ -266,6 +275,13 @@
 	$.extend($.fn.fmatter.currencyFmatter , {
 	    unformat : function(cellvalue, options) {
 	    	return cellvalue.replace("$$","");
+		}
+	});	
+
+	$.extend($.fn.fmatter.multicheckboxFmatter , {
+	    unformat : function(cellvalue, options) {
+			var store = $(this).data('store');
+			return store[options.colModel.name][options.rowId];
 		}
 	});	
 

@@ -2445,6 +2445,11 @@
 			/*grid.on('jqGridToolbarBeforeSearch', function() {
 				return grid.data('stop_triggerToolbar') ? 'stop' : '';
 			});*/
+		},
+		
+		get_join_field_base_name: function(grid, join_field_name){
+			var suffix_length = grid.data('settings').join_field_suffix.length;
+			return join_field_name.substring(0, join_field_name.length - suffix_length);
 		}
 	});
 })(jQuery);

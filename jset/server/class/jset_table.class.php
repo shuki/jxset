@@ -57,6 +57,8 @@ class jset_table {
 		if($fields == "\n")
 			return;
 		
+		$joins .= "GROUP BY {$sql_class->LD}{$table->target}{$sql_class->RD}.{$sql_class->LD}{$columns->primary}{$sql_class->RD}\n";
+		
 		if(defined('config::tag_source_fields_start') && defined('config::tag_source_fields_end') && defined('config::tag_source_joins_start') && defined('config::tag_source_joins_end')){
 			$source = gen_utils::replace_between($source, config::tag_source_fields_start, config::tag_source_fields_end, $fields);
 			$source = gen_utils::replace_between($source, config::tag_source_joins_start, config::tag_source_joins_end, $joins);

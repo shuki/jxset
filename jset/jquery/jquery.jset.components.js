@@ -642,7 +642,7 @@
 			return store[options.colModel.name][options.rowId];
 		},
 
-		multicheckbox_formatter : function(cellvalue, options, rowobject) {
+/*		multicheckbox_formatter : function(cellvalue, options, rowobject) {
 			var store = $(this).data('store');
 			if(store[options.colModel.name] == undefined)
 				store[options.colModel.name] = {};
@@ -693,7 +693,7 @@
 			var table = $(cellObject).parents('table:first');
 			var store = table.data('store');
 			return store[options.colModel.name][options.rowId];
-		},		
+		},	*/	
 			
 		select_option_exists: function(elem, value){
 			var exists = false;
@@ -1551,7 +1551,7 @@
 			},
 			multicheckbox:{
 				edittype:'custom',
-				//formatter: 'selectbox',
+				formatter: 'multicheckboxFmatter',
 				editoptions: {
 					value: {},
 					size: function(col){
