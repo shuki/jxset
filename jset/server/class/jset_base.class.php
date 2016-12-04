@@ -417,11 +417,11 @@ class jset_base
 			$output .= substr($line, 0, -1) . "\n";
 			$line = '';
 		}
-		$output = substr($output, 0, -1);
+		$output = substr($output, 0, - (strlen($value) + 3));
 		
 		echo str_replace(",", ",", $field_names) . "\n";
 		echo $output;
-		return '';
+		return $value;
 	}
 		
 //-----------------    internal functions ------------------------
