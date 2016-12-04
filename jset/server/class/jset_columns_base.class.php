@@ -357,10 +357,10 @@ class jset_columns_base {
 		$field_name = $field . config::join_field_suffix;
 		$target = $src ? $src : "{$this->sql_class->LD}{$target_table}{$this->sql_class->RD}.{$this->sql_class->LD}{$field}{$this->sql_class->RD}";
 				
-		//$result->field_name = $list_name . '.name AS ' . $field_name;
-		//$result->join = " LEFT JOIN ($sql) AS $list_name ON $target = $list_name.id ";
-		$result->field_name = "GROUP_CONCAT(DISTINCT $list_name.name ORDER BY $list_name.name SEPARATOR ', ') AS $field_name";
-		$result->join = " LEFT JOIN ($sql) AS $list_name ON FIND_IN_SET($list_name.id, $target) > 0";
+		$result->field_name = $list_name . '.name AS ' . $field_name;
+		$result->join = " LEFT JOIN ($sql) AS $list_name ON $target = $list_name.id ";
+		//$result->field_name = "GROUP_CONCAT(DISTINCT $list_name.name ORDER BY $list_name.name SEPARATOR ', ') AS $field_name";
+		//$result->join = " LEFT JOIN ($sql) AS $list_name ON FIND_IN_SET($list_name.id, $target) > 0";
 		return $result;
 	}
 }
