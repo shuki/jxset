@@ -9,6 +9,8 @@
  */
 
 include_once("autoload.php");
+if(class_exists('external'))
+	external::create();
 
 $post = jset_dispatch::get_real_POST_GET();
 $class = $post['_class_'];

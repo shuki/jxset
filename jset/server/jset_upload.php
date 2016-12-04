@@ -9,6 +9,8 @@
  */
 
 include_once("autoload.php");
+if(class_exists('external'))
+	external::create();
 
 echo json_encode(process($_FILES, $_POST));
 
