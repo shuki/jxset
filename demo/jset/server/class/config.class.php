@@ -50,5 +50,9 @@ class config
 	const export_charset_windows = 'Windows-1255';
 
 	const join_list_suffix = '_jxlist';
-	const join_field_suffix = '_jxfield';
+	const join_field_suffix = '_name';
+	const tag_source_fields_start = '-- jset_fields_start';
+	const tag_source_fields_end = '-- jset_fields_end';
+	const tag_source_joins_start = '-- jset_joins_start';
+	const tag_source_joins_end = '-- jset_joins_end';	
 }
