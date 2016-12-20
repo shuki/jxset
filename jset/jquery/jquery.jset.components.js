@@ -1581,6 +1581,9 @@
 				},
 				onInitializeForm: function(formid, id){
 					var elem = $(formid).find('input.jset-multicheckbox#' + id);
+					if(elem.length == 0)
+						return;
+					
 					var grid = $(this);
 					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
 
