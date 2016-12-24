@@ -61,9 +61,11 @@
 		
 		multicheckbox_hide: function (elem){
 			$(elem).siblings('table.jset-multicheckbox').hide();
+			$(elem).siblings('img').show();
 		},
 		
 		multicheckbox_show: function (elem){
+			$(elem).siblings('img').hide();
 			$(elem).siblings('table.jset-multicheckbox').show();
 		},
 		
@@ -1657,7 +1659,8 @@
 					if(elem.siblings().length == 0){
 						var div = $('<div></div>')
 							.insertBefore(elem)
-							.append(elem);
+							.append(elem)
+							.append('<img src="' + $.jset.dir_pre + $.jset.defaults.loading_img.substring(1) + '" style="display:none">');
 						
 						$.jset.fn.create_multicheckbox_options(elem, grid, editoptions.value);
 					}
