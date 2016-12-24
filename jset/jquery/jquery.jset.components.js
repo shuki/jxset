@@ -59,8 +59,15 @@
 			
 		},
 		
+		multicheckbox_hide: function (elem){
+			$(elem).siblings('table.jset-multicheckbox').hide();
+		},
+		
+		multicheckbox_show: function (elem){
+			$(elem).siblings('table.jset-multicheckbox').show();
+		},
+		
 		remove_multicheckbox_options: function (elem){
-			var div = $(elem).closest('div');
 			$(elem).siblings('table.jset-multicheckbox').remove();
 		},
 		
@@ -141,17 +148,22 @@
 						var sql = $.jset.fn.get_select_list_sql(grid, field, $(elem).val());						
 						sql = sql.replace('{' + name + '}', $(elem).val());
 						var target_element = $.jset.fn.get_dependent_field_element(elem, field);
-						if(target_element !== false && target_element.length > 0)
-							$.jset.fn.get_rows(grid, sql, function(data){
-								if($(target_element).is('select')){
+						if(target_element !== false && target_element.length > 0){
+							if($(target_element).is('select')){
+								$.jset.fn.get_rows(grid, sql, function(data){
 									$.jset.fn.set_select_options(target_element, grid, data, target_element.val(), !preserve_value, target_element.attr('name'));
 									if(search)
 										grid[0].triggerToolbar();
-								}
-								else if($(target_element).is('input.jset-multicheckbox')){
+								});
+							}
+							else if($(target_element).is('input.jset-multicheckbox')){
+								$.jset.fn.multicheckbox_hide(target_element);
+								$.jset.fn.get_rows(grid, sql, function(data){
 									$.jset.fn.set_multicheckbox_options(target_element, grid, data, elem);
-								}
-							});
+									$.jset.fn.multicheckbox_show(target_element);
+								});
+							}
+						}
 					});
 			});
 			return elem;
