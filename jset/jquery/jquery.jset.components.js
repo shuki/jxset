@@ -58,20 +58,69 @@
 			return $.jset.fn.prepend_empty_select_option(elem);
 			
 		},
+		
+		remove_multicheckbox_options: function (elem){
+			var div = $(elem).closest('div');
+			$(elem).siblings('table.jset-multicheckbox').remove();
+		},
+		
+		create_multicheckbox_options: function (elem, grid, data){
+			var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
+			var div = $(elem).closest('div');
 
-		set_select_options: function (elem, grid, source, value, dont_preserve_value, name){
+			var table = $('<table class="jset-multicheckbox"><tr><td></td></tr></table>')
+				.appendTo(div);
+			
+			var td = $('td', table);
+			for(var i = 1; i < editoptions.custom_options.columns; i++)
+				td.clone().appendTo($('tr', table));
+		
+			var value = elem.val();
+			var v = value.split(',');
+			
+			if($.isArray(data)){
+				for (var i = 0; i < data.length; i++) {	
+					var option = data[i];
+					switch(editoptions.custom_options.layout){
+						case 'table':
+							var current_td = $('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table);
+							if($(current_td).children('table').length == 0)
+								$(current_td).append('<table></table>');
+								
+							$('<tr><td><label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label></td></tr>')
+								.appendTo($(current_td).children('table'));
+							break;
+						case 'simple':
+						default:
+							$('<label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label><br />')
+								.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
+					}
+				}						
+			}			
+		},
+
+		set_multicheckbox_options: function (elem, grid, data, source_elem){
+			$.jset.fn.remove_multicheckbox_options(elem);
+			if(!$(source_elem).val())
+				return;
+			
+			$.jset.fn.create_multicheckbox_options(elem, grid, data);
+		},
+		
+		set_select_options: function (elem, grid, data, value, dont_preserve_value, name){
 			if(!name){
 				alert('set_select_options: missing name for select');
 				return;
 			}
+			
 			var no_empty_first_row = grid.data('settings').grid.colModel[grid.data('index')[name]]['editoptions'].no_empty_first_row;
 			var select_options = no_empty_first_row ? '' : '<option value=""></option>';
-			if($.isArray(source))
-				$.each(source, function(i, obj){
+			if($.isArray(data))
+				$.each(data, function(i, obj){
 					select_options += '<option value="' + obj.id + '" ' + (obj.disabled ? 'style="color:gray"' : '') + '>' + obj.name + '</option>';
 				});
-			else if($.isPlainObject(source))
-				$.each(source, function(key, val){
+			else if($.isPlainObject(data))
+				$.each(data, function(key, val){
 					select_options += '<option value="' + key + '">' + val + '</option>';
 				});
 			$(elem).html(select_options);
@@ -94,9 +143,14 @@
 						var target_element = $.jset.fn.get_dependent_field_element(elem, field);
 						if(target_element !== false && target_element.length > 0)
 							$.jset.fn.get_rows(grid, sql, function(data){
-								$.jset.fn.set_select_options(target_element, grid, data, target_element.val(), !preserve_value, target_element.attr('name'));
-								if(search)
-									grid[0].triggerToolbar();							
+								if($(target_element).is('select')){
+									$.jset.fn.set_select_options(target_element, grid, data, target_element.val(), !preserve_value, target_element.attr('name'));
+									if(search)
+										grid[0].triggerToolbar();
+								}
+								else if($(target_element).is('input.jset-multicheckbox')){
+									$.jset.fn.set_multicheckbox_options(target_element, grid, data, elem);
+								}
 							});
 					});
 			});
@@ -112,7 +166,7 @@
 			else if($(source).parent('span[class="FormElement"]').length > 0){
 				var container = $(source).closest('form');
 				var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, .ui-search-input .FormElement", container);
-				var target = $('select[name="' + target_name + '"]', container).not(exclude);
+				var target = $('select[name="' + target_name + '"], input[name="' + target_name + '"].jset-multicheckbox', container).not(exclude);
 				return target;
 			}
 			
@@ -1584,44 +1638,16 @@
 					if(elem.length == 0)
 						return;
 					
+					elem.hide();
 					var grid = $(this);
 					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
 
 					if(elem.siblings().length == 0){
-						elem.hide();
-
 						var div = $('<div></div>')
 							.insertBefore(elem)
 							.append(elem);
-						var table = $('<table class="jset-multicheckbox"><tr><td></td></tr></table>')
-							.appendTo(div);
 						
-						var td = $('td', table);
-						for(var i = 1; i < editoptions.custom_options.columns; i++)
-							td.clone().appendTo($('tr', table));
-					
-						var value = elem.val();
-						var v = value.split(',');
-						
-						if($.isArray(editoptions.value)){
-							for (var i = 0; i < editoptions.value.length; i++) {	
-								var option = editoptions.value[i];
-								switch(editoptions.custom_options.layout){
-									case 'table':
-										var current_td = $('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table);
-										if($(current_td).children('table').length == 0)
-											$(current_td).append('<table></table>');
-											
-										$('<tr><td><label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label></td></tr>')
-											.appendTo($(current_td).children('table'));
-										break;
-									case 'simple':
-									default:
-										$('<label class="jset-multicheckbox"><input type="checkbox" value="' + option.id + '" ' + (v.indexOf(option.id) != -1 ? '" checked="checked"' : '') + ' class="jset-multicheckbox"/> ' + option.name + '</label><br />')
-											.appendTo($('td:nth-child(' + ((i % editoptions.custom_options.columns) + 1) + ')', table));
-								}
-							}						
-						}
+						$.jset.fn.create_multicheckbox_options(elem, grid, editoptions.value);
 					}
 				}
 			},
