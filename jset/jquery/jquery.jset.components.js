@@ -108,11 +108,8 @@
 			}			
 		},
 
-		set_multicheckbox_options: function (elem, grid, data, source_elem){
+		set_multicheckbox_options: function (elem, grid, data){
 			$.jset.fn.remove_multicheckbox_options(elem);
-			if(!$(source_elem).val())
-				return;
-			
 			$.jset.fn.create_multicheckbox_options(elem, grid, data);
 		},
 		
@@ -159,11 +156,15 @@
 								});
 							}
 							else if($(target_element).is('input.jset-multicheckbox')){
-								$.jset.fn.multicheckbox_hide(target_element);
-								$.jset.fn.get_rows(grid, sql, function(data){
-									$.jset.fn.set_multicheckbox_options(target_element, grid, data, elem);
-									$.jset.fn.multicheckbox_show(target_element);
-								});
+								if(!$(elem).val())
+									$.jset.fn.remove_multicheckbox_options(target_element);
+								else{									
+									$.jset.fn.multicheckbox_hide(target_element);
+									$.jset.fn.get_rows(grid, sql, function(data){
+										$.jset.fn.set_multicheckbox_options(target_element, grid, data);
+										$.jset.fn.multicheckbox_show(target_element);
+									});
+								}
 							}
 						}
 					});
