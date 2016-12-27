@@ -1737,15 +1737,21 @@
 					sopt:['eq','ne']				
 				},
 				afterShowForm: function(formid, id){
-					var grid = $(this);
 					var elem = $(formid).find('#' + id);
+					if(elem.length == 0)
+						return;
+					
+					var grid = $(this);
 					var name = $(elem).attr('name');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
 				afterclickPgButtons : function(whichbutton, formid, rowid, id){
-					var grid = $(this);
 					var elem = $(formid).find('#' + id);
+					if(elem.length == 0)
+						return;
+					
+					var grid = $(this);
 					var name = $(elem).attr('name');
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
