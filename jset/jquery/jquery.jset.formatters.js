@@ -199,6 +199,9 @@
 			store[options.colModel.name][options.rowId] = cellvalue;
 			
 			return grid.data('index')[options.colModel.name + grid.data('settings').join_field_suffix] != undefined ? rowdata[grid.data('index')[options.colModel.name + grid.data('settings').join_field_suffix]] : cellvalue;
+		},
+		checkboxFmatter: function(cellvalue, options, rowdata, act){
+			return '<img src="../jxset/jset/img/' + (cellvalue == 0 ? 'checkbox_cleared.jpg' : 'checkbox_checked.jpg') + '" value="' + cellvalue + '" />';
 		}
 	});
 	
@@ -285,6 +288,12 @@
 		}
 	});	
 
+	$.extend($.fn.fmatter.checkboxFmatter , {
+	    unformat : function(cellvalue, options, pos, cnt) {
+	    	console.log(cellvalue, options, pos, cnt);
+			return $('img', pos).attr('value');
+		}
+	});	
 /*	$.extend($.fn.fmatter.checkbox_edit , {
 	    unformat : function(cellvalue, options) {
 			alert(cellvalue);

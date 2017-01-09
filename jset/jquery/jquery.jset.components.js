@@ -313,7 +313,6 @@
 			return value;
 		},
 
-
 		unformat_checkbox: function (cellvalue, options, cellobject){
 			return cellvalue;
 		},
@@ -1183,6 +1182,7 @@
 			checkbox: {
 				align: 'center',
 				formatter: 'checkbox',
+				//formatter: 'checkboxFmatter',
 				edittype: 'checkbox',
 				editoptions: {
 					value: '1:0',
