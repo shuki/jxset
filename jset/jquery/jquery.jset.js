@@ -1426,7 +1426,13 @@
 				overlayCSS: {
 					backgroundColor: '#AAAAAA',
 					opacity: 0.3
-				}
+				},
+				/*theme: true,
+			    themedCSS: {
+			        width: "35%",
+			        left: "30%",
+			        border: "3px solid #a00"
+			    }*/
 			}, options);
 			$(elem).block(options);
 		},

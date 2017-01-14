@@ -11,8 +11,9 @@
 ?>
 
 <head>
-<title>Jxset Admin</title>
-<script src="js/admin.js" type="text/javascript"></script>
+<title>Jxset Admin Master</title>
+<script src="js/defaults.js" type="text/javascript"></script>
+<script src="js/admin_master.js" type="text/javascript"></script>
 </head>
 
 <body>

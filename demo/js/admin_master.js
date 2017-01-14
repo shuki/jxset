@@ -14,15 +14,18 @@ $(function(){
 	
 	var events_settings = {
 		source: 'jset_event',
-		//host: fn.get_host,
-		//db_name: fn.get_db_name,
-	  	//db_remote_definitions: true,
+		host: fn.get_host,
+		db_name: fn.get_db_name,
+	  	db_remote_definitions: true,
 		filter:[{
 			source: 'id',
 			target: 'parent'}
 		],
 		filterToolbar:{
 			navButtonAdd: false
+		},
+		'import':{
+			navButtonAdd: true
 		},
 		beforeRequest: function(){
 			$.jset.fn.block($('#tables'));
@@ -43,13 +46,16 @@ $(function(){
 			
 	var columns_settings = {
 		source: 'jset_column',
-		//host: fn.get_host,
-		//db_name: fn.get_db_name,
-	  	//db_remote_definitions: true,
+		host: fn.get_host,
+		db_name: fn.get_db_name,
+	  	db_remote_definitions: true,
 		filter:[{
 			source: 'id',
 			target: 'parent'}
 		],
+		'import':{
+			navButtonAdd: true
+		},
 		beforeRequest: function(){
 			$.jset.fn.block($('#tables'));
 		},
@@ -68,11 +74,11 @@ $(function(){
 			
 	var tables_settings = {
 		source: 'jset_table',
-	  	//db_remote_definitions: true,
-		//db_fields: {
-		//	host: 'name',
-		//	db_name: 'db_name'
-		//},
+	  	db_remote_definitions: true,
+		db_fields: {
+			host: 'name',
+			db_name: 'db_name'
+		},
 		detail: [{
 			elem: '#columns',
 			settings: columns_settings
@@ -80,6 +86,15 @@ $(function(){
 			elem: '#events',
 			settings: events_settings
 		}],
+		'import':{
+			navButtonAdd: true
+		},
+		beforeRequest: function(){
+			$.jset.fn.block($('#hosts'));
+		},
+		loadComplete: function(data){
+			$('#hosts').unblock();
+		},
   		grid: {
 			autowidth: true,
 			//width: grid_width,
@@ -97,6 +112,9 @@ $(function(){
 			settings: tables_settings,
 			recreate: true
 		}],
+		'import':{
+			navButtonAdd: true
+		},
 	    grid: {
 			autowidth: true,
 			//width: grid_width,
@@ -108,6 +126,5 @@ $(function(){
 		}
 	};				
 						
-	//$('#hosts').jset(hosts_settings);
-	$('#tables').jset(tables_settings);
+	$('#hosts').jset(hosts_settings);
 });
