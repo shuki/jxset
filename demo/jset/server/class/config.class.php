@@ -32,7 +32,7 @@ class config
 	const mysql_rel_path = '';
 	const hosts_table = 'jset_host';
 
-	const login = false;
+	const login = true;
 	const session = 'demo';
 	const login_page = 'login.php';
 	const start_page = 'index.php';
@@ -40,6 +40,7 @@ class config
 	const user_table = 'jset_user';
 	const encrypt_salt = 'abba';
 	const password_reset = '1234';
+	const password_min_length = 8;
 	
 	const mysqldump_prefix = '';
 	const errorLogFile = 'log/error_log_file.txt';

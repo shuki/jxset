@@ -34,6 +34,12 @@ jset_page::min(config::jxset, $language, '', $rtl);
 			<form action="<?php echo config::password_page; ?>" method="post" target="_self"> 
 				<table>
 					<tbody>
+					<tr>
+						<td colspan="2" style="text-align:center; color:blue;"><?php echo isset($_SESSION['jset_password_criteria']) ? "{$lang['password_change']}, {$lang[$_SESSION['jset_password_criteria']]}" : ''; ?></td>
+					</tr>
+					<tr>
+						<td colspan="2"> </td>
+					</tr>					
 					<tr style="display: table-row;">
 						<td><label for="current_password"><?php echo $lang['current_password'] ?>: </label></td>
 						<td><input type="password" size="12" maxlength="50" id="current_password" name="current_password" role="textbox"></td>
@@ -52,6 +58,12 @@ jset_page::min(config::jxset, $language, '', $rtl);
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align:center; <?php echo ($success === true ? 'color:green;' : 'color:red;'); ?>"><?php echo (isset($success ) ? ($success === true ? $lang['valid'] : $lang['not_valid']) : ''); ?></td>
+					</tr>
+					<tr>
+						<td colspan="2"> </td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align:center;"><?php echo (defined('config::password_min_length') ? "{$lang['password_min_length']} " . config::password_min_length . " {$lang['password_min_length_ending']}" : ''); ?></td>
 					</tr>
 					</tbody>
 				</table>

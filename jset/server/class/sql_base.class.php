@@ -150,6 +150,9 @@ class sql_base
 	public $GET_USER_RECORD = "select * from #table# where login = ? LIMIT 1";
 	public $RESET_USER_PASSWORD = "UPDATE #table# set `password` = AES_ENCRYPT(?,?) WHERE id = ? LIMIT 1";
 	public $UPDATE_USER_PASSWORD = "update #table# set `password` = AES_ENCRYPT(?,?) where login = ?";
+	public $INSERT_PASSWORD = "insert into jset_password (ip, user, password) values (?,?,AES_ENCRYPT(?,?))";
+	public $EXPIRED_PASSWORD = "select coalesce(datediff(now(),max(stamp)) > 60, 1) as result from jset_password where `user` = ?";
+	public $USED_PASSWORD = "select count(*) > 0 as result from jset_password where `user` = ? and AES_ENCRYPT(?,?) = `password`";
 	
 	public $GET_JSET_LANG_RECORDS = "select name, value from jset_lang_item where parent = (SELECT id FROM jset_lang WHERE name = ? AND lang = ?)";
 	public $IMPORT = "LOAD DATA INFILE '#filename#'
