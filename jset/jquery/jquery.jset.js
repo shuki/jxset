@@ -506,7 +506,7 @@
 			$.jset.fn.define_grid_columns(data.columns, t);
 
 			t.each(function(i){
-				$.jset.fn.setup_grid(t, i, data);
+				$.jset.fn.gridSetup(t, i, data);
 			});
 		});
 	
@@ -1590,7 +1590,7 @@
 				settings.navigation.del.delData = obj;
 		},
 
-		setup_grid: function(t, i, data){
+		gridSetup: function(t, i, data){
 			var grid = $(t[i]);
 			grid.data({
 				settings: t.p,
@@ -1636,6 +1636,9 @@
 			
 			if(grid.data('settings').grid.scroll == 1)
 				$('td' + grid.data('settings').grid.pager + '_center', $.jset.fn.get_grid_container(grid)).css('width', '0');
+			
+			if($.isFunction(grid.data('settings').afterGridSetup))
+				grid.data('settings').afterGridSetup.call(grid);
 		},
 		
 		create_pager_div: function(grid, i){
