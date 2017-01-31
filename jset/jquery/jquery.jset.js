@@ -1470,7 +1470,7 @@
 		},
 		
 		getGridDefinition: function(name){
-			return name ? $.jset.gridDefinitions[name] : $.jset.gridDefinitions;
+			return $.jset.gridDefinitions ? (name ? $.jset.gridDefinitions[name] : $.jset.gridDefinitions) : {};
 		},
 		
 		get_rows: function(grid, sql, callback){
