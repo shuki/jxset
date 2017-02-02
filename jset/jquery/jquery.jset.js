@@ -796,7 +796,7 @@
 			}
 			
 			if(grid.data('settings').single_record.active && grid.data('settings').single_record.displayAlert)
-				alert('record updated successfuly');
+				alert($.jset.messages.recordUpdated);
 			
 			if(obj.id !== undefined)
 				grid.data('lastID', obj.id);

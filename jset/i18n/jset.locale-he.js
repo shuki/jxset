@@ -22,7 +22,8 @@
 			changePasswordSuccess: 'סיסמה אופסה בהצלחה.',
 			changePasswordFailure: 'סיסמה לא אופסה.',
 			userExists: 'שם משתמש זה קיים כבר במערכת.',
-			recordsAdded: 'רשומות נוספו.'
+			recordsAdded: 'רשומות נוספו.',
+			recordUpdated: 'רשומה נשמרה בהצלחה.'
 		},
 		nav: {
 			columnChooserTitle: 'התאמה אישית',

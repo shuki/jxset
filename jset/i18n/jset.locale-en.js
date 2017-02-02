@@ -22,7 +22,8 @@
 			changePasswordSuccess: 'Password was reset successfully.',
 			changePasswordFailure: 'Password was not reset.',
 			userExists: 'This user name already exists.',
-			recordsAdded: 'records added.'
+			recordsAdded: 'records added.',
+			recordUpdated: 'record updated successfuly.'
 		},
 		nav: {
 			columnChooserTitle: 'Select Columns',
