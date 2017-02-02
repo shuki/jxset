@@ -32,7 +32,7 @@ class config
 	const mysql_rel_path = '';
 	const hosts_table = 'jset_host';
 
-	const login = true;
+	const login = false;
 	const session = 'demo';
 	const login_page = 'login.php';
 	const start_page = 'index.php';
