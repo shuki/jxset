@@ -988,9 +988,9 @@
 					    });
 					}
 					
-					$('select,input', container).addClass('FormElement ui-widget-content ui-corner-all');
+					$.jset.fn.get_filterToolbar_fields(grid).addClass('FormElement ui-widget-content ui-corner-all');
 						
-					$('td.ui-search-input > input', container)
+					$.jset.fn.get_filterToolbar_fields(grid)
 					.on('focus.jset', function(){
 		   				var save_this = $(this);
 					    setTimeout (function(){ 
@@ -998,7 +998,7 @@
 					    },0);
 					});
 
-					$('td.ui-search-oper > a', container).css('padding', '0');
+					$('td.ui-search-oper > a', $.jset.fn.get_filterToolbar(grid)).css('padding', '0');
 					
 					grid.data('grid_width', grid.jqGrid('getGridParam', 'width'));
 
@@ -1324,10 +1324,19 @@
 			return field.val(value);
 		},
 		
+		get_filterToolbar: function(grid){
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] tr.ui-search-toolbar", $.jset.fn.get_grid_container(grid));
+			return $('tr.ui-search-toolbar', $.jset.fn.get_grid_container(grid)).not(exclude);
+		},
+		
 		get_filterToolbar_field: function(grid, field_name){
-			//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, .ui-search-input :input", $.jset.fn.get_grid_container(grid));
 			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $.jset.fn.get_grid_container(grid));
-			return $(':input[id=gs_' + field_name + ']', $.jset.fn.get_grid_container(grid)).not(exclude);
+			return $('.ui-search-input :input[id=gs_' + field_name + ']', $.jset.fn.get_grid_container(grid)).not(exclude);
+		},
+		
+		get_filterToolbar_fields: function(grid){
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $.jset.fn.get_grid_container(grid));
+			return $('.ui-search-input :input', $.jset.fn.get_grid_container(grid)).not(exclude);
 		},
 		
 		show_field: function(formid, name){
@@ -1704,7 +1713,7 @@
 			if (!grid.data('settings').filterToolbar.hide && grid.data('settings').clearFilterToolbar.navButtonAdd){
 				var options = $.extend(true, {}, grid.data('settings').clearFilterToolbar.options,
 					{onClickButton: function(){
-						grid_container.find('tr.ui-search-toolbar input[id^="gs_"]:visible, tr.ui-search-toolbar select[id^="gs_"]:visible').val('');
+						$.jset.fn.get_filterToolbar_fields(grid).filter(':visible').val('');
 						grid[0].triggerToolbar();
 					}});
 				
@@ -1759,7 +1768,7 @@
 					onClickButton:function(){
 						grid[0].toggleToolbar();
 						var height = grid.jqGrid('getGridParam', 'height');
-						grid.jqGrid('setGridHeight', $('tr.ui-search-toolbar', grid_container).css('display') == 'none' ? height + 23 : height - 23);
+						grid.jqGrid('setGridHeight', $.jset.fn.get_filterToolbar(grid).is(':visible') ? height - 23 : height + 23);
 					}
 				};
 				
@@ -1928,8 +1937,7 @@
 				$.each(grid.data('settings').search_default, function(i){
 					var acolModel = grid.data('settings').grid.colModel[grid.data('index')[this.name]];
 					if(acolModel != undefined){
-						//var $elem = $('#gs_' + acolModel.name, grid_container);
-						var $elem = $('tr.ui-search-toolbar', $.jset.fn.get_grid_container(grid)).find('input[name=' + acolModel.name + '], select[name=' + acolModel.name + ']');
+						var $elem = $.jset.fn.get_filterToolbar_field(grid, acolModel.name);
 						if(acolModel.stype === 'custom' && acolModel.searchoptions != undefined && $.isFunction(acolModel.searchoptions.custom_value))
 							acolModel.searchoptions.custom_value.call(grid, $elem, "set", this.value);
 						else

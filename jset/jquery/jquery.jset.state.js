@@ -77,9 +77,10 @@
 	    },
 	    
 	    storeFilterToolbar: function(){
+	    	var grid = $(this);
 	    	var filterTollbarState = {};
 	    	var search_default = [];
-	    	$.each($('tr.ui-search-toolbar', $.jset.fn.get_grid_container(this)).find('input, select'), function(i, v){
+	    	$.each($.jset.fn.get_filterToolbar_fields(grid), function(i, v){
 	    		if($(v).val() != ''){
 	    			var soper = $(this).closest('tr').find('td.ui-search-oper').find('a.soptclass').attr('soper');
 		    		var item = {};
