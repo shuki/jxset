@@ -180,7 +180,7 @@
 			}
 			else if($(source).parent('span[class="FormElement"]').length > 0){
 				var container = $(source).closest('form');
-				var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, .ui-search-input .FormElement", container);
+				var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, .ui-search-input :input", container);
 				var target = $('select[name="' + target_name + '"], input[name="' + target_name + '"].jset-multicheckbox', container).not(exclude);
 				return target;
 			}
