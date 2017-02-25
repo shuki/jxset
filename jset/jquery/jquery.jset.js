@@ -299,7 +299,7 @@
 				    title: $.jset.nav.clearPersistTitle,
 				    onClickButton: function () {
 				    	grid = $(this);
-				    	$.jset.fn.storeFilterToolbar.call(grid);
+				    	$.jset.fn.storeFilterToolbar(grid);
 				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName(grid));
 				        grid.jset('reload');
 				        //localStorage.clear();
@@ -549,7 +549,7 @@
 	    	grid = $(this);	
 	    	grid.data('pending_reload', false);
 	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName(grid));
-	        var filterToolbarState = $.jset.fn.getFilterToolbar.call(grid);
+	        var filterToolbarState = $.jset.fn.getFilterToolbar(grid);
 	        var settings = $.extend(true, {}, grid.data('settings'), {filterToolbar: {options: {ignore_column_search_default: true}}});
 	        if(filterToolbarState)
 	        	settings.search_default = filterToolbarState.search_default;
@@ -1015,7 +1015,7 @@
 				}
 				
 				if(grid.data('settings').persist)
-					$.jset.fn.saveGridState.call(grid);
+					$.jset.fn.saveGridState(grid);
 				 
 				if(grid.data('settings').detail){
 					$.each(grid.data('settings').detail, function(){
@@ -1138,7 +1138,7 @@
 			resizeStop: function () {
 				var grid = $(this);
 				if(grid.data('settings').persist)
-					$.jset.fn.saveGridState.call(grid);
+					$.jset.fn.saveGridState(grid);
 			},
 			
 			onSelectCell: function(rowid, cellname, value, iRow, iCol){
@@ -1629,14 +1629,14 @@
 			var grid_settings = {};
 			if(grid.data('settings').persist){
 				$.extend(true, grid_settings, t.p.grid);
-				$.jset.fn.restoreGridState.call(grid, grid_settings);
+				$.jset.fn.restoreGridState(grid, grid_settings);
 			}
 			//console.log(JSON.stringify(t.p.persist ? grid_settings : grid.data('settings').grid, null, "\t"));
 			grid.jqGrid(t.p.persist ? grid_settings : grid.data('settings').grid);
 
 			if(grid.data('settings').persist)
 				$.jset.fn.get_grid_container(grid).bind("sortstop", function(){
-				    $.jset.fn.saveGridState.call(grid);
+				    $.jset.fn.saveGridState(grid);
 				});
 				
 			$.jset.fn.create_navigator(grid, $.jset.fn.get_grid_container(grid));															
@@ -1892,7 +1892,7 @@
 				                        grid.jqGrid("remapColumns", perm, true);
 				                        grid.jqGrid("setGridWidth", grid.data('grid_width'));
 										if(grid.data('settings').persist)
-											$.jset.fn.saveGridState.call(grid);
+											$.jset.fn.saveGridState(grid);
 									}
 								}
 							});
