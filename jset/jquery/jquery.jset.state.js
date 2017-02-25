@@ -77,7 +77,7 @@
 	    },
 	    
 	    storeFilterToolbar: function(grid){
-	    	var filterTollbarState = {};
+	    	var filterToolbarState = {};
 	    	var search_default = [];
 	    	$.each($.jset.fn.get_filterToolbar_fields(grid), function(i, v){
 	    		if($(v).val() != ''){
@@ -90,12 +90,12 @@
 	    		}
 	    	});
 	    	
-	    	filterTollbarState['search_default'] = search_default;
-	    	grid.data('filterTollbarState', filterTollbarState);
+	    	filterToolbarState['search_default'] = search_default;
+	    	grid.data('filterToolbarState', filterToolbarState);
 	    },
 
 	    getFilterToolbar: function(grid){
-	    	return grid.data('filterTollbarState');
+	    	return grid.data('filterToolbarState');
 	    }
 	});
 })(jQuery);
