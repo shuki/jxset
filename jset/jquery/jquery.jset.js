@@ -299,10 +299,9 @@
 				    title: $.jset.nav.clearPersistTitle,
 				    onClickButton: function () {
 				    	grid = $(this);
-				    	$.jset.fn.storeFilterToolbar(grid);
+				    	grid.data('filterToolbarState', $.jset.fn.getFilterToolbarState(grid))
 				        $.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName(grid));
 				        grid.jset('reload');
-				        //localStorage.clear();
 				    }
 				}				
 			},
@@ -548,11 +547,9 @@
 		reload: function(unfetch_grid){
 	    	grid = $(this);	
 	    	grid.data('pending_reload', false);
-	        //$.jset.fn.removeObjectFromLocalStorage($.jset.fn.myColumnStateName(grid));
-	        var filterToolbarState = $.jset.fn.getFilterToolbar(grid);
 	        var settings = $.extend(true, {}, grid.data('settings'), {filterToolbar: {options: {ignore_column_search_default: true}}});
-	        if(filterToolbarState)
-	        	settings.search_default = filterToolbarState.search_default;
+	        if(grid.data('filterToolbarState'))
+	        	settings.search_default = grid.data('filterToolbarState');
 	        var id = grid.attr('id');
 	        grid.jset('unload', [unfetch_grid]);
 	        return $('table#' + id).jset(settings);

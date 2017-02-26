@@ -76,9 +76,8 @@
 	        return $.extend(true, settings, columnsState);
 	    },
 	    
-	    storeFilterToolbar: function(grid){
-	    	var filterToolbarState = {};
-	    	var search_default = [];
+	    getFilterToolbarState: function(grid){
+	    	var search_fields = [];
 	    	$.each($.jset.fn.get_filterToolbar_fields(grid), function(i, v){
 	    		if($(v).val() != ''){
 	    			var soper = $(this).closest('tr').find('td.ui-search-oper').find('a.soptclass').attr('soper');
@@ -86,16 +85,11 @@
 		    		item.name = $(v).attr('name');
 		    		item.value = $(v).val();
 		    		item.soper = soper;
-		    		search_default.push(item);
+		    		search_fields.push(item);
 	    		}
 	    	});
 	    	
-	    	filterToolbarState['search_default'] = search_default;
-	    	grid.data('filterToolbarState', filterToolbarState);
+	    	return search_fields;
 	    },
-
-	    getFilterToolbar: function(grid){
-	    	return grid.data('filterToolbarState');
-	    }
 	});
 })(jQuery);
