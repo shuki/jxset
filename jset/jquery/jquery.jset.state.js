@@ -79,17 +79,31 @@
 	    getFilterToolbarState: function(grid){
 	    	var search_fields = [];
 	    	$.each($.jset.fn.get_filterToolbar_fields(grid), function(i, v){
-	    		if($(v).val() != ''){
-	    			var soper = $(this).closest('tr').find('td.ui-search-oper').find('a.soptclass').attr('soper');
-		    		var item = {};
-		    		item.name = $(v).attr('name');
-		    		item.value = $(v).val();
-		    		item.soper = soper;
-		    		search_fields.push(item);
-	    		}
+	    		var item = {};
+	    		item.name = $(v).attr('name');
+	    		item.value = $(v).val();
+    			var search_operator = $.jset.fn.get_filterToolbar_field_search_operator(grid, $(this));
+	    		if(search_operator)
+	    			item.soper = search_operator.attr('soper');
+	    		
+	    		search_fields.push(item);
 	    	});
 	    	
 	    	return search_fields;
 	    },
-	});
+
+	    setFilterToolbarState: function(grid, search_fields){
+		    $.each(search_fields, function(i, item){
+		    	var search_field = $.jset.fn.get_filterToolbar_field(grid, item.name);
+	    		if(search_field.length > 0){
+	    			search_field.val(item.value);
+	    			if(typeof item.soper != 'undefined'){
+	        			var search_operator = $.jset.fn.get_filterToolbar_field_search_operator(grid, search_field);
+	    	    		if(search_operator)
+	    	    			search_operator.attr('soper', item.soper);
+	    			}
+	    		}
+	    	});
+	    },
+});
 })(jQuery);

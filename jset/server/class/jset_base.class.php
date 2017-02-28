@@ -116,7 +116,9 @@ class jset_base
 		$result->page = $page;
 		if($this->columns->aggregate)
 			$result->userdata = $this->aggregate($this->columns->aggregate);
-		
+		if(defined('config::expose_sql') && config::expose_sql)
+			$result->sql = $sql;
+
 		return $result;
 	}
 

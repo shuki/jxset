@@ -445,11 +445,13 @@
 		jsetgrid_element: function(value, options){
 			var grid = $(this);
 			var settings = grid.data('settings').grid.colModel[grid.data('index')[options.name]].settings;
-			var filter_name = settings.filter[0].target;
-			settings.search_default.push({
-		  		name: filter_name,
-		  		value: value
-		  	});
+			if(typeof settings.filter != 'undefined' && settings.filter.length > 0 && typeof settings.filter[0].target != 'undefined' ){
+				var filter_name = settings.filter[0].target;
+				settings.search_default.push({
+			  		name: filter_name,
+			  		value: value
+			  	});
+			}
 			var elem = $('<TABLE></TABLE>');
 			return elem;
 		},
@@ -464,6 +466,10 @@
 					elem.jqGrid('setGridParam', {datatype: 'json'});
 
 				filter_field.val(value);
+				
+				if($.isFunction(elem.data('settings').before_triggerToolbar))
+					elem.data('settings').before_triggerToolbar.call(elem);
+				
 				elem[0].triggerToolbar();
 			}
 		},
@@ -1472,8 +1478,8 @@
 					if(grid.data('form_action') == 'add' || grid.data('form_action') == 'copy'){
 						elem.closest('span.FormElement').hide();
 						settings.grid.datatype = 'local';
-					}	
-
+					}
+					
 					elem.jset(settings);
 				},
 				beforeShowForm: function(formid, id){

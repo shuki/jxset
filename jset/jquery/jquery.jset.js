@@ -885,9 +885,9 @@
 						return;
 					}
 		
-					if (grid.data('settings').search_default.length > 0) {
+					//if (grid.data('settings').search_default.length > 0) {
 						return false;
-					}
+					//}
 				} else {
 					if(grid.data('settings').preload_source && grid.jqGrid('getGridParam', 'datatype') == 'local')
 						grid.jqGrid('setGridParam', {datatype: 'json'});				
@@ -1335,6 +1335,19 @@
 			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $.jset.fn.get_grid_container(grid));
 			return $('.ui-search-input :input', $.jset.fn.get_grid_container(grid)).not(exclude);
 		},
+
+		get_filterToolbar_field_search_operator: function(grid, search_field){
+			var search_operator = search_field.closest('tr').find('td.ui-search-oper').find('a.soptclass');
+			return search_operator.length == 0 ? false : search_operator;
+		},
+		
+		set_filterToolbar_field_search_operator: function(grid, search_field, soper){
+			var search_operator = $.jset.fn.get_filterToolbar_field_search_operator(grid, search_field);
+			if(search_operator){
+				search_operator.attr('soper', soper);
+				search_operator.html(grid.data('settings').filterToolbar.options.operands[soper]);
+			}
+		},
 		
 		show_field: function(formid, name){
 			$.jset.fn.get_form_field_label(formid, name).show();
@@ -1645,6 +1658,11 @@
 			
 			if($.isFunction(grid.data('settings').afterGridSetup))
 				grid.data('settings').afterGridSetup.call(grid);
+			
+			if($.isFunction(grid.data('settings').before_triggerToolbar))
+				grid.data('settings').before_triggerToolbar.call(grid);
+			
+			grid[0].triggerToolbar();
 		},
 		
 		create_pager_div: function(grid, i){
@@ -1934,20 +1952,15 @@
 				$.each(grid.data('settings').search_default, function(i){
 					var acolModel = grid.data('settings').grid.colModel[grid.data('index')[this.name]];
 					if(acolModel != undefined){
-						var $elem = $.jset.fn.get_filterToolbar_field(grid, acolModel.name);
+						var search_field = $.jset.fn.get_filterToolbar_field(grid, acolModel.name);
 						if(acolModel.stype === 'custom' && acolModel.searchoptions != undefined && $.isFunction(acolModel.searchoptions.custom_value))
-							acolModel.searchoptions.custom_value.call(grid, $elem, "set", this.value);
+							acolModel.searchoptions.custom_value.call(grid, search_field, "set", this.value);
 						else
-							$elem.val(this.value);
+							search_field.val(this.value);
 
-		    			var asoper = $elem.closest('tr').find('td.ui-search-oper').find('a.soptclass');
-		    			if(asoper != undefined){
-		    				asoper.attr('soper', this.soper);
-			    			asoper.html(grid.data('settings').filterToolbar.options.operands[this.soper]);
-		    			}
+						$.jset.fn.set_filterToolbar_field_search_operator(grid, search_field, this.soper);
 					}
-				});
-				grid[0].triggerToolbar();
+				});		
 			}
 		},
 		
