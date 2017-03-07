@@ -100,7 +100,8 @@
 	    			if(typeof item.soper != 'undefined'){
 	        			var search_operator = $.jset.fn.get_filterToolbar_field_search_operator(grid, search_field);
 	    	    		if(search_operator)
-	    	    			search_operator.attr('soper', item.soper);
+	    	    			$.jset.fn.set_filterToolbar_field_search_operator(grid, search_field, item.soper);
+	    	    			//search_operator.attr('soper', item.soper);
 	    			}
 	    		}
 	    	});

@@ -589,7 +589,7 @@
 				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].beforeInitData))
 					$.jset.defaults.control[this.control].beforeInitData.call(grid, formid);
 			});	
-					
+			
 			if($.isFunction(grid.data('settings').beforeInitData))
 				grid.data('settings').beforeInitData.call(grid, formid);
 		},
@@ -657,6 +657,7 @@
 				if($.isFunction(grid.data('settings').copy.showFormInit))
 					grid.data('settings').copy.showFormInit.call(grid, formid, source_id);
 			}
+
 			if($.isFunction(grid.data('settings').afterShowForm))
 				grid.data('settings').afterShowForm.call(grid, formid);			
 		},
@@ -985,9 +986,9 @@
 					    });
 					}
 					
-					$.jset.fn.get_filterToolbar_fields(grid).addClass('FormElement ui-widget-content ui-corner-all');
+					//$.jset.fn.get_filterToolbar_fields(grid).addClass('FormElement ui-widget-content ui-corner-all');
+					$.jset.fn.get_filterToolbar_fields(grid).addClass('ui-widget-content ui-corner-all')
 						
-					$.jset.fn.get_filterToolbar_fields(grid)
 					.on('focus.jset', function(){
 		   				var save_this = $(this);
 					    setTimeout (function(){ 
@@ -1288,9 +1289,20 @@
 			return $('table[id=' + grid_id + ']' );
 		},
 		
-		get_form_field: function(formid, name){
+/*		get_form_field: function(formid, name){
 			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, .ui-search-input :input", $(formid).closest('form'));
 			return $(formid).find(':input[name=' + name + '],table[name=' + name + ']').not(exclude);
+		},*/
+		
+		get_form_field: function(formid, name){
+			var $formid = $(formid);
+			//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
+			var ret = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
+			//if(ret.length != 1)
+			//	console.log(name, ret, exclude);
+			
+			return ret;
 		},
 		
 		get_form_field_label: function(formid, name){
@@ -1327,13 +1339,15 @@
 		},
 		
 		get_filterToolbar_field: function(grid, field_name){
-			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $.jset.fn.get_grid_container(grid));
-			return $('.ui-search-input :input[id=gs_' + field_name + ']', $.jset.fn.get_grid_container(grid)).not(exclude);
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
+			console.log(exclude);
+			return $("td.ui-search-input [id='gs_" + field_name + "']", $.jset.fn.get_grid_container(grid)).not(exclude);
 		},
 		
 		get_filterToolbar_fields: function(grid){
-			var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement", $.jset.fn.get_grid_container(grid));
-			return $('.ui-search-input :input', $.jset.fn.get_grid_container(grid)).not(exclude);
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
+			console.log(exclude);
+			return $("td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid)).not(exclude);
 		},
 
 		get_filterToolbar_field_search_operator: function(grid, search_field){
