@@ -591,14 +591,14 @@
 			
 		onInitializeForm : function(formid) {
 			var grid = $(this);	
+			$(formid).data('cache', {grid:grid, form_fields:{}});
 			
-			var form_fields = {};
-			
+			/*var form_fields = {};			
 			$.each(grid.data('columns'), function(){
 				form_fields[this.Field] = $.jset.fn.get_form_field(formid, this.Field);
 			});
 			
-			grid.data('form_fields', form_fields);
+			grid.data('cache').form_fields = form_fields;*/
 
 			$('<img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '" class="sDataLoading">').insertBefore($('a[id=sData]', $.jset.fn.get_grid_container(grid))).hide();
 
@@ -1258,7 +1258,13 @@
 		},
 		
 		get_grid_container: function(grid){
-			return $('div#gbox_' + grid.attr('id'));
+			var value = grid.data('cache').grid_container;
+			console.log('get_grid_container', value);
+			if(!value){
+				value = $('div#gbox_' + grid.attr('id'));
+				grid.data('cache').grid_container = value;
+			}
+			return value;
 		},
 		
 		get_grid_from_container: function(container){
@@ -1270,16 +1276,23 @@
 		},
 		
 		get_grid_by_formid: function(formid){
-			var value = $(formid).data('grid');
-			if(!value){
-				value = $('table#' + $(formid).attr('id').substr(8));
-				$(formid).data('grid', value);
+			var grid = $(formid).data('cache').grid;
+			console.log('get_grid_by_formid', grid);
+			if(!grid){
+				grid = $('table#' + $(formid).attr('id').substr(8));
+				$(formid).data('cache').grid = grid;
 			}
-			return value;
+			return grid;
 		},
 		
 		get_formid_by_grid: function(grid){
-			return $('form#FrmGrid_' + $(grid).attr('id'));
+			var value = grid.data('cache').formid;
+			console.log('get_formid_by_grid', value);
+			if(!value){
+				value = $('form#FrmGrid_' + $(grid).attr('id'));
+				grid.data('cache').formid = value;
+			}
+			return value;
 		},
 		
 		get_grid_by_element: function(elem){
@@ -1294,17 +1307,15 @@
 		},*/
 		
 		get_form_field: function(formid, name){
-			var grid = $.jset.fn.get_grid_by_formid(formid);
-			var value = grid.data('form_fields')[name];
+			var $formid = $(formid);
+			//var grid = $.jset.fn.get_grid_by_formid(formid);
+			var value = $formid.data('cache').form_fields[name];
+			console.log('get_form_field', value);
 			if(!value){
-				var $formid = $(formid);
 				//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
-				var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
-				var ret = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
-				grid.data('form_fields')[name] = ret;
-				//if(ret.length != 1)
-				//	console.log(name, ret, exclude);
-				return ret;
+				var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $formid.closest('form'));
+				value = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
+				$formid.data('cache').form_fields[name] = value;
 			}
 			
 			return value;
@@ -1639,7 +1650,7 @@
 				loaded: false,
 				lastID: false,
 				idsOfSelectedRows: [],
-				form_fields: {}
+				cache: {formid:false, grid_container:false}
 			});
 
 			$.jset.fn.set_master_details(grid);
