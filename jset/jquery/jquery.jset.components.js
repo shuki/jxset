@@ -1079,7 +1079,8 @@
 					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn']
 				},
 				onInitializeForm: function(formid, id){
-					var elem = $(formid).find('#' + id);
+					//var elem = $(formid).find('#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
 					var grid = $(this);
 					var empty_ui_object = {};
 					empty_ui_object.item = {
@@ -1289,7 +1290,8 @@
 					},
 				},
 				onInitializeForm: function(formid, id){
-					var elem = $(formid).find('#' + id);
+					//var elem = $(formid).find('#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
 					if(elem.length > 0)
 						$.jset.fn.dateInit(elem);
 				},
@@ -1411,7 +1413,8 @@
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
-					var elem = $(formid).find('textarea#' + id);
+					//var elem = $(formid).find('textarea#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].editoptions;
 					$(elem).tinymce($.extend(true, {}, $.jset.defaults.editor, options));
 				}
@@ -1473,7 +1476,8 @@
 					label_hide: true
 				},
 				onInitializeForm: function(formid, id){
-					var elem = $(formid).find('table#' + id);
+					//var elem = $(formid).find('table#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
 					var grid = $(this);
 					var settings = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]].settings;
 
@@ -1658,7 +1662,8 @@
 					$(formid).find('input.multicheckbox').attr('checked', false);
 				},
 				onInitializeForm: function(formid, id){
-					var elem = $(formid).find('input.jset-multicheckbox#' + id);
+					//var elem = $(formid).find('input.jset-multicheckbox#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
 					if(elem.length == 0)
 						return;
 					
@@ -1854,7 +1859,8 @@
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
-					var elem = $(formid).find('select#' + id);
+					//var elem = $(formid).find('select#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
 					var target_grid_id = 'dlg_' + id + '_' + grid.attr('id');
 					var dlg = $('<div style="overflow:hidden;"><img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '"><div style="display:none"><table id ="' + target_grid_id + '"></table></div></div>');
 					var button = $('<button class="selectbox_plus-button">+</button>');
@@ -2380,7 +2386,8 @@
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
-					var $this = $('#' + id, formid);
+					//var $this = $('#' + id, formid);
+					var $this = $.jset.fn.get_form_field(formid, id);
 					var options = grid.data('settings').grid.colModel[grid.data('index')[$this.attr('name')]];							
 					var editoptions = options['editoptions'];							
 					$this.hide()

@@ -583,19 +583,23 @@
 
 	// common events
 	var add_edit_events = {
-		beforeInitData: function(formid){
+		beforeInitData : function(formid){
 			var grid = $(this);
-			$.each(grid.data('columns'), function(){
-				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].beforeInitData))
-					$.jset.defaults.control[this.control].beforeInitData.call(grid, formid);
-			});	
-			
 			if($.isFunction(grid.data('settings').beforeInitData))
 				grid.data('settings').beforeInitData.call(grid, formid);
 		},
-		
+			
 		onInitializeForm : function(formid) {
 			var grid = $(this);	
+			
+			var form_fields = {};
+			
+			$.each(grid.data('columns'), function(){
+				form_fields[this.Field] = $.jset.fn.get_form_field(formid, this.Field);
+			});
+			
+			grid.data('form_fields', form_fields);
+
 			$('<img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '" class="sDataLoading">').insertBefore($('a[id=sData]', $.jset.fn.get_grid_container(grid))).hide();
 
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
@@ -604,10 +608,6 @@
 			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
 				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
 							
-/*			$.each(grid.data('columns'), function(){
-				if($.isFunction($.jset.defaults.control[this.control].onInitializeForm))
-					$.jset.defaults.control[this.control].onInitializeForm.call(grid, formid, this.index || this.Field);
-			});*/
 			$.jset.fn.run_columns_event(grid, formid, 'onInitializeForm');
 			$.jset.fn.set_help_tips(grid, formid);
 			$('select,input', $(formid)).addClass('FormElement ui-widget-content ui-corner-all');
@@ -617,12 +617,6 @@
 			
 			if($.isFunction(grid.data('settings').onInitializeForm))
 				grid.data('settings').onInitializeForm.call(grid, formid);
-		},
-		
-		beforeInitData : function(formid){
-			var grid = $(this);
-			if($.isFunction(grid.data('settings').beforeInitData))
-				grid.data('settings').beforeInitData.call(grid, formid);
 		},
 		
 		beforeShowForm: function(formid){
@@ -1276,7 +1270,12 @@
 		},
 		
 		get_grid_by_formid: function(formid){
-			return $('table#' + $(formid).attr('id').substr(8));
+			var value = $(formid).data('grid');
+			if(!value){
+				value = $('table#' + $(formid).attr('id').substr(8));
+				$(formid).data('grid', value);
+			}
+			return value;
 		},
 		
 		get_formid_by_grid: function(grid){
@@ -1295,14 +1294,20 @@
 		},*/
 		
 		get_form_field: function(formid, name){
-			var $formid = $(formid);
-			//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
-			var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
-			var ret = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
-			//if(ret.length != 1)
-			//	console.log(name, ret, exclude);
+			var grid = $.jset.fn.get_grid_by_formid(formid);
+			var value = grid.data('form_fields')[name];
+			if(!value){
+				var $formid = $(formid);
+				//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
+				var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
+				var ret = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
+				grid.data('form_fields')[name] = ret;
+				//if(ret.length != 1)
+				//	console.log(name, ret, exclude);
+				return ret;
+			}
 			
-			return ret;
+			return value;
 		},
 		
 		get_form_field_label: function(formid, name){
@@ -1340,13 +1345,11 @@
 		
 		get_filterToolbar_field: function(grid, field_name){
 			var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
-			console.log(exclude);
 			return $("td.ui-search-input [id='gs_" + field_name + "']", $.jset.fn.get_grid_container(grid)).not(exclude);
 		},
 		
 		get_filterToolbar_fields: function(grid){
 			var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
-			console.log(exclude);
 			return $("td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid)).not(exclude);
 		},
 
@@ -1635,7 +1638,8 @@
 				loadCompleteInit: true,
 				loaded: false,
 				lastID: false,
-				idsOfSelectedRows: []
+				idsOfSelectedRows: [],
+				form_fields: {}
 			});
 
 			$.jset.fn.set_master_details(grid);
@@ -2255,7 +2259,8 @@
 		run_columns_event: function(grid, formid, event_name){
 			$.each(grid.data('columns'), function(){
 				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control][event_name]))
-					$.jset.defaults.control[this.control][event_name].call(grid, formid, this.index || this.Field);
+					$.jset.defaults.control[this.control][event_name].call(grid, formid, this.Field);
+					//$.jset.defaults.control[this.control][event_name].call(grid, formid, this.index || this.Field);
 			});	
 		},
 		
