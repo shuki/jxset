@@ -1259,7 +1259,6 @@
 		
 		get_grid_container: function(grid){
 			var value = grid.data('cache').grid_container;
-			console.log('get_grid_container', value);
 			if(!value){
 				value = $('div#gbox_' + grid.attr('id'));
 				grid.data('cache').grid_container = value;
@@ -1277,7 +1276,6 @@
 		
 		get_grid_by_formid: function(formid){
 			var grid = $(formid).data('cache').grid;
-			console.log('get_grid_by_formid', grid);
 			if(!grid){
 				grid = $('table#' + $(formid).attr('id').substr(8));
 				$(formid).data('cache').grid = grid;
@@ -1287,7 +1285,6 @@
 		
 		get_formid_by_grid: function(grid){
 			var value = grid.data('cache').formid;
-			console.log('get_formid_by_grid', value);
 			if(!value){
 				value = $('form#FrmGrid_' + $(grid).attr('id'));
 				grid.data('cache').formid = value;
@@ -1308,9 +1305,7 @@
 		
 		get_form_field: function(formid, name){
 			var $formid = $(formid);
-			//var grid = $.jset.fn.get_grid_by_formid(formid);
 			var value = $formid.data('cache').form_fields[name];
-			console.log('get_form_field', value);
 			if(!value){
 				//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
 				var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $formid.closest('form'));
