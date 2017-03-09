@@ -980,18 +980,20 @@
 					    });
 					}
 					
-					//$.jset.fn.get_filterToolbar_fields(grid).addClass('FormElement ui-widget-content ui-corner-all');
-					$.jset.fn.get_filterToolbar_fields(grid).addClass('ui-widget-content ui-corner-all')
+/*					$.each($.jset.fn.get_filterToolbar_fields(grid), function(){
+						$(this).addClass('ui-widget-content ui-corner-all')
+						.on('focus.jset', function(){
+			   				var save_this = $(this);
+						    setTimeout (function(){ 
+						       save_this.select(); 
+						    },0);
+						});
 						
-					.on('focus.jset', function(){
-		   				var save_this = $(this);
-					    setTimeout (function(){ 
-					       save_this.select(); 
-					    },0);
-					});
-
-					$('td.ui-search-oper > a', $.jset.fn.get_filterToolbar(grid)).css('padding', '0');
-					
+						var search_operator = $.jset.fn.get_filterToolbar_field_search_operator(grid, $(this));
+						if(search_operator)
+							search_operator.css('padding', '0');
+					});*/
+						
 					grid.data('grid_width', grid.jqGrid('getGridParam', 'width'));
 
 		            if(grid.data('settings').persist && grid.data('persist_state') && grid.data('persist_state').otherState){
@@ -1350,13 +1352,30 @@
 		},
 		
 		get_filterToolbar_field: function(grid, field_name){
-			var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
-			return $("td.ui-search-input [id='gs_" + field_name + "']", $.jset.fn.get_grid_container(grid)).not(exclude);
+			var value = grid.data('cache').filterToolbar_fields[name];
+			if(!value){
+				var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
+				value = $("td.ui-search-input [id='gs_" + field_name + "']", $.jset.fn.get_grid_container(grid)).not(exclude);
+				grid.data('cache').filterToolbar_fields[name] = value;
+			}
+			
+			return value;
 		},
 		
 		get_filterToolbar_fields: function(grid){
-			var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
-			return $("td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid)).not(exclude);
+			var value = grid.data('cache').filterToolbar_fields;
+			if(!value){
+				var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
+				var fields = $("td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid)).not(exclude);
+				grid.data('cache').filterToolbar_fields = {};
+				$.each(fields, function(){
+					if($(this).is("[name]"))
+						grid.data('cache').filterToolbar_fields[$(this).attr('name')] = this;
+				});
+				value = grid.data('cache').filterToolbar_fields; 
+			}
+			
+			return value;
 		},
 
 		get_filterToolbar_field_search_operator: function(grid, search_field){
@@ -1645,7 +1664,7 @@
 				loaded: false,
 				lastID: false,
 				idsOfSelectedRows: [],
-				cache: {formid:false, grid_container:false}
+				cache: {formid:false, grid_container:false, filterToolbar_fields:false}
 			});
 
 			$.jset.fn.set_master_details(grid);
@@ -1752,7 +1771,10 @@
 			if (!grid.data('settings').filterToolbar.hide && grid.data('settings').clearFilterToolbar.navButtonAdd){
 				var options = $.extend(true, {}, grid.data('settings').clearFilterToolbar.options,
 					{onClickButton: function(){
-						$.jset.fn.get_filterToolbar_fields(grid).filter(':visible').val('');
+						//$.jset.fn.get_filterToolbar_fields(grid).filter(':visible').val('');
+						$.each($.jset.fn.get_filterToolbar_fields(grid), function(){
+							$(this).filter(':visible').val('');
+						});
 						grid[0].triggerToolbar();
 					}});
 				
@@ -1971,7 +1993,17 @@
 			grid.jqGrid('filterToolbar', grid.data('settings').filterToolbar.options);
 			if (grid.data('settings').filterToolbar.hide)
 				grid[0].toggleToolbar();
-			
+
+			$.each($.jset.fn.get_filterToolbar_fields(grid), function(){
+				$(this).addClass('ui-widget-content ui-corner-all')
+				.on('focus.jset', function(){
+	   				var save_this = $(this);
+				    setTimeout (function(){ 
+				       save_this.select(); 
+				    },0);
+				});				
+			});
+
 			if (grid.data('settings').search_default.length > 0) {
 				$.each(grid.data('settings').search_default, function(i){
 					var acolModel = grid.data('settings').grid.colModel[grid.data('index')[this.name]];
