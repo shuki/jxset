@@ -326,7 +326,8 @@ class jset_columns_base {
 		foreach($cols as $row)
 			if($row->master_fields)
 				foreach($row->master_fields as $field_name)
-					$cols[$index[$field_name]]->dependent_fields[] = $row->Field;
+					if(isset($index[$field_name]))
+						$cols[$index[$field_name]]->dependent_fields[] = $row->Field;
 	}
 	
 	protected function translate_sql_type($value){
