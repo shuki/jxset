@@ -26,3 +26,7 @@
 .ui-autocomplete {
 	padding-right: 0px;
 }
+
+td.ltr{
+	direction: ltr;
+}
