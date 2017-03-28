@@ -1352,11 +1352,11 @@
 		},
 		
 		get_filterToolbar_field: function(grid, field_name){
-			var value = grid.data('cache').filterToolbar_fields[name];
+			var value = grid.data('cache').filterToolbar_fields[field_name];
 			if(!value){
 				var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
 				value = $("td.ui-search-input [id='gs_" + field_name + "']", $.jset.fn.get_grid_container(grid)).not(exclude);
-				grid.data('cache').filterToolbar_fields[name] = value;
+				grid.data('cache').filterToolbar_fields[field_name] = value;
 			}
 			
 			return value;
@@ -1370,7 +1370,7 @@
 				grid.data('cache').filterToolbar_fields = {};
 				$.each(fields, function(){
 					if($(this).is("[name]"))
-						grid.data('cache').filterToolbar_fields[$(this).attr('name')] = this;
+						grid.data('cache').filterToolbar_fields[$(this).attr('name')] = $(this);
 				});
 				value = grid.data('cache').filterToolbar_fields; 
 			}
