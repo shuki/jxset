@@ -631,6 +631,27 @@
 				$.jset.fn.handle_change_select_options(elem, value);
 		},
 		
+		multiselectbox_element: function(value, options){
+			var grid = $(this);
+			//var elem = $("<select multiple='multiple' />");
+			var elem = $("<select />");
+			$.jset.fn.set_select_options(elem, grid, options.value, value, false, options.name);
+			$.jset.fn.set_dependent_fields(elem);
+			$.jset.fn.set_select_list_refresh(elem);
+			$.jset.fn.set_search_refresh(elem);
+			elem.attr('validate', options.validate)
+			.addClass('jset-field-padding');
+			return elem;
+		},
+		
+		multiselectbox_value:function(elem, action, value){
+			//console.log(elem, action, value);
+			if(action == 'get')
+				return $(elem).val();
+			else if(action == 'set')
+				$.jset.fn.handle_change_select_options(elem, value);
+		},
+		
 		selectbox_plus_element: function(value, options){
 			var grid = $(this);
 			var elem = $('<select />');
@@ -1651,9 +1672,15 @@
 						layout: 'simple'
 					}
 				},
+				stype: 'custom',
 				searchoptions:{
-					sopt: ['cn'],
-					searchOperators:false
+					custom_element: $.jset.fn.multiselectbox_element,
+					custom_value: $.jset.fn.multiselectbox_value,
+					value: '',
+					defaultValue: function(col){
+						//return col.search_default ? col.search_default : '';
+					},
+					sopt:['fi']				
 				},
 				formoptions:{
 					label_hide: true
@@ -1770,6 +1797,9 @@
 					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
+			},
+			multiselectbox:{
+				
 			},
 			selectbox_plus:{
 				align: 'left',
