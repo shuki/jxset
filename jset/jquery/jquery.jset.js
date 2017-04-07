@@ -83,7 +83,7 @@
 					ignore_column_search_default: false,
 					operandTitle : $.jset.messages.filterToolbar_operandTitle,
 					//weakness - copied from grid.custome.js
-					operands : { "eq" :"==", "ne":"!","lt":"<","le":"<=","gt":">","ge":">=","bw":"^","bn":"!^","in":"=","ni":"!=","ew":"|","en":"!|","cn":"~","nc":"!~","nu":"#","nn":"!#","fi":"*","fn":"!*"},
+					operands : { "eq" :"==", "ne":"!=","lt":"<","le":"<=","gt":">","ge":">=","bw":"^","bn":"!^","in":"=","ni":"!=","ew":"|","en":"!|","cn":"~","nc":"!~","nu":"#","nn":"!#","fi":"*","fn":"!*"},
 					beforeSearch: function(){
 						//var grid = $(this);
 						//var postData = grid.jqGrid('getGridParam','postData');
