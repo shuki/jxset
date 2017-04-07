@@ -1659,7 +1659,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['fi']				
+					sopt:['fi','fn','eq','ne','nu','nn']				
 				},
 				formoptions:{
 					label_hide: true

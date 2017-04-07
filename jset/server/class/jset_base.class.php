@@ -628,7 +628,7 @@ class jset_base
 	private function getStringForGroup($group)
 	{
 		$i_='';
-		$sopt = array('eq' => "=",'ne' => "<>",'lt' => "<",'le' => "<=",'gt' => ">",'ge' => ">=",'bw'=>" {$i_}LIKE ",'bn'=>" NOT {$i_}LIKE ",'in'=>' IN ','ni'=> ' NOT IN','ew'=>" {$i_}LIKE ",'en'=>" NOT {$i_}LIKE ",'cn'=>" {$i_}LIKE ",'nc'=>" NOT {$i_}LIKE ", 'nu'=>'IS NULL', 'nn'=>'IS NOT NULL', 'fi'=>'FIND_IN_SET');
+		$sopt = array('eq' => "=",'ne' => "<>",'lt' => "<",'le' => "<=",'gt' => ">",'ge' => ">=",'bw'=>" {$i_}LIKE ",'bn'=>" NOT {$i_}LIKE ",'in'=>' IN ','ni'=> ' NOT IN','ew'=>" {$i_}LIKE ",'en'=>" NOT {$i_}LIKE ",'cn'=>" {$i_}LIKE ",'nc'=>" NOT {$i_}LIKE ", 'nu'=>'IS NULL', 'nn'=>'IS NOT NULL', 'fi'=>'FIND_IN_SET', 'fn'=>'NOT FIND_IN_SET');
 		$s = "(";
 		if( isset ($group['groups']) && is_array($group['groups']) && count($group['groups']) >0 )
 		{
@@ -657,24 +657,38 @@ class jset_base
 					if( $op ) {
 						switch ($op)
 						{
+							case 'ne':
+								$s .= '(' . $field . ' ' . $sopt[$op] . ' ' . $this->db->con->quote($v) . " OR $field IS NULL) ";
+								break;
 							case 'bw':
-							case 'bn':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
 								$s .= $field .' '. $sopt[$op] . $this->db->con->quote("$v%") . ' ';
 								break;
+							case 'bn':
+								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
+								$s .= '(' . $field .' '. $sopt[$op] . $this->db->con->quote("$v%") . " OR $field IS NULL) ";
+								break;
 							case 'ew':
-							case 'en':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
 								$s .= $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v") . ' ';
 								break;
+							case 'en':
+								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
+								$s .= '(' . $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v") . " OR $field IS NULL) ";
+								break;
 							case 'cn':
-							case 'nc':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
 								$s .= $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v%") . ' ';
 								break;
+							case 'nc':
+								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
+								$s .= '(' . $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v%") . " OR $field IS NULL) ";
+								break;
 							case 'in':
-							case 'ni':
 								$s .= $field . ' ' . $sopt[$op] . " ( $v ) ";
+								break;
+							case 'ni':
+								$s .= '(' . $field . ' ' . $sopt[$op] . " ( $v ) OR $field IS NULL) ";
 								break;
 							case 'nu':
 							case 'nn':
@@ -682,6 +696,9 @@ class jset_base
 								break;
 							case 'fi':
 								$s .= $sopt[$op] . ' (' . $this->db->con->quote($v) . ', ' . $field . ') > 0 ';
+								break;
+							case 'fn':
+								$s .= '(' . $sopt[$op] . ' (' . $this->db->con->quote($v) . ', ' . $field . ") > 0  OR $field IS NULL) ";
 								break;
 							default :
 								$s .= $field . ' ' . $sopt[$op] . ' ' . $this->db->con->quote($v) . ' ';
