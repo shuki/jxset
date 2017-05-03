@@ -4,7 +4,8 @@ include_once("autoload.php");
 
 class report {
 	const SQL_GET_REPORT = 'select * from report where id = ? limit 1';
-	const SQL_GET_PARAMETER = 'select * from parameter where name = ? limit 1';
+	//const SQL_GET_PARAMETER = 'select * from parameter where name = ? limit 1';
+	const SQL_GET_PARAMETER = "select * from parameter where name = ? and (find_in_set(userGroup, ?) > 0 or userGroup is null) order by userGroup desc limit 1";
 	const PHP_AUTH_USER = '$user$';
 
 	private $db;
@@ -80,6 +81,10 @@ class report {
 					$sql = str_replace(self::PHP_AUTH_USER, $_SERVER['PHP_AUTH_USER'], $report->sql);
 					$sql = str_replace($parameters->tokens, $parameters->values, $sql);
 					$sql = trim($sql);
+					$sql = str_replace('"', '\\"', $sql);
+					if(eval("\$sql = \"$sql\";") === FALSE)
+						die("unable to eval source: $sql");
+
 					$select = substr($sql, 0, 6);
 					if(strcasecmp($select, 'select') == 0 || strcasecmp($select, '(selec') == 0)
 					{
@@ -124,10 +129,10 @@ class report {
 				$data->redirectURL = str_replace($parameters->tokens, $parameters->values, $report->redirectURL);
 			$title = str_replace(self::PHP_AUTH_USER, $_SERVER['PHP_AUTH_USER'], $report->title);
 			$title = str_replace($parameters->tokens, $parameters->values, $title);
-			$data->title = 	str_replace($parameters->token_names, $parameters->value_names, $title);
+			$data->title = 	stripslashes(str_replace($parameters->token_names, $parameters->value_names, $title));
 			$description = str_replace(self::PHP_AUTH_USER, $_SERVER['PHP_AUTH_USER'], $report->description);
 			$description = str_replace($parameters->token_names, $parameters->value_names, $description);
-			$data->description = str_replace($parameters->tokens, $parameters->values, $description);
+			$data->description = stripslashes(str_replace($parameters->tokens, $parameters->values, $description));
 			$data->parameters = $parameters;
 			$data->report = $report;
 			if($params['interactive']) 
@@ -154,7 +159,7 @@ class report {
 		$i = 0;
 		foreach($vars as $var){
 			if($var){
-				$res = $this->db->query(self::SQL_GET_PARAMETER, array($var));
+				$res = $this->db->query(self::SQL_GET_PARAMETER, array($var, $_SESSION['jset_user_group']));
 				if(isset($res->error))
 					$this->error('unable to get the report parameters.', $res->error); 
 				if(!$field = $this->db->fetch()){
@@ -229,7 +234,7 @@ class report {
 		if(!$parameter_name)
 			return;
 		
-		$res = $this->db->query(self::SQL_GET_PARAMETER, array($parameter_name));
+		$res = $this->db->query(self::SQL_GET_PARAMETER, array($parameter_name, $_SESSION['jset_user_group']));
 		if(isset($res->error))
 			$this->error('unable to get the report parameter.', $res->error);
 		if(!$field = $this->db->fetch())
@@ -371,6 +376,9 @@ class report {
 			$db = db::create($p);
 		}
 		
+		$sql = str_replace('"', '\\"', $sql);
+		if(eval("\$sql = \"$sql\";") === FALSE)
+			die("unable to eval source: $sql");
 		$res = $db->query($sql);
 		if(isset($res->error))
 			$this->error($error, $res->error);
