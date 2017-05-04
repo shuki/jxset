@@ -153,7 +153,8 @@ class report {
 	}
 	
 	private function get_parameters($sql, $params){
-		preg_match_all('/{.*?}/', $sql, $matches);
+		//preg_match_all('/{.*?}/', $sql, $matches);
+		preg_match_all('/{[^\$]*?}/', $sql, $matches);
 		$vars = str_replace(array('{','}'), '', $matches[0]);
 
 		$i = 0;
