@@ -17,10 +17,6 @@
 	
 	$.jset = ($.jset == undefined) ? jset : $.extend(true, jset, $.jset);
 	
-	$(document).on('click', 'div.ui-tooltip', function(){
-		$(this).hide();
-	});
-	
 	// function used in defaults
 	$.jset = $.extend(true, $.jset, {
 		fn:{
@@ -330,7 +326,7 @@
 			},
 			validate:{
 				meta: 'validate',
-				tooltip: {items: ":input", position: {my: 'right center', at: 'right+30, top-10 center', collision: "none"}, tooltipClass:'top'},
+				tooltip: {items: ":input", position: {my: 'right center', at: 'right-40, top-10 center', collision: "none"}, tooltipClass:'top'},
 				invalidHandler: function(form, validator) {
 				    var errors = validator.numberOfInvalids();
 				    if (errors) {
@@ -593,17 +589,14 @@
 			var grid = $(this);	
 			$(formid).data('cache', {grid:grid, form_fields:{}});
 			
-			/*var form_fields = {};			
-			$.each(grid.data('columns'), function(){
-				form_fields[this.Field] = $.jset.fn.get_form_field(formid, this.Field);
-			});
-			
-			grid.data('cache').form_fields = form_fields;*/
-
 			$('<img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '" class="sDataLoading">').insertBefore($('a[id=sData]', $.jset.fn.get_grid_container(grid))).hide();
 
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
+			
+			$(formid).on('click keydown', function(){
+				$.jset.fn.clear_form_tooltips($(formid));
+			});
 
 			if(grid.data('settings').template !== undefined && grid.data('settings').template.use)
 				$.jset.fn.template_apply.call(grid, formid, grid.data('settings').template);
@@ -694,14 +687,6 @@
 				$('html, body').animate({ scrollTop: 0 }, 200);
 				return [false, validation_error];
 			}
-			
-			/*var colModel = grid.data('settings').grid.colModel;
-			$.each(colModel, function(i){
-				if(this.index != this.name){
-					postdata[this.index] = postdata[this.name];
-					delete postdata[this.name];
-				}
-			});*/
 			
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).hide();
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').show();
