@@ -612,6 +612,33 @@
 			}
 		},
 
+		radio_element: function(value, options){
+			var grid = $(this);
+			var elem = $('<input type="radio" />');
+			if(value)
+				elem.prop('initial_value', value);
+			
+			//var elem = $('<input />');
+			//$.jset.fn.set_radio_options(elem, grid, options.value, value, false, options.name);
+			//$.jset.fn.set_dependent_fields(elem);
+			//$.jset.fn.set_select_list_refresh(elem);
+			//$.jset.fn.set_search_refresh(elem);
+			elem.attr('validate', options.validate);
+			//.addClass('jset-field-padding');
+			return elem;
+		},
+		
+		radio_value:function(elem, action, value){
+			if(action == 'get'){
+				var val = $("input[name='" + elem.attr('name') + "']:checked").val();
+				return (typeof val != 'undefined' ? val : '');
+			}
+			else if(action == 'set'){
+				$("input[name='" + elem.attr('name') + "']").prop('checked', false);
+				$("input[name='" + elem.attr('name') + "'][value='" + value + "']").prop("checked", true);
+			}
+		},
+		
 		selectbox_element: function(value, options){
 			var grid = $(this);
 			var elem = $('<select />');
@@ -1724,7 +1751,95 @@
 						return col.default_value;
 					}
 				}
-			}, 
+			},
+			
+			radio:{
+				align: 'left',
+				formatter: 'selectbox',
+				edittype: 'custom',
+				editoptions: {
+					value: {},
+					defaultValue: function(col){
+						return col.default_value;
+					},
+					dataInit: function(col){
+						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
+					},
+					no_empty_first_row: false,
+					select_list_refresh: false,
+					custom_options: {
+						readonly: function(formid, name){
+							$.jset.fn.disable_field(formid, name);
+						}
+					}
+				},
+				//stype: 'select',
+				stype: 'custom',
+				searchoptions:{
+					custom_element: $.jset.fn.selectbox_element,
+					custom_value: $.jset.fn.selectbox_value,
+					value: '',
+					defaultValue: function(col){
+						//return col.search_default ? col.search_default : '';
+					},
+					sopt:['eq','ne']				
+				},
+				onInitializeForm: function(formid, id){
+					var grid = $(this);
+					var elem = $.jset.fn.get_form_field(formid, id);
+					var initial_value = elem.prop('initial_value');
+					var name = elem.attr('name');
+					var options = grid.data('settings').grid.colModel[grid.data('index')[name]];							
+					var editoptions = options['editoptions'];
+					var data = editoptions.value;
+					
+					var div = $('<div></div>')
+					.insertBefore(elem)
+					.append(elem);
+					
+					var radio_options = '';
+					if($.isArray(data))
+						$.each(data, function(i, obj){
+							if(i == 0){
+								elem.attr('value', obj.id)
+								.attr('id', name)
+								.after($('<label class="radio_label" for="' + name +  '">' + obj.name + '</label>'));
+								
+								if(obj.id == initial_value)
+									elem.attr('checked', 'checked');
+							}
+							else
+								radio_options += '<input type="radio" name="' + name + '" value="' + obj.id + '" ' + (obj.id == initial_value ? ' checked="checked" ' : '') + ' id="rb_' + name + obj.id +  '" ' + (obj.disabled ? 'style="color:gray"' : '') + '/><label class="radio_label" for="rb_' + name + obj.id +  '">' + obj.name + '</label>';
+						});
+					else if($.isPlainObject(data))
+						$.each(data, function(key, val){
+							radio_options += '<input type="radio" name="' + name + '" value="' + key + '" ' + (key == initial_value ? ' checked="checked" ' : '') + ' id="rb_' + name + key +  '" ' + (obj.disabled ? 'style="color:gray"' : '') + '/><label class="radio_label" for="rb_' + name + key +  '">' + val + '</label>';
+						});
+
+					div.append(radio_options);					
+				}
+				/*afterShowForm: function(formid, id){
+					var elem = $(formid).find('#' + id);
+					if(elem.length == 0)
+						return;
+					
+					var grid = $(this);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},
+				afterclickPgButtons : function(whichbutton, formid, rowid, id){
+					var elem = $(formid).find('#' + id);
+					if(elem.length == 0)
+						return;
+					
+					var grid = $(this);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},*/
+			},
+			
 			selectbox:{
 				align: 'left',
 				formatter: 'selectbox',
@@ -1777,6 +1892,7 @@
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
 			},
+			
 			selectbox_plus:{
 				align: 'left',
 				formatter: 'selectbox',
