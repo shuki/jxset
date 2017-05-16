@@ -375,6 +375,7 @@ class jset_base
 				{
 					$field = $col->Field;
 					$name = $col->title ? iconv('UTF-8', config::export_charset_windows, $col->title) : ($col->Comment ? $col->Comment : $col->Field);
+					$name = str_replace(array("\n", "\r", '"', ","), '', $name);
 					$fields .= $field . ",";
 					$field_names .= $name . ",";
 					$filters .= ($this->settings->$field ? $this->settings->$field : '') . ",";
