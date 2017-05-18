@@ -23,7 +23,8 @@
 			changePasswordFailure: 'סיסמה לא אופסה.',
 			userExists: 'שם משתמש זה קיים כבר במערכת.',
 			recordsAdded: 'רשומות נוספו.',
-			recordUpdated: 'רשומה נשמרה בהצלחה.'
+			recordUpdated: 'רשומה נשמרה בהצלחה.',
+			recordSent: 'רשומה נשלחה בהצלחה.'
 		},
 		nav: {
 			columnChooserTitle: 'התאמה אישית',

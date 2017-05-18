@@ -68,6 +68,7 @@
 			clearSearch: false,
 			preload_source: false,
 			persist: true,
+			form_sent_button: false,
 			filterToolbar:{
 				hide: false,
 				navButtonAdd: false,
@@ -590,7 +591,16 @@
 			$(formid).data('cache', {grid:grid, form_fields:{}});
 			
 			$('<img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '" class="sDataLoading">').insertBefore($('a[id=sData]', $.jset.fn.get_grid_container(grid))).hide();
-
+			if(grid.data('settings').form_sent_button){
+				var sent_button = $('<a class="sent_button fm-button ui-state-default ui-corner-all fm-button-icon-left">שלח<span class="ui-icon ui-icon-disk"></span></a>')
+				.on('click', function(){
+					grid.data('validate', true);
+					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).trigger('click');
+				});
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).after(sent_button);
+				
+			}
+				
 			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
 			
@@ -677,18 +687,24 @@
 		
 		beforeSubmit: function(postdata, formid){
 			var grid = $(this);
-			if(!$(formid).valid())
-				return [false, ''];
 			
-			var validation_error = '';
-			eval(grid.data('table').validation);
-			if(validation_error)
-			{
-				$('html, body').animate({ scrollTop: 0 }, 200);
-				return [false, validation_error];
+			if(!grid.data('settings').form_sent_button || (grid.data('settings').form_sent_button && grid.data('validate'))){
+				grid.data('validate', false);
+				if(!$(formid).valid())
+					return [false, ''];
+				
+				var validation_error = '';
+				eval(grid.data('table').validation);
+				if(validation_error)
+				{
+					$('html, body').animate({ scrollTop: 0 }, 200);
+					return [false, validation_error];
+				}
+				grid.data('valid', true);
 			}
 			
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).hide();
+			$('a.sent_button', $.jset.fn.get_grid_container(grid)).hide();
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').show();
 
 			var post = $.jset.fn.unformat_columns(this, postdata);
@@ -737,6 +753,7 @@
 				if(!return_value[0]){
 					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
 					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
+					$('a.sent_button', $.jset.fn.get_grid_container(grid)).show();
 				}
 			}
 			
@@ -747,6 +764,7 @@
 			var grid = $(this);
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
+			$('a.sent_button', $.jset.fn.get_grid_container(grid)).show();
 			
 			if(grid.data('copy')){
 				grid.data('copy', false);
@@ -773,7 +791,10 @@
 			}
 			
 			if(grid.data('settings').single_record.active && grid.data('settings').single_record.displayAlert)
-				alert($.jset.messages.recordUpdated);
+				if(grid.data('settings').form_sent_button && grid.data('valid'))
+					alert($.jset.messages.recordSent);
+				else
+					alert($.jset.messages.recordUpdated);
 			
 			if(obj.id !== undefined)
 				grid.data('lastID', obj.id);
@@ -2519,6 +2540,17 @@
 		get_join_field_base_name: function(grid, join_field_name){
 			var suffix_length = grid.data('settings').join_field_suffix.length;
 			return join_field_name.substring(0, join_field_name.length - suffix_length);
+		},
+		
+		edit_row: function(grid_id, id){
+			var grid = $(grid_id);
+			var options = grid.data('settings').navigation.edit;
+			grid.data('settings').navigation.options.editfunc.call(grid, id, options);
+		},
+		delete_row: function(grid_id, id){
+			var grid = $(grid_id);
+			var options = grid.data('settings').navigation.del;
+			grid.jqGrid('delGridRow', id, options);
 		}
 	});
 })(jQuery);

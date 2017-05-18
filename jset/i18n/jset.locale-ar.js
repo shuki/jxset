@@ -22,7 +22,9 @@
 			changePasswordSuccess: 'تم إعادة تعيين كلمة المرور بنجاح.',
 			changePasswordFailure: 'لم يكن هناك إعادة تعيين كلمة المرور.',
 			userExists: 'اسم المستخدم هذا موجود بالفعل في النظام.',
-			recordsAdded: 'السجلات المضافة.'
+			recordsAdded: 'السجلات المضافة.',
+			recordUpdated: 'record updated successfuly.',
+			recordSent: 'record sent successfuly.'
 		},
 		nav: {
 			columnChooserTitle: 'التخصيص',
