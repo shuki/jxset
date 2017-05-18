@@ -23,7 +23,7 @@
 			changePasswordFailure: 'Password was not reset.',
 			userExists: 'This user name already exists.',
 			recordsAdded: 'records added.',
-			recordUpdated: 'record updated successfuly.'
+			recordUpdated: 'record updated successfuly.',
 			recordSent: 'record sent successfuly.'
 		},
 		nav: {
