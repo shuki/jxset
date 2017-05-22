@@ -595,7 +595,7 @@
 				var sent_button = $('<a class="sent_button fm-button ui-state-default ui-corner-all fm-button-icon-left">שלח<span class="ui-icon ui-icon-disk"></span></a>')
 				.on('click', function(){
 					grid.data('validate', true);
-					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).trigger('click');
+					$(this).siblings('a[id=sData]').trigger('click');
 				});
 				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).after(sent_button);
 				
