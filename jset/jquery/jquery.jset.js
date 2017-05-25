@@ -326,7 +326,9 @@
 				db_name: ''
 			},
 			validate:{
-				meta: 'validate',
+				//debug: true,
+				onsubmit: false,
+				ignore: "",
 				tooltip: {items: ":input", position: {my: 'right center', at: 'right-40, top-10 center', collision: "none"}, tooltipClass:'top'},
 				invalidHandler: function(form, validator) {
 				    var errors = validator.numberOfInvalids();
@@ -336,14 +338,20 @@
 				},
 		        errorPlacement: function (error, element) {
 		        	var grid = $.jset.fn.get_grid_by_formid($(element).closest('form'));
-		        	//to take care of wrongly displaying an error tooltip before a form is oppened.
-		        	if($(element).is(":visible")){
+		        	//to take care of wrongly displaying an error tooltip before a form is oppened and displaying error for hidden validated fields.
+	        		var visible = $(element).is(":visible");
+		        	if($(element).closest('form').is(":visible")){
+		        		if(!visible)
+		        			$(element).show();
+
 			        	$(element).prop('tooltip', $(error).text())
 			        	.tooltip(grid.data('settings').validate.tooltip)
 			            .tooltip( "option", "content", $(error).text())
 			            .tooltip('open')
 			            .unbind('mouseleave')
 			            .unbind('mouseover');
+		        		if(!visible)
+		        			$(element).hide();
 		        	}
 		        },
 		        success: function (label, element) {
@@ -601,7 +609,6 @@
 				
 			}
 				
-			$.metadata.setType('attr', grid.data('settings').validate.meta);
 			$(formid).validate(grid.data('settings').validate);
 			
 			$(formid).on('click keydown', function(){
@@ -639,8 +646,9 @@
 		},
 		
 		afterShowForm: function(formid){
-			$(formid).validate().resetForm();
 			var grid = $(this);
+			$(formid).validate().resetForm();
+			
 			$.each(grid.data('columns'), function(){
 				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].afterShowForm))
 					$.jset.defaults.control[this.control].afterShowForm.call(grid, formid, this.index || this.Field);
@@ -2027,11 +2035,15 @@
 		},
 		
 		define_grid_columns: function(columns, t){
+			var validation_obj = {};
 			$.each(columns, function(i){
+				if(this.validation)
+					validation_obj[this.Field] = $.jset.fn.get_col_object(this.validation);
 				t.p.grid.colNames[i] = $.jset.fn.colNames(this);
 				t.p.grid.colModel[i] = $.jset.fn.colModel(this, i, t);
 				if(this.search_default) $.jset.fn.search_default(this, t);
-			}); 
+			});
+			t.p.validate.rules = validation_obj;
 		},
 
 		set_master_details: function(grid){
@@ -2055,7 +2067,7 @@
 		
 		colModel: function(col, i, t){
 			var obj = {};
-			var col_object = $.jset.fn.get_col_object(col);
+			var col_object = $.jset.fn.get_col_object(col.object);
 			obj.name = col.index ? col.index : col.Field;
 			obj.index = col.Field;
 			obj.width = col.width ? col.width : 80;
@@ -2085,10 +2097,10 @@
 			return obj;
 		},
 		
-		get_col_object: function(col){
-			if (col.object){
+		get_col_object: function(object){
+			if (object){
 				try {
-					return eval('({' + col.object + '})');
+					return eval('({' + object + '})');
 				} 
 				catch (e) {
 					alert( 'column ' + obj.name + '\nobject definition ' + e.name + '\n' + e.message);
@@ -2142,7 +2154,7 @@
 
 		editoptions: function(col, t){
 			var obj = {};
-			if(col.validation) obj[t.p.validate.meta] = '{' + t.p.validate.meta + ':{' + col.validation + '}}';
+			//if(col.validation) obj[t.p.validate.meta] = '{' + t.p.validate.meta + ':{' + col.validation + '}}';
 			if(col.readonly == 1)
 			{ 
 				obj.readonly = 'readonly';
