@@ -39,6 +39,7 @@ EOT;
 		$rtl_css = $rtl ? "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"{$dir_pre}jset/css/jset_rtl.css\" />" : '';
 		$direction = $rtl ? 'rtl' : 'ltr';
 		$version = defined('config::version') ? config::version : '';
+		$validate_locale = ($lang != 'en' ? "<script src=\"{$dir_pre}jset/i18n/jquery.validate.locale-{$lang}.js\" type=\"text/javascript\"></script>" : '');
 		echo <<< EOT
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -75,6 +76,7 @@ EOT;
 <script src="{$dir_pre}jset/jquery/jquery.validate.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.components.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.urlvars.js" type="text/javascript"></script>
+{$validate_locale}
 
 <script src="{$dir_pre}jset/jqGrid/plugins/jquery.tablednd.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jqGrid/plugins/jquery.contextmenu.js" type="text/javascript"></script>
