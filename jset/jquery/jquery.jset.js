@@ -2154,7 +2154,6 @@
 
 		editoptions: function(col, t){
 			var obj = {};
-			//if(col.validation) obj[t.p.validate.meta] = '{' + t.p.validate.meta + ':{' + col.validation + '}}';
 			if(col.readonly == 1)
 			{ 
 				obj.readonly = 'readonly';
