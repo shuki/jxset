@@ -46,7 +46,8 @@
 			confirmCopy: 'האם ברצונך להעתיק את הרשומה המסומנת?'	        
 		},
 		captions:{
-			searchall: 'חיפוש'
+			searchall: 'חיפוש',
+			sent: 'שלח'
 		}
 	};
 

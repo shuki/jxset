@@ -600,7 +600,7 @@
 			
 			$('<img src="' + $.jset.dir_pre + grid.data('settings').loading_img + '" class="sDataLoading">').insertBefore($('a[id=sData]', $.jset.fn.get_grid_container(grid))).hide();
 			if(grid.data('settings').form_sent_button){
-				var sent_button = $('<a class="sent_button fm-button ui-state-default ui-corner-all fm-button-icon-left">שלח<span class="ui-icon ui-icon-disk"></span></a>')
+				var sent_button = $('<a class="sent_button fm-button ui-state-default ui-corner-all fm-button-icon-left">' + $.jset.captions.sent + '<span class="ui-icon ui-icon-disk"></span></a>')
 				.on('click', function(){
 					grid.data('validate', true);
 					$(this).siblings('a[id=sData]').trigger('click');

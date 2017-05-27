@@ -46,7 +46,8 @@
 			confirmCopy: 'Are you sure you want to copy the selected row?'
 		},
 		captions:{
-			searchall: 'Search'
+			searchall: 'Search',
+			sent: 'Send'
 		}
 	};
 
