@@ -1793,7 +1793,7 @@
 					var editoptions = options['editoptions'];
 					var data = editoptions.value;
 					
-					var div = $('<div></div>')
+					var div = $('<div class="radiodiv"></div>')
 					.insertBefore(elem)
 					.append(elem);
 					
