@@ -333,7 +333,15 @@
 				invalidHandler: function(form, validator) {
 				    var errors = validator.numberOfInvalids();
 				    if (errors) {
-				        validator.errorList[0].element.focus();
+				    	var element = $(validator.errorList[0].element);
+		        		var visible = element.is(":visible");
+		        		if(!visible)
+		        			element.show();
+
+		        		element.focus();
+		        		
+		        		if(!visible)
+		        			element.hide();
 				    }
 				},
 		        errorPlacement: function (error, element) {
@@ -608,9 +616,7 @@
 				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).after(sent_button);
 				
 			}
-				
-			$(formid).validate(grid.data('settings').validate);
-			
+						
 			$(formid).on('click keydown', function(){
 				$.jset.fn.clear_form_tooltips($(formid));
 			});
@@ -695,16 +701,27 @@
 		
 		beforeSubmit: function(postdata, formid){
 			var grid = $(this);
+			$.jset.fn.clear_form_tooltips($(formid));
+
+			if($(formid).data('validator'))
+				$(formid).validate().destroy();     
 			
+			var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
+			var validate_settings = $.extend(true, {}, grid.data('settings').validate, {ignore: exclude});
+			$(formid).validate(validate_settings);
+			
+			grid.data('valid', false);
 			if(!grid.data('settings').form_sent_button || (grid.data('settings').form_sent_button && grid.data('validate'))){
-				grid.data('validate', false);
-				if(!$(formid).valid())
+				if(!$(formid).valid()){
+					grid.data('validate', false);
 					return [false, ''];
+				}
 				
 				var validation_error = '';
 				eval(grid.data('table').validation);
 				if(validation_error)
 				{
+					grid.data('validate', false);
 					$('html, body').animate({ scrollTop: 0 }, 200);
 					return [false, validation_error];
 				}
@@ -764,7 +781,7 @@
 					$('a.sent_button', $.jset.fn.get_grid_container(grid)).show();
 				}
 			}
-			
+			grid.data('validate', false);
 			return return_value;
 		},
 	
@@ -2414,8 +2431,13 @@
 		},
 		
 		clear_tooltip: function(element){
-        	$(element).removeProp('tooltip')
-            .tooltip('close');
+        	try{
+            	$(element).removeProp('tooltip')
+                .tooltip('close');
+        	}
+        	catch(e) {
+        		console.log(e);
+        	}
 		},
 		
 		clear_form_tooltips: function(formid){
