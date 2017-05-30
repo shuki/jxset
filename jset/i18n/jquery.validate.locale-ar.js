@@ -19,5 +19,6 @@ $.extend( $.validator.messages, {
 	rangelength: $.validator.format( "عدد الحروف يجب أن يكون بين {0} و {1}" ),
 	range: $.validator.format( "رجاء إدخال عدد قيمته بين {0} و {1}" ),
 	max: $.validator.format( "رجاء إدخال عدد أقل من أو يساوي {0}" ),
-	min: $.validator.format( "رجاء إدخال عدد أكبر من أو يساوي {0}" )
+	min: $.validator.format( "رجاء إدخال عدد أكبر من أو يساوي {0}" ),
+	ddmmyyyyDate: "Please enter a date in the format dd/mm/yyyy"
 } );

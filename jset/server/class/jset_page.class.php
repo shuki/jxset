@@ -74,6 +74,7 @@ EOT;
 <script src="{$dir_pre}jset/jquery/jquery.ajaxupload.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.metadata.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.validate.js" type="text/javascript"></script>
+<script src="{$dir_pre}jset/jquery/jquery.jset.validators.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.jset.components.js" type="text/javascript"></script>
 <script src="{$dir_pre}jset/jquery/jquery.urlvars.js" type="text/javascript"></script>
 {$validate_locale}
