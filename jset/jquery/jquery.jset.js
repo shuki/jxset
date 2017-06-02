@@ -2052,15 +2052,23 @@
 		},
 		
 		define_grid_columns: function(columns, t){
-			var validation_obj = {};
+			var validation_rules_obj = {};
+			var validation_messages_obj = {};
 			$.each(columns, function(i){
-				if(this.validation)
-					validation_obj[this.Field] = $.jset.fn.get_col_object(this.validation);
+				if(this.validation){
+					var validation_obj = $.jset.fn.get_col_object(this.validation);
+					if(validation_obj.hasOwnProperty('messages')){
+						validation_messages_obj[this.Field] = validation_obj.messages;
+						delete validation_obj.messages;
+					}
+					validation_rules_obj[this.Field] = validation_obj;
+				}
 				t.p.grid.colNames[i] = $.jset.fn.colNames(this);
 				t.p.grid.colModel[i] = $.jset.fn.colModel(this, i, t);
 				if(this.search_default) $.jset.fn.search_default(this, t);
 			});
-			t.p.validate.rules = validation_obj;
+			t.p.validate.rules = validation_rules_obj;
+			t.p.validate.messages = validation_messages_obj;
 		},
 
 		set_master_details: function(grid){
