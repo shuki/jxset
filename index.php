@@ -7,12 +7,11 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 ?>
-
-<head>
-<title>Jxset</title>
+<title>Jxset - Custom Information Systems</title>
 </head>
-
 <body>
-	<h1>Jxset</h1>
+		<div style="width:100%; margin-top:10px; text-align: center">
+			<img src="jset/img/jxset.jpg"/>
+			<div><h2>Contact: <a href="mailto:shukrun.shuki@gmail.com?Subject=Jxset" target="_blank">shukrun.shuki@gmail.com</a></h2></div>
 </body>
 </html>
