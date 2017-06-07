@@ -88,26 +88,34 @@ class report {
 					$select = substr($sql, 0, 6);
 					if(strcasecmp($select, 'select') == 0 || strcasecmp($select, '(selec') == 0)
 					{
-						$sql = isset($params['orderby']) ? "select * from (\n" . $sql . "\n) zz " . $params['orderby'] : $sql;
-						$db = $this->execute(
-							$report->db ? $report->db : config::dbname_default,
-							$report->host,
-						 	$sql,
-							'unable to run the report sql - ' .$sql  . '.');
-						$data->data = $db->fetchAll();
-						$data->checksum = md5(serialize($data->data));
-						
-						if($report->sql_aggregate){
-							$sql_aggregate = str_replace($parameters->tokens, $parameters->values, $report->sql_aggregate);						
-							$sql_aggregate = str_replace('($SQL)', "($sql)", $sql_aggregate);
-							$sql_aggregate = trim($sql_aggregate);
-
+						$sqls = explode('|-|', $sql);
+						$i = 0;
+						foreach($sqls as $sql){
+							$sql = isset($params['orderby']) ? "select * from (\n" . $sql . "\n) zz " . $params['orderby'] : $sql;
 							$db = $this->execute(
 								$report->db ? $report->db : config::dbname_default,
 								$report->host,
-							 	$sql_aggregate,
-								'unable to run the report sql aggregate - ' .$sql_aggregate  . '.');
-							$data->aggregate = $db->fetchAll();
+							 	$sql,
+								'unable to run the report sql - ' .$sql  . '.');
+							
+							$data_name = 'data' . ($i == 0 ? '' : $i);
+							$checksum_name = 'checksum' . ($i == 0 ? '' : $i);
+							$data->$data_name = $db->fetchAll();
+							$data->$checksum_name = md5(serialize($data->$data_name));
+							
+							if($report->sql_aggregate){
+								$sql_aggregate = str_replace($parameters->tokens, $parameters->values, $report->sql_aggregate);						
+								$sql_aggregate = str_replace('($SQL)', "($sql)", $sql_aggregate);
+								$sql_aggregate = trim($sql_aggregate);
+	
+								$db = $this->execute(
+									$report->db ? $report->db : config::dbname_default,
+									$report->host,
+								 	$sql_aggregate,
+									'unable to run the report sql aggregate - ' .$sql_aggregate  . '.');
+								$data->aggregate = $db->fetchAll();
+							}
+							$i++;
 						}
 					}
 					else
