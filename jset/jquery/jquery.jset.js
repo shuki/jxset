@@ -69,6 +69,9 @@
 			preload_source: false,
 			persist: true,
 			form_sent_button: false,
+			refresh: {
+				rate: false
+			},
 			filterToolbar:{
 				hide: false,
 				navButtonAdd: false,
@@ -1010,21 +1013,7 @@
 					        return result;
 					    });
 					}
-					
-/*					$.each($.jset.fn.get_filterToolbar_fields(grid), function(){
-						$(this).addClass('ui-widget-content ui-corner-all')
-						.on('focus.jset', function(){
-			   				var save_this = $(this);
-						    setTimeout (function(){ 
-						       save_this.select(); 
-						    },0);
-						});
-						
-						var search_operator = $.jset.fn.get_filterToolbar_field_search_operator(grid, $(this));
-						if(search_operator)
-							search_operator.css('padding', '0');
-					});*/
-						
+											
 					grid.data('grid_width', grid.jqGrid('getGridParam', 'width'));
 
 		            if(grid.data('settings').persist && grid.data('persist_state') && grid.data('persist_state').otherState){
@@ -1034,6 +1023,13 @@
 		            
 		            if(grid.data('settings').hide_horizontal_scrollbar)
 		            	$('.ui-jqgrid .ui-jqgrid-bdiv').css('overflow-x', 'hidden');
+		            
+		            if(grid.data('settings').refresh.rate)
+						setInterval(function(){
+							console.log($.jset.fn.get_formid_by_grid(grid), $.jset.fn.get_formid_by_grid(grid).is(':visible'));
+							if(grid.is(':visible') && !$($.jset.fn.get_formid_by_grid(grid)).is(':visible'))
+								grid[0].triggerToolbar();
+						}, grid.data('settings').refresh.rate * 1000);
 		                
 					if($.isFunction(grid.data('settings').loadCompleteInit))
 						grid.data('settings').loadCompleteInit.call(grid, data);
@@ -1294,7 +1290,8 @@
 			var value = grid.data('cache').grid_container;
 			if(!value){
 				value = $('div#gbox_' + grid.attr('id'));
-				grid.data('cache').grid_container = value;
+				if(value.length)
+					grid.data('cache').grid_container = value;
 			}
 			return value;
 		},
@@ -1311,7 +1308,8 @@
 			var grid = $(formid).data('cache').grid;
 			if(!grid){
 				grid = $('table#' + $(formid).attr('id').substr(8));
-				$(formid).data('cache').grid = grid;
+				if(grid.length)
+					$(formid).data('cache').grid = grid;
 			}
 			return grid;
 		},
@@ -1320,7 +1318,8 @@
 			var value = grid.data('cache').formid;
 			if(!value){
 				value = $('form#FrmGrid_' + $(grid).attr('id'));
-				grid.data('cache').formid = value;
+				if(value.length)
+					grid.data('cache').formid = value;
 			}
 			return value;
 		},
@@ -1343,7 +1342,8 @@
 				//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
 				var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $formid.closest('form'));
 				value = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
-				$formid.data('cache').form_fields[name] = value;
+				if(value.length)
+					$formid.data('cache').form_fields[name] = value;
 			}
 			
 			return value;
@@ -1387,7 +1387,8 @@
 			if(!value){
 				var exclude = $("div.ui-jqgrid[id^='gbox_'] td.ui-search-input [id^='gs_']", $.jset.fn.get_grid_container(grid));
 				value = $("td.ui-search-input [id='gs_" + field_name + "']", $.jset.fn.get_grid_container(grid)).not(exclude);
-				grid.data('cache').filterToolbar_fields[field_name] = value;
+				if(value.length)
+					grid.data('cache').filterToolbar_fields[field_name] = value;
 			}
 			
 			return value;
