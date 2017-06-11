@@ -1026,7 +1026,6 @@
 		            
 		            if(grid.data('settings').refresh.rate)
 						setInterval(function(){
-							console.log($.jset.fn.get_formid_by_grid(grid), $.jset.fn.get_formid_by_grid(grid).is(':visible'));
 							if(grid.is(':visible') && !$($.jset.fn.get_formid_by_grid(grid)).is(':visible'))
 								grid[0].triggerToolbar();
 						}, grid.data('settings').refresh.rate * 1000);
