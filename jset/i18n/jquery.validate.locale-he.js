@@ -20,5 +20,6 @@ $.extend( $.validator.messages, {
 	range: $.validator.format( "נא למלא ערך בין {0} ל- {1}" ),
 	max: $.validator.format( "נא למלא ערך קטן או שווה ל- {0}" ),
 	min: $.validator.format( "נא למלא ערך גדול או שווה ל- {0}" ),
-	ddmmyyyyDate: "נא למלא תאריך בפורמט dd/mm/yyyy"
+	ddmmyyyyDate: "נא למלא תאריך בפורמט dd/mm/yyyy",
+	time: "נא למלא זמן חוקי, בין 00:00 ל 23:59"
 } );

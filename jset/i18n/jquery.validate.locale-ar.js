@@ -20,5 +20,6 @@ $.extend( $.validator.messages, {
 	range: $.validator.format( "رجاء إدخال عدد قيمته بين {0} و {1}" ),
 	max: $.validator.format( "رجاء إدخال عدد أقل من أو يساوي {0}" ),
 	min: $.validator.format( "رجاء إدخال عدد أكبر من أو يساوي {0}" ),
-	ddmmyyyyDate: "Please enter a date in the format dd/mm/yyyy"
+	ddmmyyyyDate: "Please enter a date in the format dd/mm/yyyy",
+	time: "Please enter a valid time, between 00:00 and 23:59"
 } );

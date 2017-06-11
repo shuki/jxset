@@ -30,3 +30,11 @@
 td.ltr{
 	direction: ltr;
 }
+
+.top .ui-tooltip-content::after {
+    bottom: -7px;
+    left: auto;
+    right: 10px;
+    border-color: red transparent;
+    border-width: 10px 10px 0;    
+}
