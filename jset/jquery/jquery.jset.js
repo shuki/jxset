@@ -1334,17 +1334,16 @@
 			return $(formid).find(':input[name=' + name + '],table[name=' + name + ']').not(exclude);
 		},*/
 		
-		get_form_field: function(formid, name){
+		get_form_field: function(formid, name, cache_it){
 			var $formid = $(formid);
 			var value = $formid.data('cache').form_fields[name];
 			if(!value){
 				//var exclude = $("div.ui-jqgrid[id^='gbox_'] .FormElement, div.ui-jqgrid[id^='gbox_'] .customelement, .ui-search-input input, .ui-search-input select", $(formid).closest('form'));
 				var exclude = $("div.ui-jqgrid[id^='gbox_'] form.FormGrid .FormElement, .ui-search-input input, .ui-search-input select", $formid.closest('form'));
 				value = $('[name=' + name + ']', $formid).filter(':input, table').not(exclude);
-				if(value.length)
+				if(value.length && cache_it !== false)
 					$formid.data('cache').form_fields[name] = value;
 			}
-			
 			return value;
 		},
 		

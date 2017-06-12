@@ -1786,7 +1786,7 @@
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
-					var elem = $.jset.fn.get_form_field(formid, id);
+					var elem = $.jset.fn.get_form_field(formid, id, false);
 					var initial_value = elem.prop('initial_value');
 					var name = elem.attr('name');
 					var options = grid.data('settings').grid.colModel[grid.data('index')[name]];							
