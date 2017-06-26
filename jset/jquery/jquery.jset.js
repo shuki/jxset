@@ -60,6 +60,8 @@
 			spacing: '20px',
 			caption_class: 'CaptionField',
 			row_selection: true,
+			autoRowNum: true,
+			autoRowNumExtra: 5,
 			load_edit_record: false,
 			reopen_after_add: false,
 			pending_create: false,
@@ -886,7 +888,10 @@
 						grid.jqGrid('setGridParam', {datatype: 'jsonstring'});
 						grid.jqGrid('setGridParam', {datastr: preload_rows});
 					}
-								
+					
+					if(grid.data('settings').autoRowNum)
+						grid.jqGrid('setGridParam', {rowNum: $.jset.fn.calcRowNum(grid)});
+		
 					if(grid.data('settings').searchall === true){
 						grid.data('searchall', {
 							phrase: '', 
@@ -2591,6 +2596,13 @@
 			var grid = $(grid_id);
 			var options = grid.data('settings').navigation.del;
 			grid.jqGrid('delGridRow', id, options);
+		},
+		calcRowNum(grid){
+			/*var element = document.getElementById('foo');
+			var positionInfo = element.getBoundingClientRect();
+			var height = positionInfo.height;
+			var width = positionInfo.width;*/
+			return Math.floor(parseInt(grid.jqGrid('getGridParam', 'height') / 23)) + grid.data('settings').autoRowNumExtra;
 		}
 	});
 })(jQuery);
