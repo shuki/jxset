@@ -2597,7 +2597,7 @@
 			var options = grid.data('settings').navigation.del;
 			grid.jqGrid('delGridRow', id, options);
 		},
-		calcRowNum(grid){
+		calcRowNum: function(grid){
 			/*var element = document.getElementById('foo');
 			var positionInfo = element.getBoundingClientRect();
 			var height = positionInfo.height;
