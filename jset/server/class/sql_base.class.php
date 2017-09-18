@@ -142,6 +142,7 @@ class sql_base
 		SELECT ?,	#LD#COLUMN_NAME#RD#
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?";
+	public $COPY_JSET_COLUMNS = "call jxset.p_copy_jset_columns_by_id(?,?,?,?)";
 	
 	public $INSERT_JSET_EVENT = "insert ignore into jset_event (parent) values(?)";
 	

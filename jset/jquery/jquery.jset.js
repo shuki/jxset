@@ -44,6 +44,7 @@
 				host: '_host_',
 				db_remote_definitions: '_db_remote_definitions_',
 				copy: '_copy_',
+				copy_id: '_copy_id_',
 				param: '_param_'
 			},
 			host: '',
@@ -763,6 +764,7 @@
 					prmNames: obj
 				});
 				hard_post[grid.data('settings').prmNames.copy] = true; 
+				hard_post[grid.data('settings').prmNames.copy_id] = grid.data('copy_id'); 
 			}
 			
 			var postData = grid.jqGrid('getGridParam', 'postData');
@@ -1961,6 +1963,7 @@
 							if (id > 0) {
 								grid.data('copy_form', true);
 								grid.data('form_action', 'copy');
+								grid.data('copy_id', id);
 								var options = $.extend(true, {}, grid.data('settings').navigation.edit , grid.data('settings').copy.properties);
 								if($.isFunction(grid.data('settings').copyfunc))
 									grid.data('settings').copyfunc.call(grid, id, options);

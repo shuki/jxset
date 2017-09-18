@@ -74,7 +74,16 @@ class jset_columns_base {
 			$db->execute(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD), $sql_class->INSERT_JSET_COLUMNS), array($id, $source));
 	}
 	
+
+	public static function copy_jset_columns($db, $id, $copy_id, $source_db, $target_db){
+		if(!$copy_id)
+			return;
+		
+		$sql_class = sql::create($db);
+		return $db->exec($sql_class->COPY_JSET_COLUMNS, array($copy_id, ($source_db ? $source_db : config::dbname), $id, ($target_db ? $target_db : config::dbname)));
+	}
 	
+
 	//-----------------    internal functions ------------------------
 	protected function columns($db, $table, &$index, &$aggregate){
 		return $table->sql ? $this->columns_sql($db, $table, $index, $aggregate) :
