@@ -19,7 +19,7 @@ class jset_dispatch {
 		
 		$post = self::get_real_POST_GET();
 		foreach($post as $var => $value)
-			if($dbvar =	$db_param_names[$var])
+			if($dbvar =	$db_param_names[$var] && $value != '')
 				$dbparams->$dbvar = $value;
 			else
 				$request->$var = $value;
