@@ -13,6 +13,9 @@ include_once("autoload.php");
 class jset_columns_base {
 	private $settings;
 	private $sql_class;
+	private $primary;
+	private $key_column;
+	private $aggregate;
 	
 	function __construct($db = null)
 	{
@@ -20,12 +23,16 @@ class jset_columns_base {
 	}
 
 	public function get($db, $table, $settings){
+		$this->primary = null;
+		$this->key_column = null;
+		$this->aggregate = null;
 		$this->settings = $settings;
-		$result->source->cols = $this->columns($db, $table, $index, $aggregate);
+		$result->source->cols = $this->columns($db, $table, $index);
 		$result->target->cols = $table->target && ($table->target != $table->source) ? $this->columns_base($db, $table->target, $notused) : $result->source->cols;
+		$result->primary = $this->key_column ? $this->key_column : ($this->primary ? $this->primary : $result->target->cols[0]->Field);
+		$result->source->cols[$index[$result->primary]]->key = 1;
 		$result->index = $index;
-		$result->aggregate = $aggregate;
-		$result->primary = $this->primary($result->target->cols);
+		$result->aggregate = $this->aggregate;
 		$this->update_dependent_fields($result->source->cols, $result->index);
 		return $result;
 	}
@@ -85,10 +92,10 @@ class jset_columns_base {
 	
 
 	//-----------------    internal functions ------------------------
-	protected function columns($db, $table, &$index, &$aggregate){
-		return $table->sql ? $this->columns_sql($db, $table, $index, $aggregate) :
+	protected function columns($db, $table, &$index){
+		return $table->sql ? $this->columns_sql($db, $table, $index) :
 		(db_utils::table_exists($db, $this->sql_class->TABLE_COLUMN) ?
-			$this->columns_all($db, $table, $index, $aggregate) :
+			$this->columns_all($db, $table, $index) :
 			$this->columns_base($db, $table->name, $index));
 	}
 
@@ -101,18 +108,18 @@ class jset_columns_base {
 		return $cols;
 	}
 
-	protected function columns_all($db, $table, &$index, &$aggregate){ 
+	protected function columns_all($db, $table, &$index){ 
   		$db->query(str_replace(array('#LD#', '#RD#'), array($this->sql_class->LD, $this->sql_class->RD),$this->sql_class->GET_COLUMNS_ALL), array($table->name, $table->section, $table->source));
-		$cols = $this->process($db, $index, $aggregate);
+		$cols = $this->process($db, $index);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
 		return $this->lists($db, $cols);
 	}
 	
-	protected function columns_sql($db, $table, &$index, &$aggregate){  
+	protected function columns_sql($db, $table, &$index){  
 		$cols = $this->columns_meta($db, $table->source, $index);
-		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols, $aggregate);
+		$cols = $this->columns_extension($db, $table->name, $table->section, $index, $cols);
 		if(!$cols)
 			die('no columns defined for source: ' . $table->name);
 		
@@ -188,7 +195,7 @@ class jset_columns_base {
 		return $cols;
 	}
 
-	protected function columns_extension($db, $name, $section, $index, $cols, &$aggregate){
+	protected function columns_extension($db, $name, $section, $index, $cols){
 		if(!db_utils::table_exists($db, $this->sql_class->TABLE_COLUMN))
 			return $cols;
 		
@@ -203,14 +210,14 @@ class jset_columns_base {
 				$cols[$index[$row->Field]]->control = $cols[$index[$row->Field]]->type;
 			}
 			
-			if($row->aggregate)
-				$aggregate[$row->Field] = $row->aggregate;
+			if($row->aggregate)	$this->aggregate[$row->Field] = $row->aggregate;			
+			if($row->key) $this->key_column = $row->Field;				
 		}
 
 		return $cols;
 	}
 	
-	protected function process($db, &$index, &$aggregate){
+	protected function process($db, &$index){
 		$rows = $db->fetchAll();
 		$i = 0;
 		foreach($rows as $row){
@@ -221,7 +228,10 @@ class jset_columns_base {
 			$a_row = $this->set_computed_values($db, $row);
 			$cols[] = (object) array_merge((array) $a_row, (array) $attributes, (array) $privileges);
 			$index[$row->Field] = $i++;
-			if($row->aggregate) $aggregate[$row->Field] = $row->aggregate;
+			if($row->aggregate) $this->aggregate[$row->Field] = $row->aggregate;
+			//notice upper & lower case key/Key.
+			if($row->key) $this->key_column = $row->Field;
+			if($row->Key == 'PRI') $this->primary = $row->Field;
 		}
 
 		return $cols;
@@ -320,17 +330,6 @@ class jset_columns_base {
 		return call_user_func_array(array($call->class, $call->method), array($db, $this->settings));
 	}
 
-	// get the primary field name
-	protected function primary($cols){
-		foreach($cols as $row)
-			if($row->Key == 'PRI'){
-				$result = $row->Field;
-				break;
-			}
-
-		return $result ? $result : $cols[0]->Field;
-	}
-	
 	protected function update_dependent_fields(&$cols, $index){
 		foreach($cols as $row)
 			if($row->master_fields)

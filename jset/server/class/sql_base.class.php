@@ -84,7 +84,8 @@ class sql_base
 		j.#LD#help#RD# as #LD#help#RD#,
 		j.#LD#validation#RD# as #LD#validation#RD#,
 		j.#LD#aggregate#RD# as #LD#aggregate#RD#,
-		j.#LD#object#RD# as #LD#object#RD#
+		j.#LD#object#RD# as #LD#object#RD#,
+		j.#LD#key#RD# as #LD#key#RD#
 		FROM information_schema.COLUMNS i
 		LEFT JOIN jset_column j
 		ON i.COLUMN_NAME = j.name AND j.parent = (SELECT id FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1)
@@ -116,7 +117,8 @@ class sql_base
 		#LD#help#RD# as #LD#help#RD#,
 		#LD#validation#RD# as #LD#validation#RD#,
 		#LD#aggregate#RD# as #LD#aggregate#RD#,
-		#LD#object#RD# as #LD#object#RD#
+		#LD#object#RD# as #LD#object#RD#,
+		#LD#key#RD# as #LD#key#RD#
 		FROM jset_column
 		WHERE parent = (SELECT id FROM jset_table WHERE name = ? AND (section is null OR section = ?) ORDER BY section DESC LIMIT 1)
 		ORDER BY #LD#position#RD#";

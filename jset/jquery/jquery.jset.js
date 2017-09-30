@@ -643,7 +643,6 @@
 		
 		beforeShowForm: function(formid){
 			var grid = $(this);
-
 			//$.jset.fn.closeSubForms(formid, grid);
 			
 			$.each(grid.data('columns'), function(){
@@ -664,13 +663,14 @@
 			$.each(grid.data('columns'), function(){
 				if($.jset.defaults.control[this.control] != undefined && $.isFunction($.jset.defaults.control[this.control].afterShowForm))
 					$.jset.defaults.control[this.control].afterShowForm.call(grid, formid, this.index || this.Field);
-			});			
-			var id = $(formid).find('#id').val();
+			});
+			
+			var key_column = $.jset.fn.get_form_field(formid, grid.data('key_column'));
 			if(grid.data('copy_form')){
 				grid.data('copy_form', false);
-				var source_id = $(formid).find('#id').val();
+				var source_id = key_column.val();
 				if(grid.data('settings').copy.clear_id)
-					$(formid).find('#id').val('');
+					key_column.val('');
 				if($.isFunction(grid.data('settings').copy.showFormInit))
 					grid.data('settings').copy.showFormInit.call(grid, formid, source_id);
 			}
@@ -791,7 +791,13 @@
 			grid.data('validate', false);
 			return return_value;
 		},
-	
+		serializeEditData: function(postdata){
+			var grid = $(this);
+			if($.isFunction(grid.data('settings').serializeEditData))
+				return grid.data('settings').serializeEditData.call(grid, postdata);
+			
+			return $.extend({}, postdata);			
+		},
 		afterSubmit: function(response, postdata, frmoper){
 			var grid = $(this);
 			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
@@ -1120,7 +1126,6 @@
 			},
 			onSelectRow: function(id, isSelected) {
 				var grid = $(this);
-				var selrow = grid.jqGrid('getGridParam', 'selrow');
 				
 				if(id != grid.data('last_selection')){
 					if (grid.data('settings').detail){
@@ -1258,7 +1263,7 @@
 					return [true];
 				},
 				
-				onclickSubmit : function(eparams){
+				onclickSubmit : function(eparams, id){
 					var grid = $(this);
 					var post = {};
 					var settings = grid.data('settings');
@@ -1277,6 +1282,13 @@
 
 				beforeSubmit: function(id){
 					return [true];
+				},
+				serializeDelData: function(postdata){
+					var grid = $(this);
+					if($.isFunction(grid.data('settings').serializeDelData))
+						return grid.data('settings').serializeDelData.call(grid, postdata);
+					
+					return $.extend({}, postdata);
 				}
 			}
 		}
@@ -1934,7 +1946,7 @@
 						dump.dialog('isOpen') ? dump.dialog('close') : dump.dialog('open');
 						if(dump.dialog('isOpen')){
 							var id = grid.jqGrid('getGridParam', 'selrow');
-							if (id > 0) {
+							if (id != null) {
 								$('#' + grid.data('settings').dump.id).html('');
 								$.jset.fn.get_dump(grid, grid.data('settings'), function(data){
 									$('#' + grid.data('settings').dump.id).html(htmlspecialchars(data));
@@ -1960,7 +1972,7 @@
 								return;
 							
 							var id = grid.jqGrid('getGridParam', 'selrow');
-							if (id > 0) {
+							if (id != null) {
 								grid.data('copy_form', true);
 								grid.data('form_action', 'copy');
 								grid.data('copy_id', id);
@@ -2120,6 +2132,10 @@
 			obj.formoptions = $.jset.fn.formoptions(col, i, t, col_object);
 			obj.searchoptions = $.jset.fn.searchoptions(col, t);
 			obj.stype = $.jset.fn.stype(col, t);
+			if(col.key == 1){
+				obj.key = true;
+				t.data('key_column', col.Field);
+			}
 			
 			if(col_object.searchoptions && col_object.searchoptions.sopt && obj.searchoptions.sopt && obj.searchoptions.sopt.length > 0)
 				obj.searchoptions.sopt = [];
@@ -2399,7 +2415,7 @@
 		
 		load_edit_record: function(grid, id, options){
 			var rowid = grid.jqGrid('getGridParam', 'selrow');
-			if (rowid > 0) {
+			if (rowid != null) {
 				if (typeof options.formid != 'undefined')
 					$.jset.fn.block(options.formid);
 				else
