@@ -311,7 +311,6 @@ class report {
 		}
 		//** un-comment the following line to show the debug console
 		//$smarty->debugging = true;
-		
 		$smarty->assign('tpl_name', "tpl/" . ($data->report->tpl ? $data->report->tpl : "content_table") . ".tpl");
 		$smarty->assign('tpl_contents_name', "tpl/" . ($data->report->tpl_contents ? $data->report->tpl_contents : "data") . ".tpl");
 		$message = $smarty->display("tpl/" . (defined('config::tpl') ? config::tpl : "report.tpl"));
@@ -415,7 +414,13 @@ class report {
 			$data->error_msg = $error->message;
 			$data->error_dump = $error->dump;
 		}
-		$this->display_page($data);
+		//$this->display_page($data);
+		echo 'Error:<br />' . $msg . '<br /><br />';
+		if($error){
+			echo $error->message . '<br /><br />';
+			echo $error->dump;
+		}
+
 		die();		
 	}
 	
