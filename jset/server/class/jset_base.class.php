@@ -652,57 +652,57 @@ class jset_base
 					if (strlen($s) > 1) {
 						$s .= " ".$group['groupOp']." ";
 					}
-					$field = $this->sql_class->LD . $val['field'] . $this->sql_class->RD;
+					$field = 'LOWER(' . $this->sql_class->LD . $val['field'] . $this->sql_class->RD . ')';
 					$op = $val['op'];
 					$v = stripslashes($val['data']);
 					if( $op ) {
 						switch ($op)
 						{
 							case 'ne':
-								$s .= '(' . $field . ' ' . $sopt[$op] . ' ' . $this->db->con->quote($v) . " OR $field IS NULL) ";
+								$s .= '(' . $field . ' ' . $sopt[$op] . ' LOWER(' . $this->db->con->quote($v) . ") OR $field IS NULL) ";
 								break;
 							case 'bw':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
-								$s .= $field .' '. $sopt[$op] . $this->db->con->quote("$v%") . ' ';
+								$s .= $field .' '. $sopt[$op] . ' LOWER(' . $this->db->con->quote("$v%") . ') ';
 								break;
 							case 'bn':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
-								$s .= '(' . $field .' '. $sopt[$op] . $this->db->con->quote("$v%") . " OR $field IS NULL) ";
+								$s .= '(' . $field .' '. $sopt[$op]. ' LOWER(' . $this->db->con->quote("$v%") . ") OR $field IS NULL) ";
 								break;
 							case 'ew':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
-								$s .= $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v") . ' ';
+								$s .= $field . ' ' . $sopt[$op] . ' LOWER(' . $this->db->con->quote("%$v") . ') ';
 								break;
 							case 'en':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
-								$s .= '(' . $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v") . " OR $field IS NULL) ";
+								$s .= '(' . $field . ' ' . $sopt[$op] . ' LOWER(' . $this->db->con->quote("%$v") . ") OR $field IS NULL) ";
 								break;
 							case 'cn':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
-								$s .= $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v%") . ' ';
+								$s .= $field . ' ' . $sopt[$op] . ' LOWER(' . $this->db->con->quote("%$v%") . ') ';
 								break;
 							case 'nc':
 								$v = str_replace(array('%', '_'), array('\%', '\_'), $v);
-								$s .= '(' . $field . ' ' . $sopt[$op] . $this->db->con->quote("%$v%") . " OR $field IS NULL) ";
+								$s .= '(' . $field . ' ' . $sopt[$op] . ' LOWER(' . $this->db->con->quote("%$v%") . ") OR $field IS NULL) ";
 								break;
 							case 'in':
-								$s .= $field . ' ' . $sopt[$op] . " ( $v ) ";
+								$s .= $field . ' ' . $sopt[$op] . " ( LOWER($v) ) ";
 								break;
 							case 'ni':
-								$s .= '(' . $field . ' ' . $sopt[$op] . " ( $v ) OR $field IS NULL) ";
+								$s .= '(' . $field . ' ' . $sopt[$op] . " ( LOWER($v) ) OR $field IS NULL) ";
 								break;
 							case 'nu':
 							case 'nn':
 								$s .= $field . ' ' . $sopt[$op] . ' ';
 								break;
 							case 'fi':
-								$s .= $sopt[$op] . ' (' . $this->db->con->quote($v) . ', ' . $field . ') > 0 ';
+								$s .= $sopt[$op] . ' (LOWER(' . $this->db->con->quote($v) . '), ' . $field . ') > 0 ';
 								break;
 							case 'fn':
-								$s .= '(' . $sopt[$op] . ' (' . $this->db->con->quote($v) . ', ' . $field . ") > 0  OR $field IS NULL) ";
+								$s .= '(' . $sopt[$op] . ' (LOWER(' . $this->db->con->quote($v) . '), ' . $field . ") > 0  OR $field IS NULL) ";
 								break;
 							default :
-								$s .= $field . ' ' . $sopt[$op] . ' ' . $this->db->con->quote($v) . ' ';
+								$s .= $field . ' ' . $sopt[$op] . ' LOWER(' . $this->db->con->quote($v) . ') ';
 								break;
 						}
 					}
