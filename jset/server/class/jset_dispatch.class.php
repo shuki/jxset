@@ -18,6 +18,11 @@ class jset_dispatch {
 		$dbparams = new stdClass;
 		
 		$post = self::get_real_POST_GET();
+		if($post['_version_'] && $post['_version_'] != config::version){
+			$result->error->type = 'version';
+			return $result;
+		}
+		
 		foreach($post as $var => $value)
 			if(isset($db_param_names[$var])){
 				if($value != ''){

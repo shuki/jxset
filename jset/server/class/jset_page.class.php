@@ -102,6 +102,10 @@ EOT;
 <script type="text/javascript">
 	$.jgrid.no_legacy_api = true;
 	$.jgrid.useJSON = true;
+	if($.jset.fn.getVersionState() != $.jset.version)
+		$.jset.fn.clearLocalStorage();
+	
+	$.jset.fn.setVersionState($.jset.version);
 </script>
 
 <script src="{$dir_pre}jset/jquery/jquery.jset.formatters.js" type="text/javascript"></script>

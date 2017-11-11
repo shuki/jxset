@@ -26,16 +26,16 @@
 	    },
 	    
 	    saveGridState: function (grid){
-		var state = {
-			//search: grid.jqGrid('getGridParam', 'search'),
-			//page: grid.jqGrid('getGridParam', 'page'),
-			sortname: grid.jqGrid('getGridParam', 'sortname'),
-			sortorder: grid.jqGrid('getGridParam', 'sortorder'),
-			colStates: {},
-			otherState: {
-				permutation: grid.jqGrid("getGridParam", "remapColumns")
-			}
-		};
+			var state = {
+				//search: grid.jqGrid('getGridParam', 'search'),
+				//page: grid.jqGrid('getGridParam', 'page'),
+				sortname: grid.jqGrid('getGridParam', 'sortname'),
+				sortorder: grid.jqGrid('getGridParam', 'sortorder'),
+				colStates: {},
+				otherState: {
+					permutation: grid.jqGrid("getGridParam", "remapColumns")
+				}
+			};
 
 	        var colModel = grid.jqGrid('getGridParam', 'colModel'), i, l = colModel.length, colItem, cmName;
 	        for (i = 0; i < l; i++){
@@ -106,5 +106,17 @@
 	    		}
 	    	});
 	    },
+	    
+	    versionName: function (){
+	        return window.location.href + '#version';
+	    },
+	    
+	    setVersionState: function(version){
+	    	$.jset.fn.saveObjectInLocalStorage($.jset.fn.versionName(), version);
+	    },
+	    
+	    getVersionState: function(){
+	    	return $.jset.fn.getObjectFromLocalStorage($.jset.fn.versionName());
+	    }
 });
 })(jQuery);

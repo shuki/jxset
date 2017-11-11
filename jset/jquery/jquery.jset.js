@@ -512,7 +512,8 @@
 		$.jset.fn.set_source_param(t.p);
 		
 		$.jset.fn.get_grid_definitions(t.p, function(data){
-			$.jset.fn.version_check(data);
+			if(!$.jset.fn.version_check(data))
+				return this;
 
 			if(!$.jset.fn.fetch_grid(t.p.source))
 				$.jset.fn.store_grid(t.p.source, data);
@@ -816,13 +817,12 @@
 
 			var obj = $.parseJSON(response.responseText);
 			if(obj.error !== undefined){
-				if($.isFunction(grid.data('settings').afterSubmitError))
-					return grid.data('settings').afterSubmitError.call(grid, response, postdata, frmoper, obj);
-					
 				if(obj.error.type !== undefined && obj.error.type == 'version'){
 					setTimeout(function(){$.jset.fn.version_check(obj);}, 0);
 					var message = $.jset.messages.versionUpdated;
 				}
+				else if($.isFunction(grid.data('settings').afterSubmitError))
+					return grid.data('settings').afterSubmitError.call(grid, response, postdata, frmoper, obj);					
 				else
 					var message = obj.error.message;
 				return [false, message];
@@ -1006,7 +1006,9 @@
 			},
 		
 			loadComplete: function(data){
-				$.jset.fn.version_check(data);
+				if(!$.jset.fn.version_check(data))
+					return;
+				
 				var grid = $(this);
 				var container = $.jset.fn.get_grid_container(grid);
 
@@ -2578,13 +2580,15 @@
 				if($('div#version_check').length == 0)
 					$('body').append('<div id="version_check" style="display:none;direction:' + $.jset.direction + ';">' + $.jset.messages.versionUpdated + '</div>');
 
-				setTimeout("location.reload(false)", 2000);
+				setTimeout("location.reload(false)", 5000);
+
 			    $("#version_check").dialog({
 			    	title: $.jset.messages.warning,
 			        modal: true
 			    });
-				//alert($.jset.messages.versionUpdated);
+			    return false;
 			}
+			return true;
 		},
 		
 		searchall_action: function(grid){
