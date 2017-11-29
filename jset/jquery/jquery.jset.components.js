@@ -446,13 +446,12 @@
 		jsetgrid_element: function(value, options){
 			var grid = $(this);
 			var settings = grid.data('settings').grid.colModel[grid.data('index')[options.name]].settings;
-			if(typeof settings.filter != 'undefined' && settings.filter.length > 0 && typeof settings.filter[0].target != 'undefined' ){
-				var filter_name = settings.filter[0].target;
+			if(typeof settings.filter != 'undefined' && settings.filter.length > 0 && typeof settings.filter[0].target != 'undefined' )
 				settings.search_default.push({
-			  		name: filter_name,
-			  		value: value
+			  		name: settings.filter[0].target,
+			  		value: (value == '' ? '_empty_' : grid.jqGrid('getCell', value, settings.filter[0].source))
 			  	});
-			}
+
 			var elem = $('<TABLE></TABLE>');
 			return elem;
 		},
@@ -461,12 +460,13 @@
 			if(elem.length == 0 || action == 'get')
 				return '';
 				
+			var grid = $(this);
 			var filter_field = $.jset.fn.get_filterToolbar_field($.jset.fn.get_grid_by_element(elem), elem.data('settings').filter[0].target);
-			if($(this).data('form_action') == 'edit' && (elem.data('settings').load_edit_record || filter_field.val() != value)){
+			if(grid.data('form_action') == 'edit' && (elem.data('settings').load_edit_record || filter_field.val() != value)){
 				if(elem.jqGrid('getGridParam', 'datatype') == 'local')
 					elem.jqGrid('setGridParam', {datatype: 'json'});
 
-				filter_field.val(value);
+				filter_field.val(value == '' ? '_empty_' : grid.jqGrid('getCell', value, elem.data('settings').filter[0].source));
 				
 				if($.isFunction(elem.data('settings').before_triggerToolbar))
 					elem.data('settings').before_triggerToolbar.call(elem);
