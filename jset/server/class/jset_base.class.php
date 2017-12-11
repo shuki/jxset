@@ -719,7 +719,12 @@ class jset_base
 	}
 
 	private function get_searchall($value){
+		if(preg_match_all('~(["\'])([^"\']+)\1~', $value, $arr))	
+			for ($i = 0; $i < count($arr[0]); $i++)
+				$value = str_replace ($arr[0][$i], '' , $value);
+				
 		$values = array_unique(explode(' ', $value));
+		$values = array_merge($arr[2], $values);
 		foreach($values as $val){
 			$q = '';
 			if($val)

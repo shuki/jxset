@@ -1822,7 +1822,8 @@
 			if (!grid.data('settings').filterToolbar.hide && grid.data('settings').clearFilterToolbar.navButtonAdd){
 				var options = $.extend(true, {}, grid.data('settings').clearFilterToolbar.options,
 					{onClickButton: function(){
-						//$.jset.fn.get_filterToolbar_fields(grid).filter(':visible').val('');
+						if(grid.data('settings').searchall === true)
+							grid.data('searchall').elem.val('');
 						$.each($.jset.fn.get_filterToolbar_fields(grid), function(){
 							$(this).filter(':visible').val('');
 						});
@@ -2593,8 +2594,13 @@
 		
 		searchall_action: function(grid){
 			grid.data('searchall').timer = null;
-			if(grid.data('searchall').phrase != grid.data('searchall').elem.val()){
-				grid.data('searchall').phrase = grid.data('searchall').elem.val();
+			var val = grid.data('searchall').elem.val();
+
+			if(val.match(/^"/g) && (val.match(/"/g) || []).length == 1 || val.match(/^'/g) && (val.match(/'/g) || []).length == 1)
+				return;
+			
+			if(grid.data('searchall').phrase != val){
+				grid.data('searchall').phrase = val;
 				grid[0].triggerToolbar();
 			}
 		},
