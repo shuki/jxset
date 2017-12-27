@@ -23,7 +23,13 @@
 	    
 	    myColumnStateName: function (grid){
 	    	var persist_parameter = (grid.data('settings').persist_parameter ? grid.data('settings')[grid.data('settings').persist_parameter] : grid[0].id);
-	        return window.location.href + '#' + persist_parameter + (typeof user_attributes != 'undefined' && user_attributes.id != undefined ? '#' + user_attributes.id : '');
+	        return $.jset.fn.urlBaseName() + '#' + persist_parameter + (typeof user_attributes != 'undefined' && user_attributes.id != undefined ? '#' + user_attributes.id : '');
+	    },
+	    
+	    urlBaseName: function(){
+	    	var path_parts = window.location.href.split('?');
+	    	var path_base = path_parts[0];
+	    	return path_base + (path_base.slice(-1) == '/' ? 'index.php' : '');
 	    },
 	    
 	    saveGridState: function (grid){
@@ -109,7 +115,7 @@
 	    },
 	    
 	    versionName: function (){
-	        return window.location.href + '#version';
+	        return $.jset.fn.urlBaseName() + '#version';
 	    },
 	    
 	    setVersionState: function(version){
