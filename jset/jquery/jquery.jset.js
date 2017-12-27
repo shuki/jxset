@@ -71,6 +71,7 @@
 			clearSearch: false,
 			preload_source: false,
 			persist: true,
+			persist_parameter: false,
 			form_sent_button: false,
 			refresh: {
 				rate: false

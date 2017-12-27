@@ -22,7 +22,8 @@
 	    },
 	    
 	    myColumnStateName: function (grid){
-	        return window.location.href + '#' + grid[0].id + (typeof user_attributes != 'undefined' && user_attributes.id != undefined ? '#' + user_attributes.id : '');
+	    	var persist_parameter = (grid.data('settings').persist_parameter ? grid.data('settings')[grid.data('settings').persist_parameter] : grid[0].id);
+	        return window.location.href + '#' + persist_parameter + (typeof user_attributes != 'undefined' && user_attributes.id != undefined ? '#' + user_attributes.id : '');
 	    },
 	    
 	    saveGridState: function (grid){
