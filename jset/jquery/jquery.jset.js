@@ -958,13 +958,23 @@
 					var fields = [];
 					$.each(colModel, function(i){
 						if(!this.hidden && this.name != 'rn')
-						{
-							if(grid.data('settings').export.associative == 'both')
+							switch(grid.data('settings').export.associative){
+							case 'literals':
+								if(typeof grid.data('index')[this.index + grid.data('settings').join_field_suffix] != 'undefined')
+									fields.push(this.index + grid.data('settings').join_field_suffix);
+								else
+									fields.push(this.index);
+								break;								
+							case 'codes':
+								fields.push(this.index);
+								break;
+							case 'both':	
+							default:
 								if(typeof grid.data('index')[this.index + grid.data('settings').join_field_suffix] != 'undefined')
 									fields.push(this.index + grid.data('settings').join_field_suffix);
 
-							fields.push(this.index);
-						}
+								fields.push(this.index);
+							}
 					});
 
 					var get = $.extend({}, post, post_columns);
