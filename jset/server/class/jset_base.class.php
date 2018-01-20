@@ -414,17 +414,17 @@ class jset_base
 		$data = $this->db->fetchAll();
 	
 		foreach($data as $row){
+			if($line)
+				$output .= substr($line, 0, -1) . "\n";
+			$line = '';
 			foreach($row as $key => $value)
 				$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '",';
-		
-			$output .= substr($line, 0, -1) . "\n";
-			$line = '';
 		}
-		$output = substr($output, 0, - (strlen($value) + 3));
 		
 		echo str_replace(",", ",", $field_names) . "\n";
 		echo $output;
-		return $value;
+		echo substr($line, 0, -1);
+		return substr($line, 0, -1);
 	}
 		
 //-----------------    internal functions ------------------------

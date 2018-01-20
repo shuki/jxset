@@ -47,12 +47,14 @@
 	        var colModel = grid.jqGrid('getGridParam', 'colModel'), i, l = colModel.length, colItem, cmName;
 	        for (i = 0; i < l; i++){
 	            colItem = colModel[i];
-	            cmName = colItem.name;
-	            if (cmName !== 'rn' && cmName !== 'cb' && cmName !== 'subgrid'){
-	                state.colStates[cmName] = {
-	                    width: colItem.width,
-	                    hidden: colItem.hidden
-	                };
+	            if(colItem !== undefined && colItem.name !== undefined){
+		            cmName = colItem.name;
+		            if (cmName !== 'rn' && cmName !== 'cb' && cmName !== 'subgrid'){
+		                state.colStates[cmName] = {
+		                    width: colItem.width,
+		                    hidden: colItem.hidden
+		                };
+		            }
 	            }
 	        }
 	        $.jset.fn.saveObjectInLocalStorage($.jset.fn.myColumnStateName(grid), state);
@@ -62,16 +64,15 @@
 	    	var columnsState = $.jset.fn.getObjectFromLocalStorage($.jset.fn.myColumnStateName(grid));
 	    	if(!columnsState)
 	    		return settings;
-	    		
+	    	
 	    	var colModel = settings.colModel;
-			
 	        if (columnsState.colStates) {
 	            var colStates = columnsState.colStates;
 	        	var colItem, i, l = colModel.length, cmName;
 	            for (i = 0; i < l; i++) {
 	                colItem = colModel[i];
 	                cmName = colItem.name;
-	                if (cmName !== 'rn' && cmName !== 'cb' && cmName !== 'subgrid')
+	                if (grid.data('index')[cmName] !== undefined && cmName !== 'rn' && cmName !== 'cb' && cmName !== 'subgrid')
 	                    $.extend(true, colModel[i], colStates[cmName]);
 	            }
 	            delete columnsState.colStates;
