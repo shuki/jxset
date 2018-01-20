@@ -424,7 +424,8 @@ class jset_base
 		echo str_replace(",", ",", $field_names) . "\n";
 		echo $output;
 		echo substr($line, 0, -1);
-		return substr($line, 0, -1);
+		//return substr($line, 0, -1);
+		return $line;
 	}
 		
 //-----------------    internal functions ------------------------
