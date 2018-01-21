@@ -421,11 +421,13 @@ class jset_base
 				$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '",';
 		}
 		
-		echo str_replace(",", ",", $field_names) . "\n";
-		echo $output;
-		echo substr($line, 0, -1);
+		$result = str_replace(",", ",", $field_names) . "\n" . $output . substr($line, 0, -1);
+		//echo str_replace(",", ",", $field_names) . "\n";
+		//echo $output;
+		//echo substr($line, 0, -1);
 		//return substr($line, 0, -1);
-		return $line;
+		echo $result;
+		return $result;
 	}
 		
 //-----------------    internal functions ------------------------
