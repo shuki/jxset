@@ -407,7 +407,6 @@ class jset_base
 		$limit = general::get_export_limit($this->db, $this->settings);
 		$field_list = $this->coalesce($this->field_list($fields));
 		$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
-		//$sql = $this->sql_class->EXPORT;
 		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#limit#', '#LD#', '#RD#'), 
 					array($field_list, $this->table->source, $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
 		$this->db->query($sql);
@@ -429,11 +428,9 @@ class jset_base
 			}
 		}
 		
-		$item = (strlen($item) == 2 ? '' : $item);
 		$result = str_replace(",", ",", $field_names) . "\n" . $output . $line . "," . $item;
 		echo $result;
-		//return $item; //work perfectly on windows regardless if last field is empty or not. on linux add null to end of field when full, correct when last field is empty.
-		return ""; //work correctly on linux when last field is empty, wrongly add '' to last field when last field is full.
+		return "";
 	}
 		
 //-----------------    internal functions ------------------------
