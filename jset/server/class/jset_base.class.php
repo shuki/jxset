@@ -422,10 +422,6 @@ class jset_base
 		}
 		
 		$result = str_replace(",", ",", $field_names) . "\n" . $output . substr($line, 0, -1);
-		//echo str_replace(",", ",", $field_names) . "\n";
-		//echo $output;
-		//echo substr($line, 0, -1);
-		//return substr($line, 0, -1);
 		echo $result;
 		return $result;
 	}
