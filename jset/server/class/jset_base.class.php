@@ -414,16 +414,25 @@ class jset_base
 		$data = $this->db->fetchAll();
 	
 		foreach($data as $row){
-			if($line)
-				$output .= substr($line, 0, -1) . "\n";
+			if($line){
+				$output .= $line . "," . $item . "\n";
+				$item = '';
+			}
 			$line = '';
-			foreach($row as $key => $value)
-				$line .= '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '",';
+			foreach($row as $key => $value){
+				if($line)
+					$line .= "," . $item;
+				else 
+					$line = $item;
+				
+				$item = '"'. str_replace('"', '""', iconv('UTF-8', config::export_charset_windows, $this->strip_html($value))) . '"';
+			}
 		}
 		
-		$result = str_replace(",", ",", $field_names) . "\n" . $output . substr($line, 0, -1);
+		$item = (strlen($item) == 2 ? '' : $item);
+		$result = str_replace(",", ",", $field_names) . "\n" . $output . $line . "," . $item;
 		echo $result;
-		return $result;
+		return $item;
 	}
 		
 //-----------------    internal functions ------------------------
