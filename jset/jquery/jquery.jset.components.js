@@ -44,6 +44,12 @@
 				.addClass('jset-field-readonly');
 		},
 		
+		enabled: function(elem){
+			elem.removeAttr('disabled')
+			.removeAttr('readonly')
+			.removeClass('jset-field-readonly');
+		},
+
 		default_sopt: function(){
 			return ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','nu','nn'];
 		},
@@ -1675,7 +1681,21 @@
 					//multiple: true,
 					custom_options: {
 						columns: 2,
-						layout: 'simple'
+						layout: 'simple',
+						readonly: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.disabled($(':input', elem.siblings('table')))
+						},
+						enable: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.enabled($(':input', elem.siblings('table')))
+						}
 					}
 				},
 				stype: 'custom',
