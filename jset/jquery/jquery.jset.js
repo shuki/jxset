@@ -1613,6 +1613,10 @@
 			$.post(grid.data('settings').grid.url, params, callback, 'json');
 		},
 		
+		post: function(grid, postdata, callback){
+			$.post(grid.data('settings').grid.url, postdata, callback, 'json');
+		},
+		
 		'import': function(grid, filename, callback){
 			var params = {
 				_methods_: 'import',
