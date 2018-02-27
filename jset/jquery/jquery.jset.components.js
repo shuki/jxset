@@ -1134,7 +1134,7 @@
 						.attr('id', elem.attr('name') + '_autocomplete')
 						.attr('name', elem.attr('name') + '_autocomplete')
 						.attr('size', editoptions.size)
-						.addClass('ui-widget-content ui-corner-all ui-widget')
+						.addClass('ui-widget-content ui-corner-all')
 						.css({'font-size': '1em', display: 'inline-block', 'vertical-align': 'text-top'})
 						.addClass('jset-field-padding')
 						.attr('validate', editoptions.validate);
