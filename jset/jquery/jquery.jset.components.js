@@ -1275,7 +1275,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne'],					
+					sopt:['eq','ne','nu','nn'],					
 					//dataInit: function(col){
 						//return $.jset.fn.select_searchoptions_dataInit;
 					//},
@@ -1802,7 +1802,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne']				
+					sopt:['eq','ne','nu','nn']				
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
@@ -1889,7 +1889,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne']				
+					sopt:['eq','ne','nu','nn']				
 				},
 				afterShowForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
@@ -1997,7 +1997,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne']				
+					sopt:['eq','ne','nu','nn']				
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
