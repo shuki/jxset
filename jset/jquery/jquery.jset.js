@@ -816,6 +816,9 @@
 				});
 			}
 
+			if(grid.data('settings').detail && grid.data('form_action') == 'edit')
+				grid.data('refresh_details', true);
+			
 			var obj = $.parseJSON(response.responseText);
 			if(obj.error !== undefined){
 				if(obj.error.type !== undefined && obj.error.type == 'version'){
@@ -1140,25 +1143,8 @@
 			onSelectRow: function(id, isSelected) {
 				var grid = $(this);
 				
-				if(id != grid.data('last_selection')){
-					if (grid.data('settings').detail){
-						$.each(grid.data('settings').detail, function(i){
-							var elem = $.jset.fn.get_elem(this.elem);
-							if(this.recreate && elem.jset('defined')){
-								var settings = this.settings;
-								elem.jset('unload', [true]);
-								if(settings.db_fields){
-									settings.host = settings.db_fields.host ? grid.jqGrid('getCell', id, settings.db_fields.host) : '';
-									settings.db_name = settings.db_fields.db_name ? grid.jqGrid('getCell', id, settings.db_fields.db_name) : '';
-								}
-								elem = $.jset.fn.get_elem(this.elem);
-								setTimeout(function(){elem.jset($.extend(true, {master: grid}, settings));}, 0);
-							}
-						});
-
-						$.jset.fn.db_details(grid, id);
-						$.jset.fn.filter_details(grid, id);
-					}
+				if(id != grid.data('last_selection') || grid.data('refresh_details')){
+					$.jset.fn.refresh_details(grid, id);
 					grid.data('last_selection', id);
 					
 					if($.isFunction(grid.data('settings').onSelectRow))
@@ -2331,6 +2317,28 @@
 			});
 			
 			return post;
+		},
+		
+		refresh_details: function(grid, id){
+			if (grid.data('settings').detail){
+				$.each(grid.data('settings').detail, function(i){
+					var elem = $.jset.fn.get_elem(this.elem);
+					if(this.recreate && elem.jset('defined')){
+						var settings = this.settings;
+						elem.jset('unload', [true]);
+						if(settings.db_fields){
+							settings.host = settings.db_fields.host ? grid.jqGrid('getCell', id, settings.db_fields.host) : '';
+							settings.db_name = settings.db_fields.db_name ? grid.jqGrid('getCell', id, settings.db_fields.db_name) : '';
+						}
+						elem = $.jset.fn.get_elem(this.elem);
+						setTimeout(function(){elem.jset($.extend(true, {master: grid}, settings));}, 0);
+					}
+				});
+
+				$.jset.fn.db_details(grid, id);
+				$.jset.fn.filter_details(grid, id);
+			}
+			grid.data('refresh_details', false);
 		},
 		
 		filter_details: function(grid, ids){
