@@ -212,8 +212,12 @@
 			var grid = $(this);
 			var grid_id = 'table#' + grid.attr('id') + '.jset_table';
 			return '<a class="fm-button ui-state-default ui-corner-all fm-button-icon-left" href="javascript:$.jset.fn.delete_row(\'' +  grid_id + '\', ' + cellvalue + ');">מחק<span class="ui-icon ui-icon-trash"></span></a>';
-		}		
+		},
+		textareaFmatter: function(cellvalue, options, rowdata, act) {
+            return cellvalue;
+        }
 	});
+	
 	$.extend($.fn.fmatter.selectbox, {
 		unformat: function (cellval,options,pos,cnt) {
 			// Spacial case when we have local data and perform a sort
@@ -361,7 +365,14 @@
 	    	return cellval ? cellval.replace('%', '') : '';
 		}
 	});
-	
+
+	$.extend($.fn.fmatter.textareaFmatter , {
+	    unformat : function(cellval,options,pos,cnt) {
+	    	console.log(cellval,options,pos,cnt);
+			return cellval;
+		}
+	});
+
 	// public functions for formatters
 	$.extend($.jset.fn, {
 		checkbox_submit: function(elem){
