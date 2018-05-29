@@ -85,6 +85,10 @@ class jset_base
 
 	private function grid_rows()
 	{
+		$result_before = jset_event::exec($this->db, $this->event->before_select, $this->pairs, $this->settings);
+		if(isset($result_before->error))
+			return $result_before;
+		
 		$count = $this->count();
 		$limit = $this->settings->_rows_ ? $this->settings->_rows_ : $this->settings->_limit_;
 		$pages = ($count > 0) ? ceil($count / $limit) : 0;

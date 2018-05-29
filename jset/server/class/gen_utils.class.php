@@ -24,10 +24,15 @@ class gen_utils
 		$class = $parts[0];
 		$call = explode('(', $parts[1]);
 		$method = $call[0];
-		$vars = explode(',', $call[1]);
 		
-		foreach($vars as $var)
-			$params[] = $pairs->values[$pairs->index[$var]] ? $pairs->values[$pairs->index[$var]] : $settings->$var;
+		if($call[1]){
+			$vars = explode(',', $call[1]);
+			
+			foreach($vars as $var)
+				$params[] = $pairs->values[$pairs->index[$var]] ? $pairs->values[$pairs->index[$var]] : $settings->$var;
+		}
+		else 
+			$params = array();
 		
 		$result->class = $class;
 		$result->method = $method;
