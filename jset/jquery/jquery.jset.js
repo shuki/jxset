@@ -59,6 +59,7 @@
 			loading_img: '/jset/img/loading.gif',
 			join_field_suffix: '_name',
 			spacing: '20px',
+			form_label_suffix: ': ',
 			caption_class: 'CaptionField',
 			row_selection: true,
 			autoRowNum: true,
@@ -2287,7 +2288,7 @@
 			var options = $.extend(true, {}, control_formoptions, col_formoptions);
 			if(col.rowpos){
 				obj.rowpos = col.rowpos;
-				obj.elmprefix = '<label name="' + col.Field +'" ' + (options.label_hide ? '' : 'class="' + t.p.caption_class + '"') + ' for="' + (col.index ? col.index : col.Field) + '">' + (options.label_hide ? '' : $.jset.fn.colNames(col) + ': ') + "</label>";
+				obj.elmprefix = '<label name="' + col.Field +'" ' + (options.label_hide ? '' : 'class="' + t.p.caption_class + '"') + ' for="' + (col.index ? col.index : col.Field) + '">' + (options.label_hide ? '' : $.jset.fn.colNames(col) + t.p.form_label_suffix) + "</label>";
 				obj.elmsuffix = '<span name="' + col.Field + '_span" style="display:inline-block; width:' + t.p.spacing + '"/>';
 				obj.label = col.rowlabel;
 			}else{
