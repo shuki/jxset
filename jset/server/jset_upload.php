@@ -27,6 +27,12 @@ function process($files, $post){
 	
 	$pathinfo = pathinfo($files['userfile']['name']);
 	$extension = $pathinfo['extension'] ? '.' . strtolower($pathinfo['extension']) : '';
+	if($extension == '.php'){
+		$result->error->message = 'this file can not be uploaded';
+		$result->error = $result->error->message;
+		$result->success = false;
+		return $result;
+	}
 	
 	$db = db::create();
 	$sql_class = sql::create($db);
