@@ -17,8 +17,8 @@ echo json_encode(process($_FILES, $_POST));
 function process($files, $post){
 	$request = new stdClass;
 	if($post) foreach($post as $var => $value) $request->$var = $value;
-	
-	if($files['userfile']['size'] > $request->max){
+
+	if((defined('config::upload_size_limit') && $files['userfile']['size'] > config::upload_size_limit) || $files['userfile']['size'] > $request->max){
 		$result->error->message = 'file is too big';
 		$result->error = $result->error->message;
 		$result->success = false;

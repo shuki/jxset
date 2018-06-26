@@ -29,6 +29,8 @@ class config
 	const permission_source_table = true;
 
 	const upload_directory = 'uploads/';
+	const upload_size_limit = 10000000; //10M
+	
 	const mysql_rel_path = '';
 	const hosts_table = 'jset_host';
 
