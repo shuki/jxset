@@ -25,14 +25,15 @@ function process($files, $post){
 		return $result;
 	}
 	
-	$pathinfo = pathinfo($files['userfile']['name']);
-	$extension = $pathinfo['extension'] ? '.' . strtolower($pathinfo['extension']) : '';
-	if($extension == '.php'){
+	if (strpos($files['userfile']['name'], '.php') !== false || strpos($files['userfile']['name'], '.phtml') !== false){
 		$result->error->message = 'this file can not be uploaded';
 		$result->error = $result->error->message;
 		$result->success = false;
 		return $result;
 	}
+
+	$pathinfo = pathinfo($files['userfile']['name']);
+	$extension = $pathinfo['extension'] ? '.' . strtolower($pathinfo['extension']) : '';
 	
 	$db = db::create();
 	$sql_class = sql::create($db);
