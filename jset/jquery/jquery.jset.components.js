@@ -7,6 +7,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * Date: 2010-01-01
  */
+	$.jset.message_flag = false; //don't display alert when a value is missing in a selectbox
 	$.extend($.jset.fn, {
 		colsize : function(col){
 			return col.usize ? col.usize : col.size > $.jset.defaults.max_field_size ? $.jset.defaults.max_field_size : col.size ? col.size : $.jset.defaults.field_size;
