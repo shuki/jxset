@@ -79,7 +79,7 @@ class jset_table {
 				$result->sql = true;
 			
 			if($eval){
-				if(eval("\$sql = \"$result->source\";") === FALSE)
+				if(eval("\$sql = \"{$result->source}\";") === FALSE)
 					die("unable to eval source: {$result->source}");
 				
 				$result->source = $sql;

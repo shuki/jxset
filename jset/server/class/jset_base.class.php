@@ -79,8 +79,9 @@ class jset_base
 	
 	private function rows($fields = null)
 	{
-	    $this->db->query(stripslashes($this->settings->_source_));
-		return $this->db->fetchAll();
+	    //$this->db->query(stripslashes($this->settings->_source_));
+	    $this->db->query($this->settings->_source_);
+	    return $this->db->fetchAll();
 	}
 
 	private function grid_rows()
@@ -479,7 +480,8 @@ class jset_base
 				
 				$names[] = $name;
 				$override = $this->col($name)->override;
-				$values[] = $this->nullit(stripslashes($override ? $this->override($override) : $this->settings->$name));
+				//$values[] = $this->nullit(stripslashes($override ? $this->override($override) : $this->settings->$name));
+				$values[] = $this->nullit($override ? $this->override($override) : $this->settings->$name);
 				$index[$name] = $i++;
 			}
 		}
