@@ -413,7 +413,7 @@ class jset_base
 		$field_list = $this->coalesce($this->field_list($fields));
 		$sql = $this->table->sql ? $this->sql_class->EXPORT_GRID_ROWS_SQL_SOURCE : $this->sql_class->EXPORT_GRID_ROWS;
 		$sql = str_replace(array('#field_list#', '#source#', '#where#', '#order#', '#direction#', '#limit#', '#LD#', '#RD#'), 
-					array($field_list, $this->table->source, $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
+					array($field_list, ($this->table->export_source ? $this->table->export_source : $this->table->source), $this->where, $order, $direction, $limit, $this->sql_class->LD, $this->sql_class->RD), $sql);	
 		$this->db->query($sql);
 		$data = $this->db->fetchAll();
 	
