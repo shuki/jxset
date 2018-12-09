@@ -66,4 +66,8 @@ class config
 	const memcache_host = '127.0.0.1';
 	const memcache_port = 11211;
 	const memcache_time = 80;
+	
+	const log_directory = '../../log/';
 }
+
+

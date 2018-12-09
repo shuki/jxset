@@ -77,5 +77,14 @@ class gen_utils
 	public function get_join_field_base_name($name){
 		return (substr($name, -strlen(config::join_field_suffix)) === config::join_field_suffix) ? substr($name, 0, -strlen(config::join_field_suffix)) : null;
 	}
+	
+	public function log_to_file($str, $filename){
+		$dir = (defined('config::log_directory') ? config::log_directory : config::rel_path . 'log/');
+		if (!is_dir($dir))
+			if(!mkdir($dir))
+				return false;
+				
+		return file_put_contents($dir . $filename, date("Y-m-d H:i:s") . " $str\n", FILE_APPEND);
+	}
 }
 
