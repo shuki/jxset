@@ -637,12 +637,12 @@
 		
 		radio_value:function(elem, action, value){
 			if(action == 'get'){
-				var val = $("input[name='" + elem.attr('name') + "']:checked").val();
+				var val = $("input[name='" + elem.attr('name') + "']:checked", $(elem).closest('form')).val();
 				return (typeof val != 'undefined' ? val : '');
 			}
 			else if(action == 'set'){
-				$("input[name='" + elem.attr('name') + "']").prop('checked', false);
-				$("input[name='" + elem.attr('name') + "'][value='" + value + "']").prop("checked", true);
+				$("input[name='" + elem.attr('name') + "']", $(elem).closest('form')).prop('checked', false);
+				$("input[name='" + elem.attr('name') + "'][value='" + value + "']", $(elem).closest('form')).prop("checked", true);
 			}
 		},
 		
