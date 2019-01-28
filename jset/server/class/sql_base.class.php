@@ -140,8 +140,8 @@ class sql_base
 	public $GET_HOST_CREDENTIALS = "select * from #table# where name = ?";
 	
 	public $INSERT_JSET_COLUMN = "insert ignore into jset_column (parent, name, rowpos, `export`, hidden, title) values (?, ?, ?, ?, ?, ?)";
-	public $INSERT_JSET_COLUMNS = "insert ignore into jset_column (parent, name)
-		SELECT ?,	#LD#COLUMN_NAME#RD#
+	public $INSERT_JSET_COLUMNS = "insert ignore into jset_column (parent, name, rowpos, `export`, hidden, title)
+		SELECT ?,	#LD#COLUMN_NAME#RD#, ?, ?, ?, ?
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?";
 	public $COPY_JSET_COLUMNS = "call jxset.p_copy_jset_columns_by_id(?,?,?,?)";

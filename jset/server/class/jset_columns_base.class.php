@@ -46,7 +46,7 @@ class jset_columns_base {
 				foreach($row as $key => $value)
 					$db->execute($sql_class->INSERT_JSET_COLUMN, array($id, $key, 10, 1, 0, null));
 		}else
-			$db->execute(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD), $sql_class->INSERT_JSET_COLUMNS), array($id, $source));
+			$db->execute(str_replace(array('#LD#', '#RD#'), array($sql_class->LD, $sql_class->RD), $sql_class->INSERT_JSET_COLUMNS), array($id, 10, 1, 0, null, $source));
 	}
 
 	
