@@ -7,6 +7,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * Date: 2010-01-01
  */
+	$.jset.message_flag = false; //don't display alert when a value is missing in a selectbox
 	$.extend($.jset.fn, {
 		colsize : function(col){
 			return col.usize ? col.usize : col.size > $.jset.defaults.max_field_size ? $.jset.defaults.max_field_size : col.size ? col.size : $.jset.defaults.field_size;
@@ -44,6 +45,12 @@
 				.addClass('jset-field-readonly');
 		},
 		
+		enabled: function(elem){
+			elem.removeAttr('disabled')
+			.removeAttr('readonly')
+			.removeClass('jset-field-readonly');
+		},
+
 		default_sopt: function(){
 			return ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','nu','nn'];
 		},
@@ -446,13 +453,12 @@
 		jsetgrid_element: function(value, options){
 			var grid = $(this);
 			var settings = grid.data('settings').grid.colModel[grid.data('index')[options.name]].settings;
-			if(typeof settings.filter != 'undefined' && settings.filter.length > 0 && typeof settings.filter[0].target != 'undefined' ){
-				var filter_name = settings.filter[0].target;
+			if(typeof settings.filter != 'undefined' && settings.filter.length > 0 && typeof settings.filter[0].target != 'undefined' )
 				settings.search_default.push({
-			  		name: filter_name,
-			  		value: value
+			  		name: settings.filter[0].target,
+			  		value: (value == '' ? '_empty_' : grid.jqGrid('getCell', value, settings.filter[0].source))
 			  	});
-			}
+
 			var elem = $('<TABLE></TABLE>');
 			return elem;
 		},
@@ -461,12 +467,13 @@
 			if(elem.length == 0 || action == 'get')
 				return '';
 				
+			var grid = $(this);
 			var filter_field = $.jset.fn.get_filterToolbar_field($.jset.fn.get_grid_by_element(elem), elem.data('settings').filter[0].target);
-			if($(this).data('form_action') == 'edit' && filter_field.val() != value){
+			if(grid.data('form_action') == 'edit' && (elem.data('settings').load_edit_record || filter_field.val() != value)){
 				if(elem.jqGrid('getGridParam', 'datatype') == 'local')
 					elem.jqGrid('setGridParam', {datatype: 'json'});
 
-				filter_field.val(value);
+				filter_field.val(value == '' ? '_empty_' : grid.jqGrid('getCell', value, elem.data('settings').filter[0].source));
 				
 				if($.isFunction(elem.data('settings').before_triggerToolbar))
 					elem.data('settings').before_triggerToolbar.call(elem);
@@ -612,6 +619,33 @@
 			}
 		},
 
+		radio_element: function(value, options){
+			var grid = $(this);
+			var elem = $('<input type="radio" />');
+			if(value)
+				elem.prop('initial_value', value);
+			
+			//var elem = $('<input />');
+			//$.jset.fn.set_radio_options(elem, grid, options.value, value, false, options.name);
+			//$.jset.fn.set_dependent_fields(elem);
+			//$.jset.fn.set_select_list_refresh(elem);
+			//$.jset.fn.set_search_refresh(elem);
+			elem.attr('validate', options.validate);
+			//.addClass('jset-field-padding');
+			return elem;
+		},
+		
+		radio_value:function(elem, action, value){
+			if(action == 'get'){
+				var val = $("input[name='" + elem.attr('name') + "']:checked", $(elem).closest('form')).val();
+				return (typeof val != 'undefined' ? val : '');
+			}
+			else if(action == 'set'){
+				$("input[name='" + elem.attr('name') + "']", $(elem).closest('form')).prop('checked', false);
+				$("input[name='" + elem.attr('name') + "'][value='" + value + "']", $(elem).closest('form')).prop("checked", true);
+			}
+		},
+		
 		selectbox_element: function(value, options){
 			var grid = $(this);
 			var elem = $('<select />');
@@ -630,7 +664,7 @@
 			else if(action == 'set')
 				$.jset.fn.handle_change_select_options(elem, value);
 		},
-		
+				
 		selectbox_plus_element: function(value, options){
 			var grid = $(this);
 			var elem = $('<select />');
@@ -1101,7 +1135,7 @@
 						.attr('id', elem.attr('name') + '_autocomplete')
 						.attr('name', elem.attr('name') + '_autocomplete')
 						.attr('size', editoptions.size)
-						.addClass('ui-widget-content ui-corner-all ui-widget')
+						.addClass('ui-widget-content ui-corner-all')
 						.css({'font-size': '1em', display: 'inline-block', 'vertical-align': 'text-top'})
 						.addClass('jset-field-padding')
 						.attr('validate', editoptions.validate);
@@ -1242,7 +1276,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne'],					
+					sopt:['eq','ne','nu','nn'],					
 					//dataInit: function(col){
 						//return $.jset.fn.select_searchoptions_dataInit;
 					//},
@@ -1648,12 +1682,32 @@
 					//multiple: true,
 					custom_options: {
 						columns: 2,
-						layout: 'simple'
+						layout: 'simple',
+						readonly: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.disabled($(':input', elem.siblings('table')))
+						},
+						enable: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.enabled($(':input', elem.siblings('table')))
+						}
 					}
 				},
+				stype: 'custom',
 				searchoptions:{
-					sopt: ['cn'],
-					searchOperators:false
+					custom_element: $.jset.fn.selectbox_element,
+					custom_value: $.jset.fn.selectbox_value,
+					value: '',
+					defaultValue: function(col){
+						//return col.search_default ? col.search_default : '';
+					},
+					sopt:['fi','fn','eq','ne','nu','nn']				
 				},
 				formoptions:{
 					label_hide: true
@@ -1718,7 +1772,95 @@
 						return col.default_value;
 					}
 				}
-			}, 
+			},
+			
+			radio:{
+				align: 'left',
+				formatter: 'selectbox',
+				edittype: 'custom',
+				editoptions: {
+					value: {},
+					defaultValue: function(col){
+						return col.default_value;
+					},
+					dataInit: function(col){
+						return col.readonly != 1 ? undefined : $.jset.fn.disabled;
+					},
+					no_empty_first_row: false,
+					select_list_refresh: false,
+					custom_options: {
+						readonly: function(formid, name){
+							$.jset.fn.disable_field(formid, name);
+						}
+					}
+				},
+				//stype: 'select',
+				stype: 'custom',
+				searchoptions:{
+					custom_element: $.jset.fn.selectbox_element,
+					custom_value: $.jset.fn.selectbox_value,
+					value: '',
+					defaultValue: function(col){
+						//return col.search_default ? col.search_default : '';
+					},
+					sopt:['eq','ne','nu','nn']				
+				},
+				onInitializeForm: function(formid, id){
+					var grid = $(this);
+					var elem = $.jset.fn.get_form_field(formid, id, false);
+					var initial_value = elem.prop('initial_value');
+					var name = elem.attr('name');
+					var options = grid.data('settings').grid.colModel[grid.data('index')[name]];							
+					var editoptions = options['editoptions'];
+					var data = editoptions.value;
+					
+					var div = $('<div class="radiodiv"></div>')
+					.insertBefore(elem)
+					.append(elem);
+					
+					var radio_options = '';
+					if($.isArray(data))
+						$.each(data, function(i, obj){
+							if(i == 0){
+								elem.attr('value', obj.id)
+								.attr('id', name)
+								.after($('<label class="radio_label" for="' + name +  '">' + obj.name + '</label>'));
+								
+								if(obj.id == initial_value)
+									elem.attr('checked', 'checked');
+							}
+							else
+								radio_options += '<input type="radio" name="' + name + '" value="' + obj.id + '" ' + (obj.id == initial_value ? ' checked="checked" ' : '') + ' id="rb_' + name + obj.id +  '" ' + (obj.disabled ? 'style="color:gray"' : '') + '/><label class="radio_label" for="rb_' + name + obj.id +  '">' + obj.name + '</label>';
+						});
+					else if($.isPlainObject(data))
+						$.each(data, function(key, val){
+							radio_options += '<input type="radio" name="' + name + '" value="' + key + '" ' + (key == initial_value ? ' checked="checked" ' : '') + ' id="rb_' + name + key +  '" ' + (obj.disabled ? 'style="color:gray"' : '') + '/><label class="radio_label" for="rb_' + name + key +  '">' + val + '</label>';
+						});
+
+					div.append(radio_options);					
+				}
+				/*afterShowForm: function(formid, id){
+					var elem = $(formid).find('#' + id);
+					if(elem.length == 0)
+						return;
+					
+					var grid = $(this);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},
+				afterclickPgButtons : function(whichbutton, formid, rowid, id){
+					var elem = $(formid).find('#' + id);
+					if(elem.length == 0)
+						return;
+					
+					var grid = $(this);
+					var name = $(elem).attr('name');
+					if(grid.data('columns')[grid.data('index')[name]]['dependent_fields'])
+						$(elem).trigger('change.dependent_fields', [true]);
+				},*/
+			},
+			
 			selectbox:{
 				align: 'left',
 				formatter: 'selectbox',
@@ -1748,7 +1890,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne']				
+					sopt:['eq','ne','nu','nn']				
 				},
 				afterShowForm: function(formid, id){
 					var elem = $(formid).find('#' + id);
@@ -1771,6 +1913,7 @@
 						$(elem).trigger('change.dependent_fields', [true]);
 				},
 			},
+			
 			selectbox_plus:{
 				align: 'left',
 				formatter: 'selectbox',
@@ -1855,7 +1998,7 @@
 					defaultValue: function(col){
 						//return col.search_default ? col.search_default : '';
 					},
-					sopt:['eq','ne']				
+					sopt:['eq','ne','nu','nn']				
 				},
 				onInitializeForm: function(formid, id){
 					var grid = $(this);
