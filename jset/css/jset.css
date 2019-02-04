@@ -323,3 +323,11 @@ img.sDataLoading {
 	vertical-align: middle;
 	padding: 0 0 0 20px;
 }
+
+label.radio_label {
+	padding: 0 20px 0 4px;
+}
+
+div.radiodiv {
+	white-space: nowrap;
+}
