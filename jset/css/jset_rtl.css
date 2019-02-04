@@ -26,3 +26,9 @@
 .ui-autocomplete {
 	padding-right: 0px;
 }
+
+label.radio_label {
+	padding: 0 4px 0 20px;
+}
+
+
