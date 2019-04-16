@@ -1253,7 +1253,10 @@
 							var message = obj.error.message + '<br />' + (obj.error.dump !== undefined ? obj.error.dump : '') + '<br />' + (obj.error.info !== undefined ? (obj.error.info[0] + '<br />' + obj.error.info[1] + '<br />' + obj.error.info[2]) : '');
 						return [false, message];
 					}
-					
+
+					if(grid.data('settings').grid.multiselect)
+						grid .jset('resetMultiselectedRows');
+
 					if(grid.data('settings').single_record.active && grid.data('settings').single_record.displayAlert)
 						alert('record deleted!');
 
@@ -1285,6 +1288,11 @@
 				},
 				serializeDelData: function(postdata){
 					var grid = $(this);
+					if(grid.data('settings').grid.multiselect){
+						var rows = grid .jset('getMultiselectedRows');
+						postdata['_id_'] = rows.join(',');
+					}
+					
 					if($.isFunction(grid.data('settings').serializeDelData))
 						return grid.data('settings').serializeDelData.call(grid, postdata);
 					
@@ -2555,9 +2563,10 @@
 		
 		updateNavigationSelectedCounter: function(){
 			var grid = $(this);
-			if(!grid.data('settings').grid.scroll == 1)
-				$('div.ui-paging-info-selected', $.jset.fn.get_grid_container(grid))
+			if(!grid.data('settings').grid.scroll == 1){
+				$('div.ui-paging-info-selected', $(grid.data('settings').grid.pager))
 					.html($.jgrid.format($.jset.nav.selectedCounter, grid.data('multiselectedRows').array.length));
+			}
 		},
 		
 		setNavigationSelectedFilters: function(post){
