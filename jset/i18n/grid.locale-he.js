@@ -18,7 +18,7 @@ $.extend($.jgrid,{
 	search : {
 		caption: "מחפש...",
 		Find: "חפש",
-		Reset: "התחל",
+		Reset: "אתחל",
 		odata: [{ oper:'eq', text:"שווה"},{ oper:'ne', text:"לא שווה"},{ oper:'lt', text:"קטן"},{ oper:'le', text:"קטן או שווה"},{ oper:'gt', text:"גדול"},{ oper:'ge', text:"גדול או שווה"},{ oper:'bw', text:"מתחיל ב"},{ oper:'bn', text:"לא מתחיל ב"},{ oper:'in', text:"נמצא ב"},{ oper:'ni', text:"לא נמצא ב"},{ oper:'ew', text:"מסתיים ב"},{ oper:'en', text:"לא מסתיים ב"},{ oper:'cn', text:"מכיל"},{ oper:'nc', text:"לא מכיל"},{ oper:'nu', text:"ריק"},{ oper:'nn', text:"לא ריק"},{ oper:'fi', text:"נמצא ברשימה"},{ oper:'fn', text:"לא נמצא ברשימה"}],
 		groupOps: [	{ op: "AND", text: "הכל" },	{ op: "OR",  text: "אחד מ" }	],
 		addRule: "הוסף תנאי",
