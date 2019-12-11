@@ -74,6 +74,8 @@
 			persist: true,
 			persist_parameter: false,
 			form_sent_button: false,
+			allow_multiselect_dblClickRow: true,
+			select_row_after_load: true,
 			refresh: {
 				rate: false
 			},
@@ -1080,15 +1082,22 @@
 					grid.data('loaded', true);
 				}
 
-				if(grid.data('settings').row_selection === true && grid.jqGrid('getGridParam', 'records') != 0 && !grid.data('settings').grid.multiselect){ //todo remove check for multiselect, control it by row_selection
-					if(grid.data('lastID')){
-						grid.jqGrid('setSelection', grid.data('lastID'));
-						grid.data('lastID', false);
-						if(!grid.jqGrid('getGridParam', 'selrow'))
-							grid.jqGrid('setSelection', grid.jqGrid('getDataIDs')[0]);
+				if(grid.data('settings').row_selection === true && grid.jqGrid('getGridParam', 'records') != 0){
+					if(grid.data('settings').select_row_after_load){
+						if(grid.data('settings').grid.multiselect){
+							if(!grid.data('multiselectedRows').array.length)
+					        	$.jset.fn.updateMultiselectedRow.call(grid, grid.jqGrid('getDataIDs')[0], true, true);
+						} else {
+							if(grid.data('lastID')){
+								grid.jqGrid('setSelection', grid.data('lastID'));
+								grid.data('lastID', false);
+								if(!grid.jqGrid('getGridParam', 'selrow'))
+									grid.jqGrid('setSelection', grid.jqGrid('getDataIDs')[0]);
+							}
+							else
+								grid.jqGrid('setSelection', grid.jqGrid('getDataIDs')[0]);
+						}
 					}
-					else
-						grid.jqGrid('setSelection', grid.jqGrid('getDataIDs')[0]);
 				}
 				else if(grid.data('settings').detail)
 				{ //&& grid.data('settings').detail.elem.data('loaded')
@@ -1134,8 +1143,7 @@
 					var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
 			        cm = grid.jqGrid('getGridParam', 'colModel');
 				    if(cm[i].name === 'cb' && $(e.target).attr('id') && $(e.target).attr('id').substr(0,4) === 'jqg_'){
-			        	$.jset.fn.updateMultiselectedRow.call(grid, rowid, $(e.target).attr('checked') == 'checked');
-			        	$.jset.fn.updateNavigationSelectedCounter.call(grid);
+			        	$.jset.fn.updateMultiselectedRow.call(grid, rowid, $(e.target).attr('checked') == 'checked', true);
 			        	return true;
 				    }
 			    } else
@@ -1161,9 +1169,18 @@
 
 			ondblClickRow: function(rowId, iRow, iCol, e){
 				var grid = $(this);					
-				if(rowId && grid.data('settings').navigation.options.edit != false && !grid.data('settings').grid.multiselect){
-					grid.data('settings').navigation.options.editfunc.call(grid, rowId, grid.data('settings').navigation.edit);
-					grid.jqGrid('setSelection',rowId);	
+				if(rowId && grid.data('settings').navigation.options.edit != false){
+					if(grid.data('settings').grid.multiselect){
+						if(grid.data('settings').allow_multiselect_dblClickRow){
+							grid.data('settings').navigation.options.editfunc.call(grid, rowId, grid.data('settings').navigation.edit);
+				        	$.jset.fn.updateMultiselectedRow.call(grid, rowId, true, true);
+				        	grid.data('multiselectDontToggleSelection', true);
+							grid.jqGrid('setSelection',rowId);	
+						}
+					} else {
+						grid.data('settings').navigation.options.editfunc.call(grid, rowId, grid.data('settings').navigation.edit);
+						grid.jqGrid('setSelection',rowId);	
+					}
 				}
 			},
 			
@@ -2520,7 +2537,7 @@
 				grid.data('multiselectedRows', {array: [], rows: {}, filters: '', params: '', include: true});
 		},
 			
-		updateMultiselectedRow: function(id, isSelected){
+		updateMultiselectedRow: function(id, isSelected, updateSelectedCounter){
 			var grid = $(this);
 	        var index = $.inArray(id, grid.data('multiselectedRows').array);
 	        if (!isSelected && index >= 0){
@@ -2530,6 +2547,8 @@
 	            grid.data('multiselectedRows').array.push(id);
 	            grid.data('multiselectedRows').rows[id] = grid.jqGrid ('getRowData', id);
 	        }
+	        if(updateSelectedCounter)
+	        	$.jset.fn.updateNavigationSelectedCounter.call(grid);
 		},
 		
 		updateMultiselectedRows: function(ids, isSelected) {
