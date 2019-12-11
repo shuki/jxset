@@ -2466,7 +2466,7 @@
 		},
 		
 		load_edit_record: function(grid, id, options){
-			var rowid = grid.jqGrid('getGridParam', 'selrow');
+			var rowid = (id ? id : grid.jqGrid('getGridParam', 'selrow'));
 			if (rowid != null) {
 				if (typeof options.formid != 'undefined')
 					$.jset.fn.block(options.formid);
@@ -2499,7 +2499,7 @@
 							$(options.formid).unblock();
 						else
 							$(grid).unblock();
-						$.jset.fn.editfunc(grid, id, options);
+						$.jset.fn.editfunc(grid, rowid, options);
 					}else{
 						alert('this record no longer exists');
 						if (typeof options.formid != 'undefined')
