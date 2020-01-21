@@ -26,12 +26,15 @@
 	        });				
 		},
 		
-		confirm: function(title, message, action){
+		confirm: function(title, message, action, options){
+			var bCancel = (options != undefined && options.bCancel != undefined) ? options.bCancel : $.jgrid.edit.bCancel;
+			var bSubmit = (options != undefined && options.bSubmit != undefined) ? options.bSubmit : $.jgrid.edit.bSubmit;
 			var buttons = {};
-			buttons[$.jgrid.edit.bCancel] = function(){
+				
+			buttons[bCancel] = function(){
 	            $(this).dialog('close');
 			};
-			buttons[$.jgrid.edit.bSubmit] = function(){
+			buttons[bSubmit] = function(){
         		action();
         		$(this).dialog('close');
 			};

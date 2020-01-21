@@ -139,6 +139,10 @@ class db_base
 		$this->connect();
 	}
 	
+	public function rowCount(){
+		return $this->query->rowCount();
+	}
+	
 	protected function error($e, $obj, $sql = null, $params = null){
 		$result->error->message = $e->getMessage();
 		$result->error->info = $obj->query->errorInfo();
