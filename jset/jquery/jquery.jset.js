@@ -55,6 +55,7 @@
 			dir_rel: $.jset.dir_rel,
 			item_name: 'Record',
 			searchall: false,
+			searchall_focus: true,
 			url: $.jset.url,
 			loading_img: '/jset/img/loading.gif',
 			join_field_suffix: '_name',
@@ -914,7 +915,7 @@
 						});
 
 						grid.data('searchall').elem.parent().width(container.width());
-						grid.data('searchall').elem.removeAttr('disabled').focus()
+						grid.data('searchall').elem.removeAttr('disabled')
 						.on('keyup', function(e, l){
 							if(grid.data('searchall').timer)
 								clearTimeout(grid.data('searchall').timer);
@@ -923,7 +924,9 @@
 								function(){
 									$.jset.fn.searchall_action(grid);
 								}, e.keyCode == '13' ? 0 : 500);
-						});	
+						});
+						if(grid.data('settings').searchall_focus)
+							grid.data('searchall').elem.focus();
 					}			
 
 					$.jset.fn.initMultiselectedRows.call(grid);
