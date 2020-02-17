@@ -77,6 +77,7 @@
 			form_sent_button: false,
 			allow_multiselect_dblClickRow: true,
 			select_row_after_load: true,
+			debug: false,
 			refresh: {
 				rate: false
 			},
@@ -2109,6 +2110,10 @@
 			$.each(columns, function(i){
 				if(this.validation){
 					var validation_obj = $.jset.fn.get_col_object(this.validation);
+					if(validation_obj.col_object_error !== undefined){
+						var error_message = 'column: ' + this.Field + '\nvalidation: ' + this.validation + '\nerror: ' + validation_obj.col_object_error.message;
+						t.p.debug ? alert(error_message) : console.log(error_message);
+					}
 					if(validation_obj.hasOwnProperty('messages')){
 						validation_messages_obj[this.Field] = validation_obj.messages;
 						delete validation_obj.messages;
@@ -2145,6 +2150,10 @@
 		colModel: function(col, i, t){
 			var obj = {};
 			var col_object = $.jset.fn.get_col_object(col.object);
+			if(col_object.col_object_error !== undefined){
+				var error_message = 'column: ' + col.Field + '\nobject: ' + col.object + '\nerror: ' + col_object.col_object_error.message;
+				t.p.debug ? alert(error_message) : console.log(error_message);
+			}
 			obj.name = col.index ? col.index : col.Field;
 			obj.index = col.Field;
 			obj.width = col.width ? col.width : 80;
@@ -2184,7 +2193,7 @@
 					return eval('({' + object + '})');
 				} 
 				catch (e) {
-					alert( 'column ' + obj.name + '\nobject definition ' + e.name + '\n' + e.message);
+					return {col_object_error: {message: e.message}};
 				}
 			}
 			else
