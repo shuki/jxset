@@ -1503,6 +1503,7 @@
 				}
 			},
 			jsetgrid:{
+				searchall_focus: false,
 				edittype:'custom',
 				editoptions: {
 				},
