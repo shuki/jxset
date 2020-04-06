@@ -15,6 +15,9 @@ if(class_exists('external'))
 $post = jset_dispatch::get_real_POST_GET();
 $class = $post['_class_'];
 $method = $post['_method_'];
+if(!$class || !$method)
+	exit;
+
 unset($post['_method_']);
 unset($post['_class_']);
 

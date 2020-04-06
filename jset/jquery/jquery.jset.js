@@ -714,6 +714,7 @@
 		
 		beforeSubmit: function(postdata, formid){
 			var grid = $(this);
+			$.jset.fn.set_submit_sent_buttons_state(grid, false);
 			$.jset.fn.clear_form_tooltips($(formid));
 
 			if($(formid).data('validator'))
@@ -727,6 +728,7 @@
 			if(!grid.data('settings').form_sent_button || (grid.data('settings').form_sent_button && grid.data('validate'))){
 				if(!$(formid).valid()){
 					grid.data('validate', false);
+					$.jset.fn.set_submit_sent_buttons_state(grid, true);
 					return [false, ''];
 				}
 				
@@ -736,15 +738,12 @@
 				{
 					grid.data('validate', false);
 					$('html, body').animate({ scrollTop: 0 }, 200);
+					$.jset.fn.set_submit_sent_buttons_state(grid, true);
 					return [false, validation_error];
 				}
 				grid.data('valid', true);
 			}
 			
-			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).hide();
-			$('a.sent_button', $.jset.fn.get_grid_container(grid)).hide();
-			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').show();
-
 			var post = $.jset.fn.unformat_columns(this, postdata);
 			var hard_post = {};
 			
@@ -789,11 +788,8 @@
 			
 			if($.isFunction(grid.data('settings').beforeSubmit)){
 				return_value = grid.data('settings').beforeSubmit.call(grid, postdata, formid);
-				if(!return_value[0]){
-					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
-					$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
-					$('a.sent_button', $.jset.fn.get_grid_container(grid)).show();
-				}
+				if(!return_value[0])
+					$.jset.fn.set_submit_sent_buttons_state(grid, true);
 			}
 			grid.data('validate', false);
 			return return_value;
@@ -807,9 +803,7 @@
 		},
 		afterSubmit: function(response, postdata, frmoper){
 			var grid = $(this);
-			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
-			$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
-			$('a.sent_button', $.jset.fn.get_grid_container(grid)).show();
+			$.jset.fn.set_submit_sent_buttons_state(grid, true);
 			
 			if(grid.data('copy')){
 				grid.data('copy', false);
@@ -1536,7 +1530,18 @@
 						$.jset.fn.enable_field(formid, col.index);
 			});
 		},
-		
+
+		set_submit_sent_buttons_state: function(grid, state){
+			if(state){
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').hide();
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).show();
+				$('a.sent_button', $.jset.fn.get_grid_container(grid)).show();
+			} else {
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).hide();
+				$('a.sent_button', $.jset.fn.get_grid_container(grid)).hide();
+				$('a[id=sData]', $.jset.fn.get_grid_container(grid)).prev('img').show();
+			}
+		},
 		readonlyCheck: function(grid){
 			return !$('a[id=sData]', $.jset.fn.get_grid_container(grid)).is(':visible');
 		},
