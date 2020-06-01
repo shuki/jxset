@@ -465,7 +465,8 @@
 					closeAfterEdit: true,
 					closeAfterAdd: true,
 					//checkOnUpdate: true,
-					onclickSubmit: $.jset.fn.onclickSubmit
+					onclickSubmit: $.jset.fn.onclickSubmit,
+					focusSelector: false
 				},
 				add:{
 					width: 'auto',
@@ -476,7 +477,8 @@
 					clearAfterAdd: false,
 					closeAfterEdit: true,
 					//checkOnUpdate: true,
-					onclickSubmit: $.jset.fn.onclickSubmit
+					onclickSubmit: $.jset.fn.onclickSubmit,
+					focusSelector: false
 				},
 				del:{
 					reloadAfterSubmit: true,
