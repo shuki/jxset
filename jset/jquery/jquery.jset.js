@@ -348,12 +348,9 @@
 				    	var element = $(validator.errorList[0].element);
 		        		var visible = element.is(":visible");
 		        		if(!visible)
-		        			element.show();
-
-		        		element.focus();
-		        		
-		        		if(!visible)
-		        			element.hide();
+		        			console.log('validation error for non visible element', validator.errorList[0]);
+		        		else
+		        			element.focus();		        		
 				    }
 				},
 		        errorPlacement: function (error, element) {
