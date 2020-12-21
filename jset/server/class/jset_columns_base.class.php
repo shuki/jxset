@@ -87,10 +87,18 @@ class jset_columns_base {
 			return;
 		
 		$sql_class = sql::create($db);
-		return $db->exec($sql_class->COPY_JSET_COLUMNS, array($copy_id, ($source_db ? $source_db : config::dbname), $id, ($target_db ? $target_db : config::dbname)));
+		return $db->exec($sql_class->COPY_JSET_COLUMNS_BY_ID, array($copy_id, ($source_db ? $source_db : config::dbname), $id, ($target_db ? $target_db : config::dbname)));
 	}
 	
-
+	public static function copy_jset_columns_by_name($db, $source, $source_section, $source_db, $target, $target_section, $target_db){
+		if(!$source || !$target)
+			return;
+	
+		$sql_class = sql::create($db);
+		return $db->exec($sql_class->COPY_JSET_COLUMNS_BY_NAME, array($source, $source_section, ($source_db ? $source_db : config::dbname), $target, $target_section, ($target_db ? $target_db : config::dbname)));
+	}
+	
+	
 	//-----------------    internal functions ------------------------
 	protected function columns($db, $table, &$index){
 		return $table->sql ? $this->columns_sql($db, $table, $index) :
