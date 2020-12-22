@@ -8,7 +8,7 @@
  */
  include_once("autoload.php");
  $dir_pre = config::jxset;
- jset_page::create(config::jxset, 'en', '', false, 'micha');
+ jset_page::create(config::jxset, 'en', '', false, 'redmond');
 ?>
 <style>
 <?php
@@ -24,7 +24,7 @@
 </head>
 
 <body>
-	<div class="top-strap"> <a href="login.php?signout"><img src="<?php echo $dir_pre ?>jset/img/power-black.png" title="צא"></a> <a href="<?php echo config::password_page; ?>"><?php echo $_SESSION['jset_user_login']; ?></a> שלום</div>
+	<div class="top-strap"> <a href="login.php?signout"><img src="<?php echo $dir_pre ?>jset/img/power-black.png" title="logout"></a> <a href="<?php echo config::password_page; ?>"><?php echo $_SESSION['jset_user_login']; ?></a> Hi</div>
 	<table id="grid"></table>
 </body>
 </html>

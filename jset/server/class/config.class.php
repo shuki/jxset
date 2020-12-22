@@ -62,7 +62,7 @@ class config
 	const dbname_default = 'jxset';
 	//const tpl = 'page.tpl';
 	
-	const memcache = true;
+	const memcache = false;
 	const memcache_host = '127.0.0.1';
 	const memcache_port = 11211;
 	const memcache_time = 80;

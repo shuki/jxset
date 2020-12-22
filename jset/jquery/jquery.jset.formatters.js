@@ -206,12 +206,12 @@
 		editRowFmatter: function(cellvalue, options, rowdata, act){
 			var grid = $(this);
 			var grid_id = 'table#' + grid.attr('id') + '.jset_table';
-			return '<a class="fm-button ui-state-default ui-corner-all fm-button-icon-left" href="javascript:$.jset.fn.edit_row(\'' +  grid_id + '\', ' + cellvalue + ');">ערוך<span class="ui-icon ui-icon-pencil"></span></a>';
+			return '<a class="fm-button ui-state-default ui-corner-all fm-button-icon-left" href="javascript:$.jset.fn.edit_row(\'' +  grid_id + '\', ' + cellvalue + ');">Edit<span class="ui-icon ui-icon-pencil"></span></a>';
 		},		
 		deleteRowFmatter: function(cellvalue, options, rowdata, act){
 			var grid = $(this);
 			var grid_id = 'table#' + grid.attr('id') + '.jset_table';
-			return '<a class="fm-button ui-state-default ui-corner-all fm-button-icon-left" href="javascript:$.jset.fn.delete_row(\'' +  grid_id + '\', ' + cellvalue + ');">מחק<span class="ui-icon ui-icon-trash"></span></a>';
+			return '<a class="fm-button ui-state-default ui-corner-all fm-button-icon-left" href="javascript:$.jset.fn.delete_row(\'' +  grid_id + '\', ' + cellvalue + ');">Delete<span class="ui-icon ui-icon-trash"></span></a>';
 		},
 		textareaFmatter: function(cellvalue, options, rowdata, act) {
             return cellvalue;

@@ -3,7 +3,7 @@ $(function(){
 	var searchDefaults = [];
 	var gridOptions = {};
 	var liveSettings = {};
-	//$.dump(urlVars);
+
 	$.each(urlVars, function(key, value){
 		//alert(key + ':' + value + ':' + urlVars[value]);
 		switch(value){
@@ -25,21 +25,18 @@ $(function(){
 	liveSettings.search_default = searchDefaults;
 	var windowHeight = $(window).height();
 
-	//$.dump(searchDefaults);
-	//$( document ).tooltip();
 	var grid = $('#grid');
 	var settings = {
 	  	source: 'demo', //name of table, view or the actual sql that you wish to display in the grid
 		load_edit_record: true, //reload record before editting
+		reopen_after_add: true, // reopen after adding a record - since we got a jsetgrid that can be filled only after parent exists.
 		searchall: true,
 		template: {
 			use: true,
 			columns: 1
 		},
-		//reopen_after_add: true,
-		//search_default: searchDefaults,
 	    grid: {
-	    	direction: 'rtl',
+	    	direction: 'ltr',
 		    width: $(window).width() - 15,
 		    height: $(window).height() - 155,
 			rownumWidth: 30,
@@ -48,19 +45,17 @@ $(function(){
 	  	},
 	  	navigation:{
 			options : {
-				//checkOnUpdate:true
+				checkOnUpdate:true
 			},
 			edit:{
-				//checkOnSubmit:true,
 				checkOnUpdate:true
 			},
 			add:{
-				//checkOnUpdate:true
+				checkOnUpdate:true
 			},
 			del:{
 			},
 			search:{
-				//
 			},
 			view:{
 			}

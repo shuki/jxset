@@ -84,7 +84,7 @@ $(function(){
 			return [false, message];
 		},
 	    grid: {
-	    	direction: 'rtl',
+	    	direction: 'ltr',
 		    width: 100,
 		    height: 60,
 			rownumbers: false,
