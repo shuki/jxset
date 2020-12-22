@@ -284,7 +284,6 @@ REPLACE INTO `jset_column` (`id`, `parent`, `name`, `index`, `title`, `control`,
 	(668, 10, 'multicheckbox', NULL, NULL, 'multicheckbox', 0, 0, 0, 0, 0, 1, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'select tid as id, name from jset_list where `type` = \'test_list\' order by name', NULL, NULL, NULL, NULL, NULL, 'formoptions:{\n	label_hide: false\n}', NULL),
 	(669, 10, 'multiselect', NULL, 'Multiselect', 'multiselect', 1, 0, 0, 0, 0, 0, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'select tid as id, name from jset_list where `type` = \'test_list\' order by name', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	(670, 10, 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-	(671, 10, 'notes', NULL, NULL, 'jsetgrid', 1, 0, 1, 0, 0, 1, NULL, 20, 'Notes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'settings:{\n	source: \'note\',\n	item_name: \'Note\',\n	load_edit_record: false,\n	searchall: false,\n	search_default:[],\n	filterToolbar:{\n		hide: true\n	},\n	copy:{\n		navButtonAdd: false\n	},\n	clearFilterToolbar:{\n		navButtonAdd: false\n	},\n	columnChooser:{\n		navButtonAdd: false\n	},\n	\'export\':{\n		navButtonAdd: false\n	},\n	filter:[{\n		source: \'id\',\n		target: \'parent\'\n	}],\n	persist:false,\n	template: {\n		use: true,\n		columns: 1\n	},\n	onInitializeForm: function(formid){\n	},\n	beforeShowForm: function(formid){\n	},\n	afterclickPgButtons : function(whichbutton, formid, rowid){\n	},\n        grid: {\n          	width: $(window).width() - 80,\n        	height: Math.max(($(window).height() - 340) / 2, 100),\n	        sortname: \'id\',\n	        sortorder: \'desc\'\n          },\n         navigation:{\n		options : {\n			add: true,\n			del: true,\n			search: false,\n			view: false\n		},\n		edit:{\n			checkOnUpdate:true\n		},\n		add:{\n			checkOnUpdate:true\n		}\n         }\n}\n', NULL),
 	(672, 10, 'picture', NULL, NULL, 'upload_file', 0, 0, 0, 0, 0, 1, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'formoptions:{\n	label_hide: false\n}', NULL),
 	(673, 10, 'radio_field', NULL, 'Radio', 'radio', 0, 0, 0, 0, 0, 1, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'select tid as id, name from jset_list where `type` = \'yesno\' order by tid desc', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	(674, 10, 'select', NULL, 'Select', 'selectbox', 0, 0, 0, 0, 0, 1, NULL, 10, NULL, '2', NULL, NULL, NULL, NULL, 'select 1 as id, \'Good\' as name\nunion\nselect 2, \'Bad\'\nunion\nselect 3, \'Average\'', NULL, NULL, NULL, 'required:true', NULL, NULL, NULL),
@@ -303,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `jset_css` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_css: ~0 rows (approximately)
+-- Dumping data for table jxset.jset_css: ~1 rows (approximately)
 /*!40000 ALTER TABLE `jset_css` DISABLE KEYS */;
 REPLACE INTO `jset_css` (`id`, `contents`) VALUES
 	(1, '.top-strap {\n    background:#71C3F2;\nfont:arial;\ncolor: #ffffff;\n}\n\nbody {\n    background: #ffffff none repeat scroll 0 0;\n}\n\n/* an example of a comment\nhome-title {\ncolor: #dddddd;\n\n}\n*/\n\nhome-title {\ncolor: #00ff00;\n\n}\n\ntheme-orange .panel-header {\n    background-color: #fad87c;\n    background-image: url(images/header_bg_orange.gif);\n    border-bottom: 1px solid #dea303;\n}\n\n.CaptionField {\n	color: #2E6E9E;\n	vertical-align:middle;\n        font:arial;\n	font-size:1.1em;\n	font-weight:600;\n	padding: 0px 2px 0px 2px;\n	white-space: nowrap;\n	/* border-top: 1px solid #A6C9E2; */\n}\n\n.ui-widget select, .ui-widget textarea, .ui-widget button {\n    font-family: Arial;\n    font-size: 1.1em;\n}\n');
@@ -323,7 +322,7 @@ CREATE TABLE IF NOT EXISTS `jset_default_column` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jxset.jset_default_column: ~0 rows (approximately)
+-- Dumping data for table jxset.jset_default_column: ~1 rows (approximately)
 /*!40000 ALTER TABLE `jset_default_column` DISABLE KEYS */;
 REPLACE INTO `jset_default_column` (`id`, `Type`, `Collation`, `Null`, `Key`, `Default`, `Extra`, `Privileges`, `Comment`) VALUES
 	(1, 'varchar', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -580,7 +579,7 @@ REPLACE INTO `jset_table` (`id`, `name`, `section`, `description`, `title`, `sou
 	(5, 'jset_host', NULL, NULL, 'Hosts', 'jset_host', 'jset_host', 'This grid let you define credentials for accessing projects.', NULL, 1),
 	(6, 'demo', NULL, NULL, NULL, 'select *, \nid as notes,\nid as edit, \nid as `delete` \nfrom demo', 'demo', NULL, NULL, 0),
 	(7, 'jset_error', NULL, NULL, 'Errors', 'select a.id, stamp, `user`, `web_user`, ip, message, query, params\nfrom jset_atom a\ninner join jset_error e\non a.id = e.id', 'jset_error', '<p dir="ltr" style="text-align: left;">This grid shows data base errors that happened in the system.</p>\n<p dir="ltr" style="text-align: left;">Use it to help you debug your tables and columns definitions.</p>', NULL, 1),
-	(10, 'demo_form', NULL, NULL, NULL, 'select *, \nid as notes,\nid as edit, \nid as `delete` \nfrom demo', 'demo', NULL, NULL, 0),
+	(10, 'demo_form', NULL, NULL, NULL, 'select *, \nid as edit, \nid as `delete` \nfrom demo', 'demo', NULL, NULL, 0),
 	(11, 'note', NULL, NULL, NULL, 'select * from note', 'note', NULL, NULL, 0);
 /*!40000 ALTER TABLE `jset_table` ENABLE KEYS */;
 
