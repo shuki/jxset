@@ -331,3 +331,13 @@ label.radio_label {
 div.radiodiv {
 	white-space: nowrap;
 }
+
+ul.jset-sortable {
+	padding: 5px;
+	background: #eee;
+}
+
+ul.jset-sortable > li {
+	font-size: 15px;
+	padding: 0 5px 0 5px;
+}

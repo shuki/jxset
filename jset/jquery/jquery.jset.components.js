@@ -80,6 +80,11 @@
 			$(elem).siblings('table.jset-multicheckbox').remove();
 		},
 		
+		set_multicheckbox_options: function (elem, grid, data){
+			$.jset.fn.remove_multicheckbox_options(elem);
+			$.jset.fn.create_multicheckbox_options(elem, grid, data);
+		},
+		
 		create_multicheckbox_options: function (elem, grid, data){
 			var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
 			var div = $(elem).closest('div');
@@ -115,11 +120,52 @@
 			}			
 		},
 
-		set_multicheckbox_options: function (elem, grid, data){
-			$.jset.fn.remove_multicheckbox_options(elem);
-			$.jset.fn.create_multicheckbox_options(elem, grid, data);
+		get_sortable_element: function(formid, name){
+			return $.jset.fn.get_form_field(formid, name).siblings('ul.jset-sortable');
+		},
+
+		is_sortable_element_initialized: function(formid, name){
+			return $.jset.fn.get_form_field(formid, name).siblings('ul.ui-sortable').length > 0;
+		},
+
+		sortable_hide: function (elem){
+			$(elem).siblings('ul.jset-sortable').hide();
+			$(elem).siblings('img').show();
 		},
 		
+		sortable_show: function (elem){
+			$(elem).siblings('img').hide();
+			$(elem).siblings('ul.jset-sortable').show();
+		},
+		
+		remove_sortable_options: function (elem){
+			$(elem).siblings('ul.jset-sortable').find('li').remove();
+		},
+
+		set_sortable_options: function (elem, data){
+			$.jset.fn.remove_sortable_options(elem);
+			$.jset.fn.create_sortable_options(elem, data);
+		},
+		
+		create_sortable_options: function (elem, data){
+			var grid = $.jset.fn.get_grid_by_element(elem);
+								
+			if($.isArray(data)){
+				var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];
+				var ul = $(elem).siblings('ul.jset-sortable');
+				for (var i = 0; i < data.length; i++) {	
+					var option = data[i];
+					switch(editoptions.custom_options.layout){
+						case 'simple':
+						default:
+							$('<li class="ui-state-default' + (option.class !== undefined ? ' ' + option.class : '') +  '" value="' + option.id + '"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>' + option.name + '</li>')
+								.appendTo(ul);
+					}
+				}
+				ul.sortable('refresh');
+			}			
+		},
+
 		set_select_options: function (elem, grid, data, value, dont_preserve_value, name){
 			if(!name){
 				alert('set_select_options: missing name for select');
@@ -173,10 +219,33 @@
 									});
 								}
 							}
+							else if($(target_element).is('input.jset-sortable')){
+								if(!$(elem).val())
+									$.jset.fn.remove_sortable_options(target_element);
+								else{	
+									$.jset.fn.sortable_load(target_element, sql);
+									/*$.jset.fn.sortable_hide(target_element);
+									$.jset.fn.get_rows(grid, sql, function(data){
+										$.jset.fn.(target_element, grid, data);
+										$.jset.fn.sortable_show(target_element);
+									});*/
+								}
+							}
 						}
 					});
 			});
 			return elem;
+		},
+		
+		sortable_load: function(elem, query, callback){
+			var grid = $.jset.fn.get_grid_by_element(elem);
+			$.jset.fn.sortable_hide(elem);
+			$.jset.fn.get_rows(grid, query, function(data){
+				$.jset.fn.set_sortable_options(elem, data);
+				$.jset.fn.sortable_show(elem);
+				if(typeof callback === "function")
+					callback.call(elem);
+			});
 		},
 
 		get_dependent_field_element: function(source, target_name){
@@ -837,7 +906,38 @@
 		select_option_append: function(elem, key, value){
 			select_option = '<option value="' + key + '">' + value + '</option>';
 			$(elem).append(select_option);
-		}
+		},
+		
+		sortable_element: function(value, options){
+			return $('<input />')
+				.val(value)
+				.attr('validate', options.validate)
+				.addClass('jset-sortable');
+		},
+		
+		sortable_value: function(elem, action, value){
+			var fields = elem.closest('div').find('ul.jset-sortable > li');
+			if(action == 'get'){
+				var s = [];
+				$.each(fields, function(){
+					s.push($(this).val());
+				});
+				
+				$(elem).val(s.join(','));
+				return $(elem).val();
+			}
+			else if(action == 'set'){
+				var values = value.split(',');
+				$.each(fields, function(){
+					/*if(values.indexOf($(this).val()) != -1)
+						$(this).attr('checked', 'checked');
+					else
+						$(this).removeAttr('checked');*/
+				});
+				$(elem).val(value);
+			}
+		},
+		
 	});
 
 	$.extend(true, $.jset.defaults, {
@@ -2817,6 +2917,89 @@
 					sopt: ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','ew','en','nu','nn'],
 					dataInit: function(col){
 						return col.unsigned ? $.jset.fn.pintInit : $.jset.fn.intInit;
+					}
+				}
+			},
+			
+			sortable:{
+				edittype:'custom',
+				//formatter: 'multicheckboxFmatter',
+				editoptions: {
+					value: {},
+					size: function(col){
+						return col.usize ? col.usize : undefined;
+					},
+					height: function(col){
+						return col.height ? col.height : undefined;
+					},
+					defaultValue: function(col){
+						return col.default_value;
+					},
+					sortable_element_options: {
+						//forceHelperSize: true,
+						//forcePlaceholderSize: true	  
+					},
+					custom_options: {
+						columns: 2,
+						layout: 'simple',
+						readonly: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.get_sortable_element(formid, name).sortable('disable');
+						},
+						disable: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.get_sortable_element(formid, name).sortable('disable');
+						},
+						enable: function(formid, name){
+							var elem = $.jset.fn.get_form_field(formid, name);
+							if(elem.length == 0)
+								return;
+							
+							$.jset.fn.get_sortable_element(formid, name).sortable('enable');
+						}
+					}
+				},
+				stype: 'custom',
+				searchoptions:{
+					custom_element: $.jset.fn.sortable_element,
+					custom_value: $.jset.fn.sortable_value,
+					value: '',
+					defaultValue: function(col){
+						//return col.search_default ? col.search_default : '';
+					},
+					sopt:['fi','fn','eq','ne','nu','nn']				
+				},
+				formoptions:{
+					label_hide: false
+				},
+				beforeInitData: function(formid){
+					//$(formid).find('input.multicheckbox').attr('checked', false);
+				},
+				onInitializeForm: function(formid, id){
+					//var elem = $(formid).find('input.jset-multicheckbox#' + id);
+					var elem = $.jset.fn.get_form_field(formid, id);
+					if(elem.length == 0)
+						return;
+					
+					elem.hide();
+					var grid = $(this);
+					var editoptions = grid.data('settings').grid.colModel[grid.data('index')[elem.attr('name')]]['editoptions'];							
+
+					if(elem.siblings().length == 0){
+						var div = $('<div></div>')
+							.insertBefore(elem)
+							.append(elem)
+							.append('<img src="' + $.jset.dir_pre + $.jset.defaults.loading_img.substring(1) + '" style="display:none">');
+						var ul = $('<ul class="jset-sortable"/>').appendTo(div);
+						//div.append(ul);
+						ul.sortable(editoptions.sortable_element_options);
+						$.jset.fn.set_sortable_options(elem, editoptions.value);
 					}
 				}
 			}
