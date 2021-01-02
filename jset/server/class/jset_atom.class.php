@@ -12,7 +12,9 @@ include_once("autoload.php");
 
 class jset_atom {	
 	public function add($db){
-		$db->query($sql_class->ATOM_INSERT, array(self::get_uuid($db), 0, gen_utils::get_http_user($db), gen_utils::get_remote_address($db)));
+		$sql_class = sql::create($db);
+		$uuid = self::get_uuid($db);
+		$db->query($sql_class->ATOM_INSERT, array($uuid, 0, gen_utils::get_http_user($db), gen_utils::get_remote_address($db)));
 		return $uuid;
 	}
 	
