@@ -11,6 +11,14 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- make db
+CREATE DATABASE jxset;
+-- select
+USE jxset;
+-- fix somthing
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+
 -- Dumping structure for table jxset.demo
 CREATE TABLE IF NOT EXISTS `demo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
