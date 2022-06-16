@@ -1385,6 +1385,9 @@
 				if(value.length && cache_it !== false)
 					$formid.data('cache').form_fields[name] = value;
 			}
+			if(!value.length)
+				console.log('Error - field: ' + name + ' was not found in form:', formid);
+
 			return value;
 		},
 		
