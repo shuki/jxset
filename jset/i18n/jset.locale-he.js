@@ -47,7 +47,10 @@
 		},
 		captions:{
 			searchall: 'חיפוש',
-			sent: 'שלח'
+			sent: 'שלח',
+			add: 'הוסף',
+			edit: 'ערוך',
+			delete: 'מחק'
 		}
 	};
 

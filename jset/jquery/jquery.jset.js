@@ -1766,6 +1766,13 @@
 					 ': </label><input class="ui-widget-content ui-corner-all" disabled="disabled" /></div>')
 					.append(grid)
 					.css('direction', grid.data('settings').grid.direction);
+
+					//shuki 2022-10-21 partly developed button_menu
+					var grid_idd = 'table#' + grid.attr('id') + '.jset_table';
+					console.log(grid_idd);
+					if(grid.data('settings').button_menu === true)
+						$('div.jset-grid-searchall').append('<a class="fm-button ui-state-default ui-corner-all fm-button-icon-left" href="javascript:$.jset.fn.addfunc($(\'' + grid_idd + '\'));">' + $.jset.captions.add + '<span class="ui-icon ui-icon-plus">Add</span></a>');
+
 			}
 				
 			var grid_settings = {};

@@ -47,7 +47,10 @@
 		},
 		captions:{
 			searchall: 'Search',
-			sent: 'Send'
+			sent: 'Send',
+			add: 'Add',
+			edit: 'Edit',
+			delete: 'Delete'
 		}
 	};
 
